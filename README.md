@@ -1,41 +1,29 @@
 [![Build Status](https://travis-ci.org/funiq/geoPHP.svg?branch=master)](https://travis-ci.org/funiq/geoPHP)
 
-[geophp.net](https://geophp.net "GeoPHP homepage")
+GeoPHP is a open-source native PHP library for doing geometry operations. It is a fork of famous [geoPHP](https://github.com/phayes/geoPHP) library by Patrick Hayes.
 
-
-GeoPHP is a open-source native PHP library for doing geometry operations. It is written entirely in PHP and 
-can therefore run on shared hosts. It can read and write a wide variety of formats: WKT (including EWKT), WKB (including EWKB), GeoJSON, 
+It is written entirely in PHP and can therefore run on shared hosts. It can read and write a wide variety of formats: WKT (EWKT), WKB (EWKB), TWKB, GeoJSON, 
 KML, GPX, and GeoRSS. It works with all Simple-Feature geometries (Point, LineString, Polygon, GeometryCollection etc.)
 and can be used to get centroids, bounding-boxes, area, and a wide variety of other useful information. 
 
-geoPHP also helpfully wraps the GEOS php extension so that applications can get a transparent performance 
+GeoPHP also helpfully wraps the GEOS php extension so that applications can get a transparent performance 
 increase when GEOS is installed on the server. When GEOS is installed, geoPHP also becomes
 fully compliant with the OpenGIS® Implementation Standard for Geographic information. With GEOS you get the 
 full-set of openGIS functions in PHP like Union, IsWithin, Touches etc. This means that applications
 get a useful "core-set" of geometry operations that work in all environments, and an "extended-set"of operations 
 for environments that have GEOS installed. 
 
-See the 'getting started' section below for references and examples of everything that geoPHP can do.
+See the _getting started_ section below for references and examples of everything that geoPHP can do.
 
-This project is currently looking for co-maintainers. If you think you can help out, please send me a 
-message. Forks are also welcome, please issue pull requests and I will merge them into the main branch.
+Forks and contributions are welcome. Please open [issues](https://github.com/funiq/geoPHP/issues), send [pull](https://github.com/funiq/geoPHP/pulls) requests and I will merge them into the main branch.
 
-Getting Started
------------------------
+## Getting Started
 
- * The lastest stable version can always be downloaded at: <https://phayes.github.io/bin/current/geoPHP/geoPHP.tar.gz>
- * Read the API Reference at: <https://geophp.net/api.html>
- * Examples
-   * Using geoPHP as a GIS format converter: <http://github.com/funiq/geoPHP/wiki/Example-format-converter>
- * Other Interesting Links:
-   * Learn about GEOS integration at: <https://geophp.net/geos.html>
-
-Example usage
--------------------------------------------------
+### Example usage
 
 ```php
 <?php
-include_once('geoPHP.inc');
+use \geoPHP\geoPHP;
 
 // Polygon WKT example
 $polygon = geoPHP::load('POLYGON((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2))','wkt');
@@ -62,10 +50,8 @@ $first_wkt = $multipoint_points[0]->out('wkt');
 
 print "This multipoint has ".$multipoint->numGeometries()." points. The first point has a wkt representation of ".$first_wkt;
 ```
-=======
-	
-More Examples
--------------------------------------------------
+
+### More Examples
 	
 The Well Known Text (WKT) and Well Known Binary (WKB) support is ideal for integrating with MySQL's or PostGIS's spatial capability. 
 Once you have SELECTed your data with `'AsText('geo_field')'` or `'AsBinary('geo_field')'`, you can put it straight into 
@@ -95,13 +81,13 @@ Clearly, more complex analysis is possible.
 	echo $geom2->envelope()->area();
 
 
-Working with PostGIS
----------------------
+### Working with PostGIS
+
 geoPHP, through it's EWKB adapter, has good integration with postGIS. Here's an example of reading and writing postGIS geometries
 
 ```php
 <?php
-include_once('geoPHP.inc');
+use \geoPHP\geoPHP;
 $host =     'localhost';
 $database = 'phayes';
 $table =    'test';
@@ -138,14 +124,16 @@ foreach ($result as $item) {
 }
 ```
 
+## Documentation
 
-Credit
--------------------------------------------------
+In progress… You can read the doc for original phayes/geoPHP at [geophp.net](https://geophp.net "GeoPHP homepage")
 
-Maintainer: Patrick Hayes
+## Credit
+
+- Maintainer: Péter Báthory
+- Original author: Patrick Hayes
 
 Additional Contributors:
-
  * GeoMemes Research (<http://www.geomemes.com>)
  * HighWire Press (<http://www.highwire.org>) and GeoScienceWorld (<http://www.geoscienceworld.org>)
  * Arnaud Renevier (gisconverter.php) <https://github.com/arenevier/gisconverter.php>
