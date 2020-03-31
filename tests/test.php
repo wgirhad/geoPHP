@@ -128,6 +128,8 @@ function test_geometry($geometry) {
     $geometry->symDifference($geometry);
     $geometry->union($geometry);
     $geometry->simplify(0);// @@TODO: Adjust this once we can deal with empty geometries
+    $geometry->makeValid();
+    $geometry->buildArea();
     $geometry->disjoint($geometry);
     $geometry->touches($geometry);
     $geometry->intersects($geometry);
