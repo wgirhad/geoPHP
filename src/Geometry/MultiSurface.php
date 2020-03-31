@@ -8,14 +8,16 @@ namespace geoPHP\Geometry;
  *
  * @package geoPHP\Geometry
  */
-abstract class MultiSurface extends MultiGeometry {
+abstract class MultiSurface extends MultiGeometry
+{
 
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::MULTI_SURFACE;
     }
 
-    public function dimension() {
+    public function dimension()
+    {
         return 2;
     }
 }
-

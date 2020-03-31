@@ -8,7 +8,8 @@ namespace geoPHP\Geometry;
  *
  * @package geoPHP\Geometry
  */
-abstract class Curve extends Collection {
+abstract class Curve extends Collection
+{
 
     /**
      * @var Point[] A curve consists of sequence of Points
@@ -16,35 +17,42 @@ abstract class Curve extends Collection {
     protected $components = [];
 
     protected $startPoint = null;
+
     protected $endPoint = null;
 
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::CURVE;
     }
 
-    public function dimension() {
+    public function dimension()
+    {
         return 1;
     }
 
-    public function startPoint() {
+    public function startPoint()
+    {
         if (!isset($this->startPoint)) {
             $this->startPoint = $this->pointN(1);
         }
         return $this->startPoint;
     }
 
-    public function endPoint() {
+    public function endPoint()
+    {
         if (!isset($this->endPoint)) {
             $this->endPoint = $this->pointN($this->numPoints());
         }
         return $this->endPoint;
     }
 
-    public function isClosed() {
+    public function isClosed()
+    {
         return ($this->startPoint() && $this->endPoint() ? $this->startPoint()->equals($this->endPoint()) : false);
     }
 
-    public function isRing() {
+    public function isRing()
+    {
         return ($this->isClosed() && $this->isSimple());
     }
 
@@ -53,7 +61,8 @@ abstract class Curve extends Collection {
      *
      * @return LineString|MultiPoint
      */
-    public function boundary() {
+    public function boundary()
+    {
         if ($this->isEmpty()) {
             return new LineString();
         } else {
@@ -67,20 +76,23 @@ abstract class Curve extends Collection {
 
     // Not valid for this geometry type
     // --------------------------------
-    public function area() {
+    public function area()
+    {
         return 0;
     }
 
-    public function exteriorRing() {
+    public function exteriorRing()
+    {
         return null;
     }
 
-    public function numInteriorRings() {
+    public function numInteriorRings()
+    {
         return null;
     }
 
-    public function interiorRingN($n) {
+    public function interiorRingN($n)
+    {
         return null;
     }
 }
-

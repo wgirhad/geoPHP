@@ -11,7 +11,8 @@ use geoPHP\geoPHP;
  * A MultiPoint is simple if no two Points in the MultiPoint are equal (have identical coordinate values in X and Y).
  * Every MultiPoint is spatially equal under the definition in OGC 06-103r4 Clause 6.1.15.3 to a simple Multipoint.
  */
-class MultiPoint extends MultiGeometry {
+class MultiPoint extends MultiGeometry
+{
 
     /**
      * @var Point[] $components The elements of a MultiPoint are Points
@@ -20,7 +21,8 @@ class MultiPoint extends MultiGeometry {
     /**
      * @return string
      */
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::MULTI_POINT;
     }
 
@@ -28,11 +30,13 @@ class MultiPoint extends MultiGeometry {
      * MultiPoint is 0-dimensional
      * @return int 0
      */
-    public function dimension() {
+    public function dimension()
+    {
         return 0;
     }
 
-    public static function fromArray($array) {
+    public static function fromArray($array)
+    {
         $points = [];
         foreach ($array as $point) {
             $points[] = Point::fromArray($point);
@@ -41,13 +45,16 @@ class MultiPoint extends MultiGeometry {
     }
 
     /**
-     * A MultiPoint is simple if no two Points in the MultiPoint are equal (have identical coordinate values in X and Y).
+     * A MultiPoint is simple if no two Points in the MultiPoint are equal
+     * (have identical coordinate values in X and Y).
+     *
      * @return bool
      */
-    public function isSimple() {
+    public function isSimple()
+    {
         $componentCount = count($this->components);
-        for ($i=0; $i < $componentCount ; $i++) {
-            for ($j=$i+1; $j < $componentCount ; $j++) {
+        for ($i = 0; $i < $componentCount; $i++) {
+            for ($j = $i + 1; $j < $componentCount; $j++) {
                 if ($this->components[$i]->equals($this->components[$j])) {
                     return false;
                 }
@@ -60,15 +67,18 @@ class MultiPoint extends MultiGeometry {
      * The boundary of a MultiPoint is the empty set.
      * @return GeometryCollection
      */
-    public function boundary() {
+    public function boundary()
+    {
         return new GeometryCollection();
     }
 
-    public function numPoints() {
+    public function numPoints()
+    {
         return $this->numGeometries();
     }
 
-    public function centroid() {
+    public function centroid()
+    {
         if ($this->isEmpty()) {
             return new Point();
         }
@@ -80,7 +90,7 @@ class MultiPoint extends MultiGeometry {
 
         $x = 0;
         $y = 0;
-        foreach($this->getComponents() as $component) {
+        foreach ($this->getComponents() as $component) {
             $x += $component->x();
             $y += $component->y();
         }
@@ -89,8 +99,8 @@ class MultiPoint extends MultiGeometry {
 
     // Not valid for this geometry type
     // --------------------------------
-    public function explode($toArray=false) {
+    public function explode($toArray = false)
+    {
         return null;
     }
 }
-

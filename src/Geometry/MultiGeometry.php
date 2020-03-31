@@ -1,6 +1,7 @@
 <?php
 
 namespace geoPHP\Geometry;
+
 use geoPHP\geoPHP;
 
 /**
@@ -8,13 +9,15 @@ use geoPHP\geoPHP;
  *
  * @package geoPHP\Geometry
  */
-abstract class MultiGeometry extends Collection {
+abstract class MultiGeometry extends Collection
+{
 
 
     /**
      * @return bool|null
      */
-    public function isSimple() {
+    public function isSimple()
+    {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->isSimple();
@@ -31,7 +34,8 @@ abstract class MultiGeometry extends Collection {
     }
 
     // By default, the boundary of a collection is the boundary of it's components
-    public function boundary() {
+    public function boundary()
+    {
         if ($this->isEmpty()) {
             return new LineString();
         }
@@ -41,14 +45,15 @@ abstract class MultiGeometry extends Collection {
             return $this->getGeos()->boundary();
         }
 
-        $components_boundaries = array();
+        $components_boundaries = [];
         foreach ($this->components as $component) {
             $components_boundaries[] = $component->boundary();
         }
         return geoPHP::buildGeometry($components_boundaries);
     }
 
-    public function area() {
+    public function area()
+    {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
@@ -66,7 +71,8 @@ abstract class MultiGeometry extends Collection {
      * Eg. if Geometry is in geographical coordinate system it returns the length in degrees
      * @return float|int
      */
-    public function length() {
+    public function length()
+    {
         $length = 0;
         foreach ($this->components as $component) {
             $length += $component->length();
@@ -74,7 +80,8 @@ abstract class MultiGeometry extends Collection {
         return $length;
     }
 
-    public function length3D() {
+    public function length3D()
+    {
         $length = 0;
         foreach ($this->components as $component) {
             $length += $component->length3D();
@@ -87,7 +94,8 @@ abstract class MultiGeometry extends Collection {
      * @param int $radius default is the semi-major axis of WGS84
      * @return int the length in meters
      */
-    public function greatCircleLength($radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS) {
+    public function greatCircleLength($radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS)
+    {
         $length = 0;
         foreach ($this->components as $component) {
             $length += $component->greatCircleLength($radius);
@@ -95,7 +103,8 @@ abstract class MultiGeometry extends Collection {
         return $length;
     }
 
-    public function haversineLength() {
+    public function haversineLength()
+    {
         $length = 0;
         foreach ($this->components as $component) {
             $length += $component->haversineLength();
@@ -103,7 +112,8 @@ abstract class MultiGeometry extends Collection {
         return $length;
     }
 
-    public function minimumZ() {
+    public function minimumZ()
+    {
         $min = PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMin = $component->minimumZ();
@@ -114,7 +124,8 @@ abstract class MultiGeometry extends Collection {
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumZ() {
+    public function maximumZ()
+    {
         $max = ~PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMax = $component->maximumZ();
@@ -125,7 +136,8 @@ abstract class MultiGeometry extends Collection {
         return $max > ~PHP_INT_MAX ? $max : null;
     }
 
-    public function zDifference() {
+    public function zDifference()
+    {
         $startPoint = $this->startPoint();
         $endPoint = $this->endPoint();
         if ($startPoint && $endPoint && $startPoint->hasZ() && $endPoint->hasZ()) {
@@ -135,7 +147,8 @@ abstract class MultiGeometry extends Collection {
         }
     }
 
-    public function elevationGain($verticalTolerance = 0) {
+    public function elevationGain($verticalTolerance = 0)
+    {
         $gain = null;
         foreach ($this->components as $component) {
             $gain += $component->elevationGain($verticalTolerance);
@@ -143,7 +156,8 @@ abstract class MultiGeometry extends Collection {
         return $gain;
     }
 
-    public function elevationLoss($verticalTolerance = 0) {
+    public function elevationLoss($verticalTolerance = 0)
+    {
         $loss = null;
         foreach ($this->components as $component) {
             $loss += $component->elevationLoss($verticalTolerance);
@@ -151,7 +165,8 @@ abstract class MultiGeometry extends Collection {
         return $loss;
     }
 
-    public function minimumM() {
+    public function minimumM()
+    {
         $min = PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMin = $component->minimumM();
@@ -162,7 +177,8 @@ abstract class MultiGeometry extends Collection {
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumM() {
+    public function maximumM()
+    {
         $max = ~PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMax = $component->maximumM();
@@ -175,36 +191,43 @@ abstract class MultiGeometry extends Collection {
 
 
 
-    public function startPoint() {
+    public function startPoint()
+    {
         return null;
     }
 
-    public function endPoint() {
+    public function endPoint()
+    {
         return null;
     }
 
-    public function isRing() {
+    public function isRing()
+    {
         return null;
     }
 
-    public function isClosed() {
+    public function isClosed()
+    {
         return null;
     }
 
-    public function pointN($n) {
+    public function pointN($n)
+    {
         return null;
     }
 
-    public function exteriorRing() {
+    public function exteriorRing()
+    {
         return null;
     }
 
-    public function numInteriorRings() {
+    public function numInteriorRings()
+    {
         return null;
     }
 
-    public function interiorRingN($n) {
+    public function interiorRingN($n)
+    {
         return null;
     }
 }
-

@@ -13,80 +13,96 @@ namespace geoPHP\Geometry;
  *
  * @package geoPHP\Geometry
  */
-abstract class Surface extends Collection {
+abstract class Surface extends Collection
+{
 
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::SURFACE;
     }
 
-    public function dimension() {
+    public function dimension()
+    {
         return 2;
     }
 
-    public function startPoint() {
+    public function startPoint()
+    {
         return null;
     }
 
-    public function endPoint() {
+    public function endPoint()
+    {
         return null;
     }
 
-    public function pointN($n) {
+    public function pointN($n)
+    {
         return null;
     }
 
-    public function isClosed() {
+    public function isClosed()
+    {
         return null;
     }
 
-    public function isRing() {
+    public function isRing()
+    {
         return null;
     }
 
-    public function length() {
+    public function length()
+    {
         return 0;
     }
 
-    public function length3D() {
+    public function length3D()
+    {
         return 0;
     }
 
-    public function haversineLength() {
+    public function haversineLength()
+    {
         return 0;
     }
 
-    public function greatCircleLength($radius = null) {
+    public function greatCircleLength($radius = null)
+    {
         return 0;
     }
 
-    public function minimumZ() {
+    public function minimumZ()
+    {
         return null;
     }
 
-    public function maximumZ() {
+    public function maximumZ()
+    {
         return null;
     }
 
-    public function minimumM() {
+    public function minimumM()
+    {
         return null;
     }
 
-    public function maximumM() {
+    public function maximumM()
+    {
         return null;
     }
 
-    public function elevationGain($verticalTolerance = 0) {
+    public function elevationGain($verticalTolerance = 0)
+    {
         return null;
     }
 
-    public function elevationLoss($verticalTolerance = 0) {
+    public function elevationLoss($verticalTolerance = 0)
+    {
         return null;
     }
 
-    public function zDifference() {
+    public function zDifference()
+    {
         return null;
     }
-
-
 }
-

@@ -9,18 +9,21 @@ use geoPHP\geoPHP;
  *
  * @method LineString[] getComponents()
  */
-class MultiLineString extends MultiCurve {
+class MultiLineString extends MultiCurve
+{
 
     /**
      * @var LineString[] The elements of a MultiLineString are LineStrings
      */
     protected $components = [];
 
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::MULTI_LINE_STRING;
     }
 
-    public function centroid() {
+    public function centroid()
+    {
         if ($this->isEmpty()) {
             return null;
         }
@@ -34,7 +37,7 @@ class MultiLineString extends MultiCurve {
         $y = 0;
         $totalLength = 0;
         $components = $this->getComponents();
-        foreach($components as $line) {
+        foreach ($components as $line) {
             if ($line->isEmpty()) {
                 continue;
             }
@@ -54,7 +57,8 @@ class MultiLineString extends MultiCurve {
      *
      * @return MultiPoint
      */
-    public function boundary() {
+    public function boundary()
+    {
         $points = [];
         foreach ($this->components as $line) {
             if (!$line->isEmpty() && !$line->isClosed()) {
@@ -64,6 +68,4 @@ class MultiLineString extends MultiCurve {
         }
         return new MultiPoint($points);
     }
-
 }
-
