@@ -34,8 +34,8 @@ class GeoJSON implements GeoAdapter {
         if (!is_object($input)) {
             throw new \Exception('Invalid JSON');
         }
-        if (!is_string($input->type)) {
-            throw new \Exception('Invalid JSON');
+        if (!isset($input->type) || !is_string($input->type)) {
+            throw new \Exception('Invalid GeoJSON');
         }
 
         // Check to see if it's a FeatureCollection
