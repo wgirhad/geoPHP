@@ -226,30 +226,24 @@ abstract class Collection extends Geometry
     public function getPoints()
     {
         $points = [];
-
         // Same as array_merge($points, $component->getPoints()), but 500× faster
-        foreach ($this->components as $component1) {
-            if ($component1 instanceof Point) {
-                $points[] = $component1;
+        static::getPointsRecursive($this, $points);
+        return $points;
+    }
+
+    /**
+     * @param Geometry $geometry The geometry from which points will be extracted
+     * @param Point[] $points Result array as reference
+     */
+    private static function getPointsRecursive($geometry, &$points)
+    {
+        foreach ($geometry->components as $component) {
+            if ($component instanceof Point) {
+                $points[] = $component;
             } else {
-                foreach ($component1->components as $component2) {
-                    if ($component2 instanceof Point) {
-                        $points[] = $component2;
-                    } else {
-                        foreach ($component2->components as $component3) {
-                            if ($component3 instanceof Point) {
-                                $points[] = $component3;
-                            } else {
-                                foreach ($component3->getPoints() as $componentPoints) {
-                                    $points[] = $componentPoints;
-                                }
-                            }
-                        }
-                    }
-                }
+                static::getPointsRecursive($component, $points);
             }
         }
-        return $points;
     }
 
     /**
