@@ -1,7 +1,9 @@
 <?php
 
+use \geoPHP\Exception\InvalidGeometryException;
 use \geoPHP\Geometry\Point;
 use \geoPHP\Geometry\LineString;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests of LineString geometry
@@ -9,9 +11,11 @@ use \geoPHP\Geometry\LineString;
  * @group geometry
  *
  */
-class LineStringTest extends PHPUnit_Framework_TestCase {
+class LineStringTest extends TestCase
+{
 
-    private function createPoints($coordinateArray) {
+    private function createPoints($coordinateArray)
+    {
         $points = [];
         foreach ($coordinateArray as $point) {
             $points[] = Point::fromArray($point);
@@ -19,7 +23,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
         return $points;
     }
 
-    public function providerValidComponents() {
+    public function providerValidComponents()
+    {
         return [
                 [[]],                                       // Empty
                 [[[0, 0], [1, 1]]],                         // LineString with two points
@@ -35,50 +40,64 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      *
      * @param $points
      */
-    public function testConstructor($points) {
+    public function testConstructor($points)
+    {
         $this->assertNotNull(new LineString($this->createPoints($points)));
     }
 
-    /**
-     *
-     * @expectedException geoPHP\Exception\InvalidGeometryException
-     */
-    public function testConstructorInvalidComponentThrowsException() {
-        // Empty point
-        new LineString([new Point()]);
+    public function testConstructorEmptyComponentThrowsException()
+    {
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessageRegExp('/Cannot create a collection of empty Points.+/');
+
+        // Empty points
+        new LineString([new Point(), new Point(), new Point()]);
     }
 
-    /**
-     * @expectedException geoPHP\Exception\InvalidGeometryException
-     */
-    public function testConstructorSinglePointThrowsException() {
+    public function testConstructorNonArrayComponentThrowsException()
+    {
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessageRegExp('/Component geometries must be passed as array/');
+
+        new LineString('foo');
+    }
+
+    public function testConstructorSinglePointThrowsException()
+    {
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessageRegExp('/Cannot construct a [a-zA-Z_\\\\]+LineString with a single point/');
+
         new LineString([new Point(1, 2)]);
     }
 
-    /**
-     */
-    public function testConstructorWrongComponentTypeThrowsException() {
-        $this->setExpectedException('geoPHP\Exception\InvalidGeometryException');
-        new LineString([new LineString([new Point(1,2), new Point(3,4)]), new LineString([new Point(5,6), new Point(7,8)])]);
+    public function testConstructorWrongComponentTypeThrowsException()
+    {
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessageRegExp('/Cannot create a collection of [a-zA-Z_\\\\]+ components, expected type is.+/');
+
+        new LineString([new LineString(), new LineString()]);
     }
 
-    public function testFromArray() {
+    public function testFromArray()
+    {
         $this->assertEquals(
                 LineString::fromArray([[1,2,3,4], [5,6,7,8]]),
                 new LineString([new Point(1,2,3,4), new Point(5,6,7,8)])
         );
     }
 
-    public function testGeometryType() {
+    public function testGeometryType()
+    {
         $line = new LineString();
 
         $this->assertEquals(LineString::LINE_STRING, $line->geometryType());
 
-        $this->assertInstanceOf('\geoPHP\Geometry\LineString', $line);
-        $this->assertInstanceOf('\geoPHP\Geometry\Curve', $line);
+        $this->assertInstanceOf(LineString::class, $line);
+        $this->assertInstanceOf(\geoPHP\Geometry\Curve::class, $line);
     }
 
-    public function testIsEmpty() {
+    public function testIsEmpty()
+    {
         $line1 = new LineString();
         $this->assertTrue($line1->isEmpty());
 
@@ -86,7 +105,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($line2->isEmpty());
     }
 
-    public function testDimension() {
+    public function testDimension()
+    {
         $this->assertSame((new LineString())->dimension(), 1);
     }
 
@@ -95,9 +115,10 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      *
      * @param $points
      */
-    public function testNumPoints($points) {
+    public function testNumPoints($points)
+    {
         $line = new LineString($this->createPoints($points));
-        $this->assertEquals($line->numPoints(), count($points));
+        $this->assertCount($line->numPoints(), $points);
     }
 
     /**
@@ -105,7 +126,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      *
      * @param $points
      */    
-    public function testPointN($points) {
+    public function testPointN($points)
+    {
         $components = $this->createPoints($points);
         $line = new LineString($components);
 
@@ -120,7 +142,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    public function providerCentroid() {
+    public function providerCentroid()
+    {
         return [
                 [[], new Point()],                                  // empty linestring
                 [[[0, 0], [0, 0]], new Point(0, 0)],                // null coordinates
@@ -145,7 +168,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $centroidPoint
      */
-    public function testCentroid($points, $centroidPoint) {
+    public function testCentroid($points, $centroidPoint)
+    {
         $line = LineString::fromArray($points);
         $centroid = $line->centroid();
         $centroid->setGeos(null);
@@ -153,7 +177,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($centroidPoint, $centroid);
     }
 
-    public function providerIsSimple() {
+    public function providerIsSimple()
+    {
         return [
                 [[[0, 0], [0, 10]], true],
                 [[[1, 1], [2, 2], [2, 3.5], [1, 3], [1, 2], [2, 1]], false],
@@ -166,7 +191,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $result
      */
-    public function testIsSimple($points, $result) {
+    public function testIsSimple($points, $result)
+    {
         $line = LineString::fromArray($points);
 
         $this->assertSame($line->isSimple(), $result);
@@ -185,7 +211,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $result
      */
-    public function testLength($points, $result) {
+    public function testLength($points, $result)
+    {
         $line = LineString::fromArray($points);
 
         $this->assertSame($line->length(), $result);
@@ -204,7 +231,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $result
      */
-    public function testLength3D($points, $result) {
+    public function testLength3D($points, $result)
+    {
         $line = LineString::fromArray($points);
 
         $this->assertSame($line->length3D(), $result);
@@ -257,7 +285,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $result
      */
-    public function testGreatCircleLength($points, $result) {
+    public function testGreatCircleLength($points, $result)
+    {
         $line = LineString::fromArray($points);
 
         $this->assertEquals($line->greatCircleLength(), $result['greatCircle'], '', 1e-8);
@@ -269,11 +298,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $result
      */
-    public function testHaversineLength($points, $result) {
-        if(defined('HHVM_VERSION')) {
-            $this->markTestSkipped('HHVM\'s float precision is crappy can\'t test haversineLength()');
-        }
-
+    public function testHaversineLength($points, $result)
+    {
         $line = LineString::fromArray($points);
 
         $this->assertEquals($line->haversineLength(), $result['haversine'], '', 1e-7);
@@ -285,19 +311,22 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $points
      * @param $result
      */
-    public function testVincentyLength($points, $result) {
+    public function testVincentyLength($points, $result)
+    {
         $line = LineString::fromArray($points);
 
         $this->assertEquals($line->vincentyLength(), $result['vincenty'], '', 1e-8);
     }
 
-    public function testVincentyLengthAndipodalPoints() {
+    public function testVincentyLengthAntipodalPoints()
+    {
         $line = LineString::fromArray([[-89.7, 0], [89.7, 0]]);
 
         $this->assertNull($line->vincentyLength());
     }
 
-    public function testExplode() {
+    public function testExplode()
+    {
         $point1 = new Point(1, 2);
         $point2 = new Point(3, 4);
         $point3 = new Point(5, 6);
@@ -312,7 +341,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
         $this->assertSame((new LineString())->explode(true), []);
     }
 
-    public function providerDistance() {
+    public function providerDistance()
+    {
         return [
                 [new Point(10, 10), 10.0],
                 [new Point(0, 10), 0.0],
@@ -328,13 +358,15 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $otherGeometry
      * @param $expectedDistance
      */
-    public function testDistance($otherGeometry, $expectedDistance) {
+    public function testDistance($otherGeometry, $expectedDistance)
+    {
         $line = LineString::fromArray([[0, 0], [0, 10]]);
 
         $this->assertSame($line->distance($otherGeometry), $expectedDistance);
     }
 
-    public function testMinimumAndMaximumZAndMAndDifference() {
+    public function testMinimumAndMaximumZAndMAndDifference()
+    {
         $line = LineString::fromArray([[0, 0, 100.0, 0.0], [1, 1, 50.0, -0.5], [2, 2, 150.0, -1.0], [3, 3, 75.0, 0.5]]);
 
         $this->assertSame($line->minimumZ(), 50.0);
@@ -347,7 +379,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
         $this->assertSame(LineString::fromArray([[0, 1], [2, 3]])->zDifference(), null);
     }
 
-    public function providerElevationGainAndLoss() {
+    public function providerElevationGainAndLoss()
+    {
         return [
                 [null, 50.0, 30.0],
                 [0, 50.0, 30.0],
@@ -363,7 +396,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
      * @param $gain
      * @param $loss
      */
-    public function testElevationGainAndLoss($tolerance, $gain, $loss) {
+    public function testElevationGainAndLoss($tolerance, $gain, $loss)
+    {
         $line = LineString::fromArray(
                 [[0, 0, 100], [0, 0, 102], [0, 0, 105], [0, 0, 103], [0, 0, 110], [0, 0, 118],
                 [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 120] ]
@@ -373,5 +407,4 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
 
         $this->assertSame($line->elevationLoss($tolerance), $loss);
     }
-
 }

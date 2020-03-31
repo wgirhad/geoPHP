@@ -1,14 +1,13 @@
 <?php
 
 use \geoPHP\geoPHP;
+use PHPUnit\Framework\TestCase;
 
-class MethodsTests extends PHPUnit_Framework_TestCase {
+class MethodsTests extends TestCase
+{
 
-  function setUp() {
-
-  }
-
-  function testMethods() {
+  function testMethods()
+  {
     foreach (scandir('./input') as $file) {
       $parts = explode('.',$file);
       if ($parts[0]) {

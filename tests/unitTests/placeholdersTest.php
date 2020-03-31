@@ -1,14 +1,13 @@
 <?php
 
 use \geoPHP\geoPHP;
+use PHPUnit\Framework\TestCase;
 
-class PlaceholdersTests extends PHPUnit_Framework_TestCase {
+class PlaceholdersTests extends TestCase
+{
 
-  function setUp() {
-
-  }
-
-  function testPlaceholders() {
+  function testPlaceholders()
+  {
     foreach (scandir('./input') as $file) {
       $parts = explode('.',$file);
       if ($parts[0]) {

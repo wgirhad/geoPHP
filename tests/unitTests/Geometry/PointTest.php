@@ -1,6 +1,8 @@
 <?php
 
+use \geoPHP\Exception\InvalidGeometryException;
 use \geoPHP\Geometry\Point;
+use \PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests of Point geometry
@@ -8,9 +10,11 @@ use \geoPHP\Geometry\Point;
  * @group geometry
  *
  */
-class PointTest extends PHPUnit_Framework_TestCase {
+class PointTest extends TestCase
+{
 
-    public function providerValidCoordinatesXY() {
+    public function providerValidCoordinatesXY()
+    {
         return [
             [0, 0],
             [10, 20],
@@ -26,16 +30,23 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $x
      * @param $y
      */
-    public function testValidCoordinatesXY($x, $y) {
+    public function testValidCoordinatesXY($x, $y)
+    {
         $point = new Point($x, $y);
 
         $this->assertEquals($x, $point->x());
         $this->assertEquals($y, $point->y());
-        $this->assertInternalType('float', $point->x());
-        $this->assertInternalType('float', $point->y());
+        $this->assertNull($point->z());
+        $this->assertNull($point->m());
+
+//        $this->assertIsFloat($point->x());
+//        $this->assertIsFloat($point->y());
+        $this->assertTrue(is_float($point->x()));
+        $this->assertTrue(is_float($point->y()));
     }
 
-    public function providerValidCoordinatesXYZ_XYM() {
+    public function providerValidCoordinatesXYZ_XYM()
+    {
         return [
                 [0, 0, 0],
                 [10, 20, 30],
@@ -52,15 +63,21 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $y
      * @param $z
      */
-    public function testValidCoordinatesXYZ($x, $y, $z) {
+    public function testValidCoordinatesXYZ($x, $y, $z)
+    {
         $point = new Point($x, $y, $z);
 
         $this->assertEquals($x, $point->x());
         $this->assertEquals($y, $point->y());
         $this->assertEquals($z, $point->z());
-        $this->assertInternalType('float', $point->x());
-        $this->assertInternalType('float', $point->y());
-        $this->assertInternalType('float', $point->z());
+        $this->assertNull($point->m());
+
+//        $this->assertIsFloat($point->x());
+//        $this->assertIsFloat($point->y());
+//        $this->assertIsFloat($point->z());
+        $this->assertTrue(is_float($point->x()));
+        $this->assertTrue(is_float($point->y()));
+        $this->assertTrue(is_float($point->z()));
     }
 
     /**
@@ -70,18 +87,25 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $y
      * @param $m
      */
-    function testValidCoordinatesXYM($x, $y, $m) {
+    function testValidCoordinatesXYM($x, $y, $m)
+    {
         $point = new Point($x, $y, null, $m);
 
         $this->assertEquals($x, $point->x());
         $this->assertEquals($y, $point->y());
         $this->assertEquals($m, $point->m());
-        $this->assertInternalType('float', $point->x());
-        $this->assertInternalType('float', $point->y());
-        $this->assertInternalType('float', $point->m());
+        $this->assertNull($point->z());
+
+//        $this->assertIsFloat($point->x());
+//        $this->assertIsFloat($point->y());
+//        $this->assertIsFloat($point->m());
+        $this->assertTrue(is_float($point->x()));
+        $this->assertTrue(is_float($point->y()));
+        $this->assertTrue(is_float($point->m()));
     }
 
-    public function providerValidCoordinatesXYZM() {
+    public function providerValidCoordinatesXYZM()
+    {
         return [
                 [0, 0, 0, 0],
                 [10, 20, 30, 40],
@@ -98,20 +122,27 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $z
      * @param $m
      */
-    public function testValidCoordinatesXYZM($x, $y, $z, $m) {
+    public function testValidCoordinatesXYZM($x, $y, $z, $m)
+    {
         $point = new Point($x, $y, $z, $m);
 
         $this->assertEquals($x, $point->x());
         $this->assertEquals($y, $point->y());
         $this->assertEquals($z, $point->z());
         $this->assertEquals($m, $point->m());
-        $this->assertInternalType('float', $point->x());
-        $this->assertInternalType('float', $point->y());
-        $this->assertInternalType('float', $point->z());
-        $this->assertInternalType('float', $point->m());
+
+//        $this->assertIsFloat($point->x());
+//        $this->assertIsFloat($point->y());
+//        $this->assertIsFloat($point->z());
+//        $this->assertIsFloat($point->m());
+        $this->assertTrue(is_float($point->x()));
+        $this->assertTrue(is_float($point->y()));
+        $this->assertTrue(is_float($point->z()));
+        $this->assertTrue(is_float($point->m()));
     }
 
-    public function testConstructorWithoutParameters() {
+    public function testConstructorWithoutParameters()
+    {
         $point = new Point();
 
         $this->assertTrue($point->isEmpty());
@@ -122,7 +153,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($point->m());
     }
 
-    public function providerEmpty() {
+    public function providerEmpty()
+    {
         return [
                 [],
                 [null, 20],
@@ -141,7 +173,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $z
      * @param $m
      */
-    public function testEmpty($x = null, $y = null, $z = null, $m = null) {
+    public function testEmpty($x = null, $y = null, $z = null, $m = null)
+    {
         $point = new Point($x, $y, $z, $m);
 
         $this->assertTrue($point->isEmpty());
@@ -152,7 +185,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($point->m());
     }
 
-    public function providerInvalidCoordinates() {
+    public function providerInvalidCoordinates()
+    {
         return [
                 ['x', 'y'],
                 [true, false],
@@ -169,13 +203,15 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param null $z
      * @param null $m
      */
-    public function testConstructorWithInvalidCoordinates($x, $y, $z = null, $m = null) {
-        $this->setExpectedException('Exception');
+    public function testConstructorWithInvalidCoordinates($x, $y, $z = null, $m = null)
+    {
+        $this->expectException(InvalidGeometryException::class);
 
         new Point($x, $y, $z, $m);
     }
 
-    public function testGeometryType() {
+    public function testGeometryType()
+    {
         $point = new Point();
 
         $this->assertEquals(\geoPHP\Geometry\Geometry::POINT, $point->geometryType());
@@ -184,13 +220,15 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('\geoPHP\Geometry\Geometry', $point);
     }
 
-    public function testIs3D() {
+    public function testIs3D()
+    {
         $this->assertTrue( (new Point(1, 2, 3))->is3D() );
         $this->assertTrue( (new Point(1, 2, 3, 4))->is3D() );
         $this->assertTrue( (new Point(null, null, 3, 4))->is3D() );
     }
 
-    public function testIsMeasured() {
+    public function testIsMeasured()
+    {
         $this->assertTrue( (new Point(1, 2, null, 4))->isMeasured() );
         $this->assertTrue( (new Point(null, null , null, 4))->isMeasured() );
     }
@@ -203,7 +241,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $z
      * @param $m
      */
-    public function testInvertXY($x, $y, $z, $m) {
+    public function testInvertXY($x, $y, $z, $m)
+    {
         $point = new Point($x, $y, $z, $m);
         $point->invertXY();
 
@@ -213,12 +252,14 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($m, $point->m());
     }
 
-    public function testCentroid() {
+    public function testCentroid()
+    {
         $point = new Point(1, 2, 3, 4);
         $this->assertSame($point, $point->centroid());
     }
 
-    public function testBBox() {
+    public function testBBox()
+    {
         $point = new Point(1, 2);
         $this->assertSame($point->getBBox(), [
                 'maxy' => 2.0,
@@ -228,9 +269,12 @@ class PointTest extends PHPUnit_Framework_TestCase {
         ]);
     }
 
-    public function testAsArray() {
+    public function testAsArray()
+    {
         $pointAsArray = (new Point())->asArray();
-        $this->assertTrue(count($pointAsArray) && is_nan($pointAsArray[0]) && is_nan($pointAsArray[1]));
+        $this->assertCount(2, $pointAsArray);
+        $this->assertNan($pointAsArray[0]);
+        $this->assertNan($pointAsArray[1]);
 
         $pointAsArray = (new Point(1, 2))->asArray();
         $this->assertSame($pointAsArray, [1.0, 2.0]);
@@ -245,11 +289,13 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertSame($pointAsArray, [1.0, 2.0, 3.0, 4.0]);
     }
 
-    public function testBoundary() {
+    public function testBoundary()
+    {
         $this->assertEquals((new Point())->boundary(), new \geoPHP\Geometry\GeometryCollection());
     }
 
-    public function testEquals() {
+    public function testEquals()
+    {
         $this->assertTrue((new Point())->equals(new Point()));
 
         $point = new Point(1, 2, 3, 4);
@@ -264,17 +310,21 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($point->equals(new \geoPHP\Geometry\GeometryCollection()));
     }
 
-    public function testFlatten() {
+    public function testFlatten()
+    {
         $point = new Point(1, 2, 3, 4);
         $point->flatten();
 
-        $this->assertFalse($point->is3D());
-        $this->assertFalse($point->isMeasured());
+        $this->assertEquals($point->x(), 1);
+        $this->assertEquals($point->y(), 2);
         $this->assertNull($point->z());
         $this->assertNull($point->m());
+        $this->assertFalse($point->is3D());
+        $this->assertFalse($point->isMeasured());
     }
 
-    public function providerDistance() {
+    public function providerDistance()
+    {
         return [
                 [new Point(), null],
                 [new Point(0, 0), 14.142135623730951],
@@ -295,7 +345,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
      * @param $otherGeometry
      * @param $expectedDistance
      */
-    public function testDistance($otherGeometry, $expectedDistance) {
+    public function testDistance($otherGeometry, $expectedDistance)
+    {
         $point = new Point(10, 10);
 
         $this->assertSame($point->distance($otherGeometry), $expectedDistance);
@@ -306,13 +357,15 @@ class PointTest extends PHPUnit_Framework_TestCase {
      *
      * @param $otherGeometry
      */
-    public function testDistanceEmpty($otherGeometry) {
+    public function testDistanceEmpty($otherGeometry)
+    {
         $point = new Point();
 
         $this->assertNull($point->distance($otherGeometry));
     }
 
-    public function testTrivialMethods() {
+    public function testTrivialMethods()
+    {
         $point = new Point(1, 2, 3, 4);
 
         $this->assertSame( $point->dimension(), 0 );
@@ -324,7 +377,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue( $point->isSimple());
     }
 
-    public function testMinMaxMethods() {
+    public function testMinMaxMethods()
+    {
         $point = new Point(1, 2, 3, 4);
 
         $this->assertEquals($point->minimumZ(), 3);
@@ -333,7 +387,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($point->maximumM(), 4);
     }
 
-    public function providerMethodsNotValidForPointReturnsNull() {
+    public function providerMethodsNotValidForPointReturnsNull()
+    {
         return [
                 ['zDifference'],
                 ['elevationGain'],
@@ -357,11 +412,13 @@ class PointTest extends PHPUnit_Framework_TestCase {
      *
      * @param $methodName
      */
-    public function testPlaceholderMethodsReturnsNull($methodName) {
+    public function testPlaceholderMethodsReturnsNull($methodName)
+    {
         $this->assertNull( (new Point())->$methodName(null) );
     }
 
-    public function providerMethodsNotValidForPointReturns0() {
+    public function providerMethodsNotValidForPointReturns0()
+    {
         return [['area'], ['length'], ['length3D'], ['greatCircleLength'], ['haversineLength']];
     }
 
@@ -370,7 +427,8 @@ class PointTest extends PHPUnit_Framework_TestCase {
      *
      * @param $methodName
      */
-    public function testPlaceholderMethods($methodName) {
+    public function testPlaceholderMethods($methodName)
+    {
         $this->assertEquals( (new Point())->$methodName(null), 0 );
     }
 

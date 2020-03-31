@@ -1,11 +1,10 @@
 <?php
 
 use \geoPHP\Adapter\GeoHash;
+use PHPUnit\Framework\TestCase;
 
-class GeoHashTest extends PHPUnit_Framework_TestCase {
-
-  function setUp() {
-  }
+class GeoHashTest extends TestCase
+{
 
   /**
    * test cases for adjacent geohashes.

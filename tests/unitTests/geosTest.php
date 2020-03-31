@@ -1,14 +1,13 @@
 <?php
 
 use \geoPHP\geoPHP;
+use PHPUnit\Framework\TestCase;
 
-class GeosTests extends PHPUnit_Framework_TestCase {
+class GeosTests extends TestCase
+{
 
-  function setUp() {
-
-  }
-
-  function testGeos() {
+  function testGeos()
+  {
     if (!geoPHP::geosInstalled()) {
       $this->markTestSkipped('GEOS not installed');
       return;

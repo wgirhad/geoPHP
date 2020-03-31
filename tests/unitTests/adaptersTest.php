@@ -1,14 +1,13 @@
 <?php
 
 use \geoPHP\geoPHP;
+use PHPUnit\Framework\TestCase;
 
-class AdaptersTests extends PHPUnit_Framework_TestCase {
+class AdaptersTests extends TestCase
+{
 
-  function setUp() {
-
-  }
-
-  function testAdapters() {
+  function testAdapters()
+  {
     foreach (scandir('./input') as $file) {
       $parts = explode('.',$file);
       if ($parts[0]) {
@@ -19,17 +18,19 @@ class AdaptersTests extends PHPUnit_Framework_TestCase {
 
         // Test adapter output and input. Do a round-trip and re-test
         foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
-          if ($adapter_key != 'google_geocode') { //Don't test google geocoder regularily. Uncomment to test
-            $output = $geometry->out($adapter_key);
-            $this->assertNotNull($output, "Empty output on "  . $adapter_key);
-            if ($output) {
+          if ($adapter_key == 'google_geocode') {
+              //Don't test google geocoder regularly. Comment to test
+              continue;
+          }
+          $output = $geometry->out($adapter_key);
+          $this->assertNotNull($output, "Empty output on "  . $adapter_key);
+          if ($output) {
               $adapter_name = 'geoPHP\\Adapter\\' . $adapter_class;
               /** @var \geoPHP\Adapter\GeoAdapter $adapter_loader */
               $adapter_loader = new $adapter_name();
               $test_geom_1 = $adapter_loader->read($output);
               $test_geom_2 = $adapter_loader->read($test_geom_1->out($adapter_key));
               $this->assertEquals($test_geom_1->out('wkt'), $test_geom_2->out('wkt'), "Mismatched adapter output in ".$adapter_class  .' (test file: ' . $file . ')');
-            }
           }
         }
 
@@ -38,28 +39,30 @@ class AdaptersTests extends PHPUnit_Framework_TestCase {
         if (!geoPHP::geosInstalled()) return;
 
         foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
-          if ($adapter_key != 'google_geocode') { //Don't test google geocoder regularily. Uncomment to test
-            // Turn GEOS on
+          if ($adapter_key != 'google_geocode') {
+              //Don't test google geocoder regularily. Comment to test
+              continue;
+          }
+          // Turn GEOS on
+          geoPHP::geosInstalled(TRUE);
+
+          $output = $geometry->out($adapter_key);
+          if ($output) {
+            $adapter_name = 'geoPHP\\Adapter\\' . $adapter_class;
+            $adapter_loader = new $adapter_name();
+
+            $test_geom_1 = $adapter_loader->read($output);
+
+            // Turn GEOS off
+            geoPHP::geosInstalled(FALSE);
+
+            $test_geom_2 = $adapter_loader->read($output);
+
+            // Turn GEOS back On
             geoPHP::geosInstalled(TRUE);
 
-            $output = $geometry->out($adapter_key);
-            if ($output) {
-              $adapter_name = 'geoPHP\\Adapter\\' . $adapter_class;
-              $adapter_loader = new $adapter_name();
-
-              $test_geom_1 = $adapter_loader->read($output);
-
-              // Turn GEOS off
-              geoPHP::geosInstalled(FALSE);
-
-              $test_geom_2 = $adapter_loader->read($output);
-
-              // Turn GEOS back On
-              geoPHP::geosInstalled(TRUE);
-
-              // Check to make sure a both are the same with geos and without
-              $this->assertEquals($test_geom_1->out('wkt'), $test_geom_2->out('wkt'), "Mismatched adapter output between GEOS and NORM in ".$adapter_class .' (test file: ' . $file . ')');
-            }
+            // Check to make sure a both are the same with geos and without
+            $this->assertEquals($test_geom_1->out('wkt'), $test_geom_2->out('wkt'), "Mismatched adapter output between GEOS and NORM in ".$adapter_class .' (test file: ' . $file . ')');
           }
         }
       }
