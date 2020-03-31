@@ -31,8 +31,7 @@ class MultiPointTest extends PHPUnit_Framework_TestCase {
 
     public function providerInvalidComponents() {
         return [
-            [[new Point()]],                        // empty component
-            //[[\geoPHP\Geometry\LineString::fromArray([[1,2],[3,4]])]],  // wrong component type TODO implement this
+            [[\geoPHP\Geometry\LineString::fromArray([[1,2],[3,4]])]],  // wrong component type
         ];
     }
 

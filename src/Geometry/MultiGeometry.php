@@ -12,6 +12,10 @@ use geoPHP\geoPHP;
 abstract class MultiGeometry extends Collection
 {
 
+    public function __construct($components = [], $allowEmptyComponents = true, $allowedComponentType = Geometry::class)
+    {
+        parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
+    }
 
     /**
      * @return bool|null

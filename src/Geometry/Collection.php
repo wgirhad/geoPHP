@@ -22,34 +22,42 @@ abstract class Collection extends Geometry
     /**
      * Constructor: Checks and sets component geometries
      *
-     * @param Geometry[] $components array of geometries
-     * @param bool $allowEmpty allow creating geometries with empty components
+     * @param Geometry[] $components Array of geometries
+     * @param bool|true  $allowEmptyComponents Allow creating geometries with empty components
+     * @param string     $allowedComponentType A class the components must be instance of
+     *
      * @throws \Exception
      */
-    public function __construct($components = [], $allowEmpty = false)
-    {
+    public function __construct(
+        $components = [],
+        $allowEmptyComponents = true,
+        $allowedComponentType = Geometry::class
+    ) {
         if (!is_array($components)) {
-            throw new InvalidGeometryException("Component geometries must be passed as an array");
+            throw new InvalidGeometryException("Component geometries must be passed as array");
         }
         $componentCount = count($components);
-        for ($i = 0; $i < $componentCount; ++$i) { // foreach is too memory-intensive here
-            if ($components[$i] instanceof Geometry) {
-                if (!$allowEmpty && $components[$i]->isEmpty()) {
+        for ($i = 0; $i < $componentCount; ++$i) { // foreach is too memory-intensive here in PHP 5.*
+            if ($components[$i] instanceof $allowedComponentType) {
+                if (!$allowEmptyComponents && $components[$i]->isEmpty()) {
                     throw new InvalidGeometryException(
                         'Cannot create a collection of empty ' .
                         $components[$i]->geometryType() . 's (' . ($i + 1) . '. component)'
                     );
                 }
-                if ($components[$i]->hasZ()) {
+                if ($components[$i]->hasZ() && !$this->hasZ) {
                     $this->hasZ = true;
                 }
-                if ($components[$i]->isMeasured()) {
+                if ($components[$i]->isMeasured() && !$this->isMeasured) {
                     $this->isMeasured = true;
                 }
             } else {
-                throw new \Exception(
-                    'Cannot create a collection with non-geometries (' .
-                    gettype($components[$i]) . ')'
+                $componentType = gettype($components[$i]) !== 'object'
+                    ? gettype($components[$i])
+                    : get_class($components[$i]);
+                throw new InvalidGeometryException(
+                    'Cannot create a collection of ' . $componentType .
+                    ' components, expected type is ' . $allowedComponentType
                 );
             }
         }

@@ -11,6 +11,11 @@ namespace geoPHP\Geometry;
 abstract class MultiSurface extends MultiGeometry
 {
 
+    public function __construct($components = [], $allowEmptyComponents = true, $allowedComponentType = Surface::class)
+    {
+        parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
+    }
+
     public function geometryType()
     {
         return Geometry::MULTI_SURFACE;

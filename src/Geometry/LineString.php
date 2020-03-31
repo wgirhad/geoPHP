@@ -29,12 +29,7 @@ class LineString extends Curve
      */
     public function __construct($points = [])
     {
-        // Call the Collection constructor to build the LineString
         parent::__construct($points);
-
-        if (count($points) == 1) {
-            throw new InvalidGeometryException("Cannot construct a LineString with a single point");
-        }
     }
 
     public static function fromArray($array)

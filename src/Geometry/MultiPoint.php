@@ -17,6 +17,11 @@ use geoPHP\geoPHP;
 class MultiPoint extends MultiGeometry
 {
 
+    public function __construct($components = [])
+    {
+        parent::__construct($components, true, Point::class);
+    }
+
     /**
      * @return string
      */

@@ -2,6 +2,8 @@
 
 namespace geoPHP\Geometry;
 
+use geoPHP\Exception\InvalidGeometryException;
+
 /**
  * Class Curve
  * TODO write this
@@ -12,6 +14,14 @@ namespace geoPHP\Geometry;
  */
 abstract class Curve extends Collection
 {
+
+    public function __construct($components = [], $allowEmptyComponents = false, $allowedComponentType = Point::class)
+    {
+        if (is_array($components) && count($components) == 1) {
+            throw new InvalidGeometryException("Cannot construct a " . __CLASS__ . " with a single point");
+        }
+        parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
+    }
 
     protected $startPoint = null;
 

@@ -13,6 +13,11 @@ use geoPHP\geoPHP;
 class MultiLineString extends MultiCurve
 {
 
+    public function __construct($components = [])
+    {
+        parent::__construct($components, true, LineString::class);
+    }
+
     /**
      * @var LineString[] The elements of a MultiLineString are LineStrings
      */

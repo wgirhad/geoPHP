@@ -58,10 +58,8 @@ class LineStringTest extends PHPUnit_Framework_TestCase {
     /**
      */
     public function testConstructorWrongComponentTypeThrowsException() {
-        $this->assertTrue(true);
-        //TODO implement this
-        //$this->setExpectedException('geoPHP\Exception\InvalidGeometryException');
-        //new LineString([new LineString([new Point(1,2), new Point(3,4)]), new LineString([new Point(5,6), new Point(7,8)])]);
+        $this->setExpectedException('geoPHP\Exception\InvalidGeometryException');
+        new LineString([new LineString([new Point(1,2), new Point(3,4)]), new LineString([new Point(5,6), new Point(7,8)])]);
     }
 
     public function testFromArray() {

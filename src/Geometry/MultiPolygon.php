@@ -13,6 +13,11 @@ use geoPHP\geoPHP;
 class MultiPolygon extends MultiSurface
 {
 
+    public function __construct($components = [])
+    {
+        parent::__construct($components, true, Polygon::class);
+    }
+
     public function geometryType()
     {
         return Geometry::MULTI_POLYGON;
