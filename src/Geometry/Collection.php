@@ -309,15 +309,13 @@ abstract class Collection extends Geometry
 
     public function flatten()
     {
-        if ($this->hasZ()) {
-            $newComponents = [];
+        if ($this->hasZ() || $this->isMeasured()) {
             foreach ($this->components as $component) {
-                $newComponents[] = $component->flatten();
+                $component->flatten();
             }
-            $type = $this->geometryType();
-            return new $type($newComponents);
-        } else {
-            return $this;
+            $this->hasZ = false;
+            $this->isMeasured = false;
+            $this->setGeos(null);
         }
     }
 
