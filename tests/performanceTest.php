@@ -8,11 +8,13 @@
  * Feel free to add more test methods.
  */
 
-namespace geoPHP\Geometry;
-
-use \geoPHP\geoPHP;
-
 require '../vendor/autoload.php';
+
+use geoPHP\Geometry\Point;
+use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\Polygon;
+use geoPHP\Geometry\GeometryCollection;
+use geoPHP\geoPHP;
 
 function testStart($message) {
     $GLOBALS['runTime'] = microtime(true);
@@ -25,8 +27,8 @@ function testEnd($result=null, $ready=false) {
         echo '  Time: ' . round(microtime(true) - $GLOBALS['runTime'], 4) . ' sec,';
     }
     echo
-            ' Memory: ' . (memory_get_usage()/1024/1024 - $GLOBALS['startMem']) . 'MB' .
-            ' Memory peak: ' . (memory_get_peak_usage()/1024/1024) . 'MB' .
+            ' Memory: ' . round(memory_get_usage()/1024/1024 - $GLOBALS['startMem'], 4) . 'MB' .
+            ' Memory peak: ' . round(memory_get_peak_usage()/1024/1024, 4) . 'MB' .
             ($result ? ' Result: ' . $result : '') .
             "\n";
 }
@@ -82,53 +84,59 @@ testStart("Adding points to LineString:");
 $lineString = new LineString($points);
 testEnd();
 
-$smallLineString = new LineString(array_slice($points, 0, 1000));
-
-testStart("Test (small) LineString::isSimple():");
-$smallLineString->isSimple();
-testEnd();
-
 testStart("Test LineString::getComponents() points isMeasured():");
 foreach($lineString->getComponents() as $point) {
     $point->isMeasured();
 }
 testEnd();
 
-testStart("Test LineString::explode(true) 10 times:");
-for($i=1; $i <= 10; $i++) {
-    $res = count($lineString->explode(true));
-}
+testStart("Test LineString::explode(true):");
+$res = count($lineString->explode(true));
 testEnd($res . ' segment');
 
-testStart("Test LineString::explode() 10 times:");
-for($i=1; $i <= 10; $i++) {
-    $res = count($lineString->explode());
-}
+testStart("Test LineString::explode():");
+$res = count($lineString->explode());
 testEnd($res . ' segment');
 
-testStart("Test LineString::length() 10 times:");
-for($i=1; $i <= 10; $i++) {
-    $res = $lineString->length();
-}
+testStart("Test LineString::length():");
+$res = $lineString->length();
 testEnd($res);
 
-testStart("Test LineString::greatCircleLength() 10 times:");
-for($i=1; $i <= 10; $i++) {
-    $res = $lineString->greatCircleLength();
-}
+testStart("Test LineString::greatCircleLength():");
+$res = $lineString->greatCircleLength();
 testEnd($res);
 
-testStart("Test LineString::haversineLength() 10 times:");
-for($i=1; $i <= 10; $i++) {
-    $res = $lineString->haversineLength();
-}
+testStart("Test LineString::haversineLength():");
+$res = $lineString->haversineLength();
 testEnd($res);
 
-testStart("Test LineString::vincentyLength() 10 times:");
-for($i=1; $i <= 10; $i++) {
-    $res = $lineString->vincentyLength();
-}
+testStart("Test LineString::vincentyLength():");
+$res = $lineString->vincentyLength();
 testEnd($res);
+
+$somePoint = array_slice($points, 0, min($pointCount, 499));
+$somePoint[] = $somePoint[0];
+$shortClosedLineString = new LineString($somePoint);
+
+testStart("Test (500 points) LineString::isSimple():");
+$shortClosedLineString->isSimple();
+testEnd();
+
+$components = [];
+testStart("Creating GeometryCollection:");
+for($i=0; $i < 50; $i++) {
+    $rings = [];
+    for($j=0; $j < 50; $j++) {
+        $rings[] = $shortClosedLineString;
+    }
+    $components[] = new Polygon($rings);
+}
+$collection = new GeometryCollection($components);
+testEnd();
+
+testStart("GeometryCollection::getPoints():");
+$res = $collection->getPoints();
+testEnd(count($res));
 
 
 
