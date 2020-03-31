@@ -7,14 +7,11 @@ namespace geoPHP\Geometry;
  * TODO write this
  *
  * @package geoPHP\Geometry
+ * @method Point[] getComponents()
+ * @property Point[] $components A curve consists of sequence of Points
  */
 abstract class Curve extends Collection
 {
-
-    /**
-     * @var Point[] A curve consists of sequence of Points
-     */
-    protected $components = [];
 
     protected $startPoint = null;
 

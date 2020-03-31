@@ -5,7 +5,7 @@ namespace geoPHP\Geometry;
 use geoPHP\geoPHP;
 
 /**
- * GeometryCollection: A heterogenous collection of geometries
+ * GeometryCollection: A heterogeneous collection of geometries
  */
 class GeometryCollection extends MultiGeometry
 {

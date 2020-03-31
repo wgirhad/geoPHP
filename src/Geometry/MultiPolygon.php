@@ -8,6 +8,7 @@ use geoPHP\geoPHP;
  * MultiPolygon: A collection of Polygons
  *
  * @method Polygon[] getComponents()
+ * @property Polygon[] $components
  */
 class MultiPolygon extends MultiSurface
 {

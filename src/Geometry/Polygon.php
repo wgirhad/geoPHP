@@ -11,6 +11,7 @@ use geoPHP\geoPHP;
  * composed of a finite sequence of straight line segments
  *
  * @method LineString[] getComponents()
+ * @property LineString[] $components
  */
 class Polygon extends Surface
 {

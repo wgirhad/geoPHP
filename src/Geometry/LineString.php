@@ -10,6 +10,7 @@ use geoPHP\geoPHP;
  * Linear interpolation between the reference points defines the resulting linestring.
  *
  * @method Point[] getComponents()
+ * @property Point[] $components
  */
 class LineString extends Curve
 {
