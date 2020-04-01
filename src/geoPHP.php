@@ -17,12 +17,6 @@ use geoPHP\Geometry\GeometryCollection;
 // @codingStandardsIgnoreLine
 class geoPHP
 {
-
-    public static function version()
-    {
-        return '2.0-dev';
-    }
-
     // Earth radius constants in meters
 
     /** WGS84 semi-major axis (a), aka equatorial radius */
