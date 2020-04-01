@@ -239,8 +239,12 @@ class WKT implements GeoAdapter
         $geometries = [];
         while (strlen($dataString) > 0) {
             // Matches the first balanced parenthesis group (or term EMPTY)
-            preg_match('/\((?>[^()]+|(?R))*\)|EMPTY/',
-                       $dataString, $m, PREG_OFFSET_CAPTURE);
+            preg_match(
+                '/\((?>[^()]+|(?R))*\)|EMPTY/',
+                $dataString,
+                $m,
+                PREG_OFFSET_CAPTURE
+            );
             if (!isset($m[0])) {
                 // something weird happened, we stop here before running in an infinite loop
                 break;

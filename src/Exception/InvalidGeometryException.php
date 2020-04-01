@@ -9,5 +9,6 @@ namespace geoPHP\Exception;
  *
  * @package geoPHP\Exception
  */
-class InvalidGeometryException extends \Exception {
+class InvalidGeometryException extends \Exception
+{
 }

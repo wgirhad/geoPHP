@@ -14,6 +14,7 @@ use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 
+// @codingStandardsIgnoreLine
 class geoPHP
 {
 
