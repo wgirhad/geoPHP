@@ -34,4 +34,7 @@ matrix:
   fast_finish: false
 
 after_success:
-  - travis_retry php vendor/bin/php-coveralls -v
+  - |
+    wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
+    chmod +x php-coveralls.phar
+    ./php-coveralls.phar
