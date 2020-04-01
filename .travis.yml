@@ -15,6 +15,7 @@ install:
   # TODO optionally set up a postgis database for testing
 
 script:
+  - mkdir -p build/logs
   - GEOS_DISABLED=1 vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - cd tests
   - php test.php
@@ -33,4 +34,4 @@ matrix:
   fast_finish: false
 
 after_success:
-  - vendor/bin/php-coveralls -v
+  - travis_retry php vendor/bin/php-coveralls -v
