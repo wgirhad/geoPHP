@@ -1,5 +1,7 @@
 <?php
 
+namespace geoPHP\Tests\Geometry;
+
 use \geoPHP\Exception\InvalidGeometryException;
 use \geoPHP\Geometry\Point;
 use \geoPHP\Geometry\LineString;

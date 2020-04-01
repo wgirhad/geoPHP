@@ -1,8 +1,9 @@
 <?php
 
+namespace geoPHP\Tests\Geometry;
+
 use \geoPHP\Exception\InvalidGeometryException;
 use \geoPHP\Geometry\Point;
-use \geoPHP\geoPHP;
 use \geoPHP\Geometry\MultiPoint;
 use \PHPUnit\Framework\TestCase;
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace geoPHP\Tests;
+
 use \geoPHP\geoPHP;
 use PHPUnit\Framework\TestCase;
 

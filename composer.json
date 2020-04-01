@@ -23,6 +23,11 @@
       "geoPHP\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "geoPHP\\": "tests/"
+    }
+  },
   "require": {
     "php": ">=5.5.0"
   },

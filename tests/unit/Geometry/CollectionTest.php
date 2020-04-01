@@ -7,6 +7,8 @@
  * @since 2020-03-19
  */
 
+namespace geoPHP\Tests\Geometry;
+
 use \geoPHP\Geometry\Collection;
 use \geoPHP\Geometry\Point;
 use \geoPHP\Geometry\LineString;

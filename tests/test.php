@@ -4,13 +4,7 @@ require '../vendor/autoload.php';
 
 use \geoPHP\geoPHP;
 
-// Uncomment to test
-if (getenv("GEOPHP_RUN_TESTS") == 1) {
-  run_test();
-}
-else {
-  print "Skipping tests. Please set GEOPHP_RUN_TESTS=1 environment variable if you wish to run tests\n";
-}
+run_test();
 
 function run_test() {
   set_time_limit(0);

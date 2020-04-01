@@ -1,5 +1,7 @@
 <?php
 
+namespace geoPHP\Tests\Adapter;
+
 use \geoPHP\Adapter\GeoHash;
 use PHPUnit\Framework\TestCase;
 
