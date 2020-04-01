@@ -74,8 +74,10 @@ class Polygon extends Surface
         }
 
         if ($this->getGeos() && $exterior_only == false) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var LineString $exterior_ring */
@@ -116,8 +118,10 @@ class Polygon extends Surface
         }
 
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
+            // @codeCoverageIgnoreEnd
         }
 
         $x = 0;
@@ -219,8 +223,10 @@ class Polygon extends Surface
     public function isSimple()
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->isSimple();
+            // @codeCoverageIgnoreEnd
         }
 
         $segments = $this->explode(true);
@@ -324,8 +330,10 @@ class Polygon extends Surface
     public function contains($geometry)
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->contains($geometry->getGeos());
+            // @codeCoverageIgnoreEnd
         }
 
         $isInside = false;

@@ -117,6 +117,7 @@ abstract class Collection extends Geometry
         }
 
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             $envelope = $this->getGeos()->envelope();
             /** @noinspection PhpUndefinedMethodInspection */
@@ -133,6 +134,7 @@ abstract class Collection extends Geometry
                     'maxx' => $geosRing->pointN(1)->getX(),
                     'minx' => $geosRing->pointN(3)->getX(),
             ];
+            // @codeCoverageIgnoreEnd
         }
 
         // Go through each component and get the max and min x and y
@@ -253,8 +255,10 @@ abstract class Collection extends Geometry
     public function equals($geometry)
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->equals($geometry->getGeos());
+            // @codeCoverageIgnoreEnd
         }
 
         // To test for equality we check to make sure that there is a matching point
@@ -322,8 +326,10 @@ abstract class Collection extends Geometry
     public function distance($geometry)
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->distance($geometry->getGeos());
+            // @codeCoverageIgnoreEnd
         }
         $distance = null;
         foreach ($this->components as $component) {

@@ -77,8 +77,10 @@ class LineString extends Curve
         }
 
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
+            // @codeCoverageIgnoreEnd
         }
 
         $x = 0;
@@ -113,8 +115,10 @@ class LineString extends Curve
     public function length()
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->length();
+            // @codeCoverageIgnoreEnd
         }
         $length = 0;
         /** @var Point $previousPoint */
@@ -423,8 +427,10 @@ class LineString extends Curve
     public function isSimple()
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->isSimple();
+            // @codeCoverageIgnoreEnd
         }
 
         // As of OGR specification a ring is simple only if its start and end points equals in all coordinates
@@ -470,8 +476,10 @@ class LineString extends Curve
     public function distance($geometry)
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->distance($geometry->getGeos());
+            // @codeCoverageIgnoreEnd
         }
 
         if ($geometry->geometryType() == Geometry::POINT) {

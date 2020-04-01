@@ -240,8 +240,10 @@ class Point extends Geometry
             return null;
         }
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->distance($geometry->getGeos());
+            // @codeCoverageIgnoreEnd
         }
         if ($geometry->geometryType() == Geometry::POINT) {
             return sqrt(

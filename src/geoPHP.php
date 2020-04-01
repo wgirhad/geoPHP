@@ -161,6 +161,7 @@ class geoPHP
      * @param $geos
      * @return Geometry|null
      * @throws \Exception
+     * @codeCoverageIgnore
      */
     public static function geosToGeometry($geos)
     {

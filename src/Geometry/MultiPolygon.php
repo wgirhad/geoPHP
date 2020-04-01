@@ -30,8 +30,10 @@ class MultiPolygon extends MultiSurface
         }
 
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
+            // @codeCoverageIgnoreEnd
         }
 
         $x = 0;
@@ -53,8 +55,10 @@ class MultiPolygon extends MultiSurface
     public function area()
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
+            // @codeCoverageIgnoreEnd
         }
 
         $area = 0;

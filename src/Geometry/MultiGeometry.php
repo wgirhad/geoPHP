@@ -23,8 +23,10 @@ abstract class MultiGeometry extends Collection
     public function isSimple()
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->isSimple();
+            // @codeCoverageIgnoreEnd
         }
 
         // A collection is simple if all it's components are simple
@@ -45,8 +47,10 @@ abstract class MultiGeometry extends Collection
         }
 
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->boundary();
+            // @codeCoverageIgnoreEnd
         }
 
         $components_boundaries = [];
@@ -59,8 +63,10 @@ abstract class MultiGeometry extends Collection
     public function area()
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
+            // @codeCoverageIgnoreEnd
         }
 
         $area = 0;

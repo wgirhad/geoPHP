@@ -274,8 +274,10 @@ abstract class Geometry
     public function setSRID($srid)
     {
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             $this->getGeos()->setSRID($srid);
+            // @codeCoverageIgnoreEnd
         }
         $this->srid = $srid;
     }
@@ -331,8 +333,10 @@ abstract class Geometry
         }
 
         if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->envelope());
+            // @codeCoverageIgnoreEnd
         }
 
         $boundingBox = $this->getBBox();
@@ -478,6 +482,7 @@ abstract class Geometry
      * Returns the GEOS representation of Geometry if GEOS is installed
      *
      * @return \GEOSGeometry|false
+     * @codeCoverageIgnore
      */
     public function getGeos()
     {
@@ -502,6 +507,11 @@ abstract class Geometry
         $this->geos = $geos;
     }
 
+    /**
+     * @return Geometry|Point|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function pointOnSurface()
     {
         if ($this->isEmpty()) {
@@ -515,6 +525,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function equalsExact(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -529,6 +545,7 @@ abstract class Geometry
      * @param string|null $pattern
      * @return string|null
      * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
      */
     public function relate(Geometry $geometry, $pattern = null)
     {
@@ -544,6 +561,11 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @return array
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function checkValidity()
     {
         if ($this->getGeos()) {
@@ -553,6 +575,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param $distance
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function buffer($distance)
     {
         if ($this->getGeos()) {
@@ -562,6 +590,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function intersection(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -571,6 +605,11 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function convexHull()
     {
         if ($this->getGeos()) {
@@ -580,6 +619,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function difference(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -589,6 +634,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function symDifference(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -600,9 +651,11 @@ abstract class Geometry
 
     /**
      * Can pass in a geometry or an array of geometries
+     *
      * @param Geometry $geometry
      * @return bool|mixed|null|GeometryCollection
      * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
      */
     public function union(Geometry $geometry)
     {
@@ -622,6 +675,13 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param float      $tolerance
+     * @param bool|false $preserveTopology
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function simplify($tolerance, $preserveTopology = false)
     {
         if ($this->getGeos()) {
@@ -631,6 +691,11 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function makeValid()
     {
         if ($this->getGeos()) {
@@ -640,6 +705,11 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @return Geometry|null
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function buildArea()
     {
         if ($this->getGeos()) {
@@ -649,6 +719,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function disjoint(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -658,6 +734,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function touches(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -667,6 +749,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function intersects(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -676,6 +764,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function crosses(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -685,6 +779,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function within(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -694,6 +794,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function contains($geometry)
     {
         if ($this->getGeos()) {
@@ -703,6 +809,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function overlaps(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -712,6 +824,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function covers(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -721,6 +839,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return bool
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function coveredBy(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -730,6 +854,12 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $geometry
+     * @return float
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function hausdorffDistance(Geometry $geometry)
     {
         if ($this->getGeos()) {
@@ -739,6 +869,13 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    /**
+     * @param Geometry $point
+     * @param null     $normalized
+     * @return \GEOSGeometry
+     * @throws UnsupportedMethodException
+     * @codeCoverageIgnore
+     */
     public function project(Geometry $point, $normalized = null)
     {
         if ($this->getGeos()) {
