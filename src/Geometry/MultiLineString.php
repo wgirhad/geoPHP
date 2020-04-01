@@ -44,6 +44,7 @@ class MultiLineString extends MultiCurve
         $x = 0;
         $y = 0;
         $totalLength = 0;
+        $componentLength = 0;
         $components = $this->getComponents();
         foreach ($components as $line) {
             if ($line->isEmpty()) {

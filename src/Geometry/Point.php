@@ -209,11 +209,9 @@ class Point extends Geometry
      */
     public function equals($geometry)
     {
-        if ($geometry->geometryType() === Geometry::POINT) {
-            return (abs($this->x() - $geometry->x()) <= 1.0E-9 && abs($this->y() - $geometry->y()) <= 1.0E-9);
-        } else {
-            return false;
-        }
+        return $geometry->geometryType() === Geometry::POINT
+            ? (abs($this->x() - $geometry->x()) <= 1.0E-9 && abs($this->y() - $geometry->y()) <= 1.0E-9)
+            : false;
     }
 
     public function isSimple()
@@ -257,18 +255,18 @@ class Point extends Geometry
         ) {
             $distance = null;
             foreach ($geometry->getComponents() as $component) {
-                $check_distance = $this->distance($component);
-                if ($check_distance === 0) {
+                $checkDistance = $this->distance($component);
+                if ($checkDistance === 0) {
                     return 0.0;
                 }
-                if ($check_distance === null) {
+                if ($checkDistance === null) {
                     continue;
                 }
                 if ($distance === null) {
-                    $distance = $check_distance;
+                    $distance = $checkDistance;
                 }
-                if ($check_distance < $distance) {
-                    $distance = $check_distance;
+                if ($checkDistance < $distance) {
+                    $distance = $checkDistance;
                 }
             }
             return $distance;
@@ -289,7 +287,7 @@ class Point extends Geometry
                 $d = ($px * $px) + ($py * $py);
                 if ($d == 0) {
                     // Line-segment's endpoints are identical. This is merely a point masquerading as a line-segment.
-                    $check_distance = $this->distance($seg[1]);
+                    $checkDistance = $this->distance($seg[1]);
                 } else {
                     $x3 = $this->x();
                     $y3 = $this->y();
@@ -304,13 +302,13 @@ class Point extends Geometry
                     $y = $y1 + ($u * $py);
                     $dx = $x - $x3;
                     $dy = $y - $y3;
-                    $check_distance = sqrt(($dx * $dx) + ($dy * $dy));
+                    $checkDistance = sqrt(($dx * $dx) + ($dy * $dy));
                 }
                 if ($distance === null) {
-                    $distance = $check_distance;
+                    $distance = $checkDistance;
                 }
-                if ($check_distance < $distance) {
-                    $distance = $check_distance;
+                if ($checkDistance < $distance) {
+                    $distance = $checkDistance;
                 }
                 if ($distance === 0.0) {
                     return 0.0;

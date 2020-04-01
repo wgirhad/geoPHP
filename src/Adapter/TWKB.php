@@ -74,16 +74,16 @@ class TWKB implements GeoAdapter
     /**
      * Read TWKB into geometry objects
      *
-     * @param string $twkb Tiny Well-known-binary string
-     * @param bool $is_hex_string If this is a hexadecimal string that is in need of packing
+     * @param string $twkb        Tiny Well-known-binary string
+     * @param bool   $isHexString If this is a hexadecimal string that is in need of packing
      *
      * @return Geometry
      *
      * @throws \Exception
      */
-    public function read($twkb, $is_hex_string = false)
+    public function read($twkb, $isHexString = false)
     {
-        if ($is_hex_string) {
+        if ($isHexString) {
             $twkb = @pack('H*', $twkb);
         }
 

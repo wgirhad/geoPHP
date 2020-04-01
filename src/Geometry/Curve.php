@@ -70,15 +70,12 @@ abstract class Curve extends Collection
      */
     public function boundary()
     {
-        if ($this->isEmpty()) {
-            return new LineString();
-        } else {
-            if ($this->isClosed()) {
-                return new MultiPoint();
-            } else {
-                return new MultiPoint([$this->startPoint(), $this->endPoint()]);
-            }
-        }
+        return $this->isEmpty()
+            ? new LineString()
+            : ($this->isClosed()
+                ? new MultiPoint()
+                : new MultiPoint([$this->startPoint(), $this->endPoint()])
+            );
     }
 
     // Not valid for this geometry type

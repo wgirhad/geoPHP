@@ -182,8 +182,8 @@ class GPX implements GeoAdapter
             return [];
         }
         $points = [];
-        $wpt_elements = $xmlObject->getElementsByTagName('wpt');
-        foreach ($wpt_elements as $wpt) {
+        $wptElements = $xmlObject->getElementsByTagName('wpt');
+        foreach ($wptElements as $wpt) {
             $point = $this->parsePoint($wpt);
             $point->setData('gpxType', 'waypoint');
             $points[] = $point;
@@ -201,8 +201,8 @@ class GPX implements GeoAdapter
             return [];
         }
         $tracks = [];
-        $trk_elements = $xmlObject->getElementsByTagName('trk');
-        foreach ($trk_elements as $trk) {
+        $trkElements = $xmlObject->getElementsByTagName('trk');
+        foreach ($trkElements as $trk) {
             $segments = [];
             /** @noinspection SpellCheckingInspection */
             foreach ($this->childElements($trk, 'trkseg') as $trkseg) {
@@ -236,8 +236,8 @@ class GPX implements GeoAdapter
             return [];
         }
         $lines = [];
-        $rte_elements = $xmlObject->getElementsByTagName('rte');
-        foreach ($rte_elements as $rte) {
+        $rteElements = $xmlObject->getElementsByTagName('rte');
+        foreach ($rteElements as $rte) {
             $components = [];
             /** @noinspection SpellCheckingInspection */
             foreach ($this->childElements($rte, 'rtept') as $routePoint) {

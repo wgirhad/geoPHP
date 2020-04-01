@@ -78,14 +78,15 @@ class GeoHash implements GeoAdapter
     /**
      * Convert the geoHash to a Point. The point is 2-dimensional.
      *
-     * @param string $hash a GeoHash
-     * @param boolean $as_grid Return the center point of hash grid or the grid cell as Polygon
+     * @param string  $hash   a GeoHash
+     * @param boolean $asGrid Return the center point of hash grid or the grid cell as Polygon
+     *
      * @return Point|Polygon the converted GeoHash
      */
-    public function read($hash, $as_grid = false)
+    public function read($hash, $asGrid = false)
     {
         $decodedHash = $this->decode($hash);
-        if (!$as_grid) {
+        if (!$asGrid) {
             return new Point($decodedHash['centerLongitude'], $decodedHash['centerLatitude']);
         } else {
             return new Polygon(

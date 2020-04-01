@@ -89,7 +89,7 @@ class geoPHP
      *
      * @param mixed $data The data in any supported format, including geoPHP Geometry
      * @var null|string $type Data type. Tries to detect if omitted
-     * @var mixed|null $other_args Arguments will be passed to the geo adapter
+     * @var mixed|null $otherArgs Arguments will be passed to the geo adapter
      *
      * @return Collection|Geometry
      * @throws \Exception
@@ -142,19 +142,19 @@ class geoPHP
 
     public static function geosInstalled($force = null)
     {
-        static $geos_installed = null;
+        static $geosInstalled = null;
         if ($force !== null) {
-            $geos_installed = $force;
+            $geosInstalled = $force;
         }
         if (getenv('GEOS_DISABLED') == 1) {
-            $geos_installed = false;
+            $geosInstalled = false;
         }
-        if ($geos_installed !== null) {
-            return $geos_installed;
+        if ($geosInstalled !== null) {
+            return $geosInstalled;
         }
-        $geos_installed = class_exists('GEOSGeometry', false);
+        $geosInstalled = class_exists('GEOSGeometry', false);
 
-        return $geos_installed;
+        return $geosInstalled;
     }
 
     /**
@@ -169,9 +169,9 @@ class geoPHP
             return null;
         }
         /** @noinspection PhpUndefinedClassInspection */
-        $wkb_writer = new \GEOSWKBWriter();
+        $wkbWriter = new \GEOSWKBWriter();
         /** @noinspection PhpUndefinedMethodInspection */
-        $wkb = $wkb_writer->writeHEX($geos);
+        $wkb = $wkbWriter->writeHEX($geos);
         $geometry = geoPHP::load($wkb, 'wkb', true);
         if ($geometry) {
             $geometry->setGeos($geos);
@@ -201,8 +201,8 @@ class geoPHP
         if ($geometries instanceof Geometry) {
             /** @var Geometry|GeometryCollection $geometries */
             // If the geometry cannot even theoretically be reduced more, then pass it back
-            $single_geometries = ['Point', 'LineString', 'Polygon'];
-            if (in_array($geometries->geometryType(), $single_geometries)) {
+            $singleGeometries = ['Point', 'LineString', 'Polygon'];
+            if (in_array($geometries->geometryType(), $singleGeometries)) {
                 return $geometries;
             }
 

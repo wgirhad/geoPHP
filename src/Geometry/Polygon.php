@@ -63,26 +63,26 @@ class Polygon extends Surface
     }
 
     /**
-     * @param bool|false $exterior_only Calculate the area of exterior ring only, or the polygon with holes
-     * @param bool|false $signed Usually we want to get positive area, but vertices order (CW or CCW) can be determined from signed area.
+     * @param bool|false $exteriorOnly Calculate the area of exterior ring only, or the polygon with holes
+     * @param bool|false $signed       Usually we want to get positive area, but vertices order (CW or CCW) can be determined from signed area.
+     *
      * @return float|null|number
      */
-    public function area($exterior_only = false, $signed = false)
+    public function area($exteriorOnly = false, $signed = false)
     {
         if ($this->isEmpty()) {
             return 0;
         }
 
-        if ($this->getGeos() && $exterior_only == false) {
+        if ($this->getGeos() && $exteriorOnly == false) {
             // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
             // @codeCoverageIgnoreEnd
         }
 
-        /** @var LineString $exterior_ring */
-        $exterior_ring = $this->components[0];
-        $points = $exterior_ring->getComponents();
+        $exteriorRing = $this->components[0];
+        $points = $exteriorRing->getComponents();
 
         $pointCount = count($points);
         if ($pointCount === 0) {
@@ -96,13 +96,13 @@ class Polygon extends Surface
 
         $area = $signed ? ($a / 2) : abs(($a / 2));
 
-        if ($exterior_only == true) {
+        if ($exteriorOnly == true) {
             return $area;
         }
         foreach ($this->components as $delta => $component) {
             if ($delta != 0) {
-                $inner_poly = new Polygon([$component]);
-                $area -= $inner_poly->area();
+                $innerPoly = new Polygon([$component]);
+                $area -= $innerPoly->area();
             }
         }
         return (float) $area;
@@ -233,9 +233,9 @@ class Polygon extends Surface
 
         //TODO: instead of this O(n^2) algorithm implement Shamos-Hoey Algorithm which is only O(n*log(n))
         foreach ($segments as $i => $segment) {
-            foreach ($segments as $j => $check_segment) {
+            foreach ($segments as $j => $checkSegment) {
                 if ($i != $j) {
-                    if (Geometry::segmentIntersects($segment[0], $segment[1], $check_segment[0], $check_segment[1])) {
+                    if (Geometry::segmentIntersects($segment[0], $segment[1], $checkSegment[0], $checkSegment[1])) {
                         return false;
                     }
                 }
@@ -266,9 +266,8 @@ class Polygon extends Surface
 
         // Check if the point is inside the polygon or on the boundary
         $intersections = 0;
-        $vertices_count = count($vertices);
-
-        for ($i = 1; $i < $vertices_count; $i++) {
+        $verticesCount = count($vertices);
+        for ($i = 1; $i < $verticesCount; $i++) {
             $vertex1 = $vertices[$i - 1];
             $vertex2 = $vertices[$i];
             if (

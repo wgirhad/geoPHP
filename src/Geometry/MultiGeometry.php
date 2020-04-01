@@ -53,11 +53,11 @@ abstract class MultiGeometry extends Collection
             // @codeCoverageIgnoreEnd
         }
 
-        $components_boundaries = [];
+        $componentsBoundaries = [];
         foreach ($this->components as $component) {
-            $components_boundaries[] = $component->boundary();
+            $componentsBoundaries[] = $component->boundary();
         }
-        return geoPHP::buildGeometry($components_boundaries);
+        return geoPHP::buildGeometry($componentsBoundaries);
     }
 
     public function area()

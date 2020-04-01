@@ -73,16 +73,16 @@ class WKB implements GeoAdapter
     /**
      * Read WKB into geometry objects
      *
-     * @param string $wkb Well-known-binary string
-     * @param bool $is_hex_string If this is a hexadecimal string that is in need of packing
+     * @param string $wkb         Well-known-binary string
+     * @param bool   $isHexString If this is a hexadecimal string that is in need of packing
      *
      * @return Geometry
      *
      * @throws \Exception
      */
-    public function read($wkb, $is_hex_string = false)
+    public function read($wkb, $isHexString = false)
     {
-        if ($is_hex_string) {
+        if ($isHexString) {
             $wkb = pack('H*', $wkb);
         }
 
@@ -202,15 +202,15 @@ class WKB implements GeoAdapter
     protected function getLineString()
     {
         // Get the number of points expected in this string out of the first 4 bytes
-        $line_length = $this->reader->readUInt32();
+        $lineLength = $this->reader->readUInt32();
 
         // Return an empty linestring if there is no line-length
-        if (!$line_length) {
+        if (!$lineLength) {
             return new LineString();
         }
 
         $components = [];
-        for ($i = 0; $i < $line_length; ++$i) {
+        for ($i = 0; $i < $lineLength; ++$i) {
             $point = $this->getPoint();
             if ($point) {
                 $components[] = $point;
@@ -222,11 +222,11 @@ class WKB implements GeoAdapter
     protected function getPolygon()
     {
         // Get the number of linestring expected in this poly out of the first 4 bytes
-        $poly_length = $this->reader->readUInt32();
+        $polyLength = $this->reader->readUInt32();
 
         $components = [];
         $i = 1;
-        while ($i <= $poly_length) {
+        while ($i <= $polyLength) {
             $ring = $this->getLineString();
             if (!$ring->isEmpty()) {
                 $components[] = $ring;
@@ -240,10 +240,10 @@ class WKB implements GeoAdapter
     protected function getMulti($type)
     {
         // Get the number of items expected in this multi out of the first 4 bytes
-        $multi_length = $this->reader->readUInt32();
+        $multiLength = $this->reader->readUInt32();
 
         $components = [];
-        for ($i = 0; $i < $multi_length; $i++) {
+        for ($i = 0; $i < $multiLength; $i++) {
             $component = $this->getGeometry();
             $component->setSRID(null);
             $components[] = $component;
