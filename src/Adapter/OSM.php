@@ -227,7 +227,7 @@ class OSM implements GeoAdapter
     {
     
         // Construct lines
-        /** @var LineString[] $lines */
+        /** @var LineString[] $lineStrings */
         $lineStrings = [];
         while (count($relationWays) > 0) {
             $line = array_shift($relationWays);
@@ -361,7 +361,7 @@ class OSM implements GeoAdapter
         $round = 0;
         /** @var int[][] $polygonsRingIds */
         $polygonsRingIds = [];
-        /** @var Polygon[] $polygons */
+        /** @var Polygon[] $relationPolygons */
         $relationPolygons = [];
         while ($foundCount < $containmentCount && $round < 100) {
             $ringsFound = [];

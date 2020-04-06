@@ -18,6 +18,7 @@ use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\MultiGeometry;
 use geoPHP\Geometry\MultiLineString;
 use geoPHP\Geometry\MultiPoint;
 use geoPHP\Geometry\MultiPolygon;
@@ -145,6 +146,7 @@ class TWKB implements GeoAdapter
                 $options['hasZ'] ? $options['zPrecisionFactor'] : 0,
                 $options['hasM'] ? $options['mPrecisionFactor'] : 0
             ];
+            $bBoxMin = $bBoxMax = [];
             for ($i = 0; $i < $dimension; $i++) {
                 $bBoxMin[$i] = $this->reader->readUVarInt() / $precisions[$i];
                 $bBoxMax[$i] = $this->reader->readUVarInt() / $precisions[$i] + $bBoxMin[$i];
@@ -197,6 +199,12 @@ class TWKB implements GeoAdapter
         return $geometry;
     }
 
+    /**
+     * @param array $options
+     *
+     * @return Point
+     * @throws \Exception
+     */
     protected function getPoint($options)
     {
         if ($options['isEmpty']) {
@@ -224,8 +232,10 @@ class TWKB implements GeoAdapter
     }
 
     /**
-     * @param $options
+     * @param array $options
+     *
      * @return LineString
+     * @throws \Exception
      */
     protected function getLineString($options)
     {
@@ -243,6 +253,12 @@ class TWKB implements GeoAdapter
         return new LineString($points);
     }
 
+    /**
+     * @param array $options
+     *
+     * @return Polygon
+     * @throws \Exception
+     */
     protected function getPolygon($options)
     {
         if ($options['isEmpty']) {
@@ -259,6 +275,13 @@ class TWKB implements GeoAdapter
         return new Polygon($rings, true);
     }
 
+    /**
+     * @param string $type
+     * @param array $options
+     *
+     * @return MultiGeometry|null
+     * @throws \Exception
+     */
     protected function getMulti($type, $options)
     {
         $multiLength = $this->reader->readUVarInt();

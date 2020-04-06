@@ -41,7 +41,7 @@ class GeoJSON implements GeoAdapter
         }
 
         // Check to see if it's a FeatureCollection
-        if ($input->type == 'FeatureCollection') {
+        if ($input->type == 'FeatureCollection' && isset($input->features)) {
             $geometries = [];
             foreach ($input->features as $feature) {
                 $geometries[] = $this->read($feature);
@@ -73,7 +73,7 @@ class GeoJSON implements GeoAdapter
     }
 
     /**
-     * @param $obj
+     * @param object $obj
      * @return Geometry
      * @throws \Exception
      */
@@ -109,7 +109,7 @@ class GeoJSON implements GeoAdapter
     }
 
     /**
-     * @param [] $coordinates Array of coordinates
+     * @param array $coordinates Array of coordinates
      * @return Point
      */
     private function arrayToPoint($coordinates)
@@ -190,7 +190,7 @@ class GeoJSON implements GeoAdapter
     }
 
     /**
-     * @param $obj
+     * @param object $obj
      * @throws \Exception
      * @return GeometryCollection
      */

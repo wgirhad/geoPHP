@@ -153,7 +153,7 @@ class geoPHP
     }
 
     /**
-     * @param $geos
+     * @param \GEOSGeometry $geos
      * @return Geometry|null
      * @throws \Exception
      * @codeCoverageIgnore
@@ -331,7 +331,7 @@ class geoPHP
      * It could make a mistake in XML detection if you are mixing or using namespaces in weird ways
      * (ie, KML inside an RSS feed)
      *
-     * @param $input
+     * @param mixed $input
      *
      * @return string|false
      */

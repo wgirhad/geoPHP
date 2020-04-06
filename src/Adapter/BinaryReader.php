@@ -55,7 +55,7 @@ class BinaryReader
     }
 
     /**
-     * @param self::BIG_ENDIAN|self::LITTLE_ENDIAN $endian
+     * @param int $endian self::BIG_ENDIAN or self::LITTLE_ENDIAN
      */
     public function setEndianness($endian)
     {

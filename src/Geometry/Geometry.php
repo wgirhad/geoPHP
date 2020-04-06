@@ -576,7 +576,7 @@ abstract class Geometry
     }
 
     /**
-     * @param $distance
+     * @param float|int $distance
      * @return Geometry|null
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
@@ -795,12 +795,12 @@ abstract class Geometry
     }
 
     /**
-     * @param $geometry
+     * @param Geometry $geometry
      * @return bool
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function contains($geometry)
+    public function contains(Geometry $geometry)
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */

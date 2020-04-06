@@ -456,7 +456,7 @@ class LineString extends Curve
     }
 
     /**
-     * @param $segment LineString
+     * @param LineString $segment
      * @return bool
      */
     public function lineSegmentIntersect($segment)

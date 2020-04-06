@@ -86,8 +86,10 @@ class WKT implements GeoAdapter
     }
 
     /**
-     * @param $wkt
+     * @param string $wkt
+     *
      * @return Geometry|null
+     * @throws \Exception
      */
     private function parseTypeAndGetData($wkt)
     {

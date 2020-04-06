@@ -234,7 +234,7 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * @param Geometry $geometry The geometry from which points will be extracted
+     * @param Collection $geometry The geometry from which points will be extracted
      * @param Point[] $points Result array as reference
      */
     private static function getPointsRecursive($geometry, &$points)

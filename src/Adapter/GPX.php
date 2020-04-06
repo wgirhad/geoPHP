@@ -503,4 +503,3 @@ class GPX implements GeoAdapter
         return $indent . "<{$tagName}{$attributes}>{$returnValue}</{$tagName}>";
     }
 }
-
