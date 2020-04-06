@@ -326,7 +326,7 @@ class Polygon extends Surface
      * @param Geometry $geometry
      * @return bool
      */
-    public function contains($geometry)
+    public function contains(Geometry $geometry)
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
