@@ -240,7 +240,8 @@ class PointTest extends TestCase
         $point = new Point(1, 2);
         $components = $point->getComponents();
 
-        $this->assertIsArray($components);
+        //$this->assertIsArray($components);
+        $this->assertTrue(is_array($components) );
         $this->assertCount(1, $components);
         $this->assertSame($point, $components[0]);
     }
