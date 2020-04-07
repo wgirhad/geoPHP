@@ -154,6 +154,9 @@ class Point extends Geometry
         ];
     }
 
+    /**
+     * @return array
+     */
     public function asArray()
     {
         if ($this->isEmpty()) {
@@ -173,7 +176,7 @@ class Point extends Geometry
     }
 
     /**
-     * The boundary of a MultiPoint is the empty set.
+     * The boundary of a Point is the empty set.
      * @return GeometryCollection
      */
     public function boundary()
@@ -181,17 +184,34 @@ class Point extends Geometry
         return new GeometryCollection();
     }
 
+    /**
+     * @return bool
+     */
     public function isEmpty()
     {
         return $this->x === null;
     }
 
+    /**
+     * @return int Returns always 1
+     */
     public function numPoints()
     {
         return 1;
     }
 
+    /**
+     * @return Point[]
+     */
     public function getPoints()
+    {
+        return [$this];
+    }
+
+    /**
+     * @return Point[]
+     */
+    public function getComponents()
     {
         return [$this];
     }

@@ -235,6 +235,16 @@ class PointTest extends TestCase
         $this->assertTrue( (new Point(null, null , null, 4))->isMeasured() );
     }
 
+    public function testGetComponents()
+    {
+        $point = new Point(1, 2);
+        $components = $point->getComponents();
+
+        $this->assertIsArray($components);
+        $this->assertCount(1, $components);
+        $this->assertSame($point, $components[0]);
+    }
+
     /**
      * @dataProvider providerValidCoordinatesXYZM
      *

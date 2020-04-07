@@ -118,6 +118,11 @@ abstract class Geometry
      */
     abstract public function boundary();
 
+    /**
+     * @return Geometry[]
+     */
+    abstract public function getComponents();
+
 
     /*************************************************
      *  Methods applicable on certain geometry types *
@@ -445,6 +450,9 @@ abstract class Geometry
     public function getBoundingBox()
     {
         return $this->getBBox();
+    }
+    public function dump() {
+        return $this->getComponents();
     }
     public function getCentroid()
     {
