@@ -183,7 +183,7 @@ class geoPHP
      * An array of geometries can be passed and they will be compiled into a single geometry
      *
      * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
-     * @return bool|GeometryCollection
+     * @return Geometry|false
      */
     public static function geometryReduce($geometries)
     {
@@ -194,7 +194,6 @@ class geoPHP
          * If it is a single geometry
          */
         if ($geometries instanceof Geometry) {
-            /** @var Geometry|GeometryCollection $geometries */
             // If the geometry cannot even theoretically be reduced more, then pass it back
             $singleGeometries = ['Point', 'LineString', 'Polygon'];
             if (in_array($geometries->geometryType(), $singleGeometries)) {
@@ -268,7 +267,8 @@ class geoPHP
      * @see geos::geom::GeometryFactory::buildGeometry
      *
      * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
-     * @return GeometryCollection|null A Geometry of the "smallest", "most type-specific" class that can contain the elements.
+     * @return Geometry A Geometry of the "smallest", "most type-specific" class that can contain the elements.
+     * @throws \Exception
      */
     public static function buildGeometry($geometries)
     {
@@ -281,6 +281,7 @@ class geoPHP
             return $geometries;
         } elseif (!is_array($geometries)) {
             return null;
+            //FIXME should be: throw new \Exception('Input is not a Geometry or array of Geometries');
         } elseif (count($geometries) == 1) {
             // If it's an array of one, then just parse the one
             return geoPHP::buildGeometry(array_shift($geometries));
@@ -304,6 +305,7 @@ class geoPHP
         $geometryTypes = array_unique($geometryTypes);
         if (empty($geometryTypes)) {
             return null;
+            // FIXME normally it never happens. Should be refactored
         }
         if (count($geometryTypes) == 1 && !$hasData) {
             if ($geometryTypes[0] === Geometry::GEOMETRY_COLLECTION) {

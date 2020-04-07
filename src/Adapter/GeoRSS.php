@@ -58,7 +58,7 @@ class GeoRSS implements GeoAdapter
             $this->namespace = $namespace;
             $this->nss = $namespace . ':';
         }
-        return $this->geometryToGeoRSS($geometry);
+        return $this->geometryToGeoRSS($geometry) ?: '';
     }
 
     public function geomFromText($text)
@@ -193,7 +193,7 @@ class GeoRSS implements GeoAdapter
 
     /**
      * @param Geometry $geometry
-     * @return string
+     * @return string|null
      */
     protected function geometryToGeoRSS($geometry)
     {

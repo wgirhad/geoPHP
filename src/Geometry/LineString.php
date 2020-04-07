@@ -11,6 +11,7 @@ use geoPHP\geoPHP;
  *
  * @method Point[] getComponents()
  * @property Point[] $components
+ * @method Point geometryN($n)
  */
 class LineString extends Curve
 {

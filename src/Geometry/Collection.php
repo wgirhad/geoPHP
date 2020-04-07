@@ -65,9 +65,9 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * check if Geometry has Z (altitude) coordinate
+     * Check if Geometry has Z (altitude) coordinate
      *
-     * @return true or false depending on point has Z value
+     * @return bool True if collection has Z value
      */
     public function is3D()
     {
@@ -75,9 +75,9 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * check if Geometry has a measure value
+     * Check if Geometry has a measure value
      *
-     * @return true if is a measured value
+     * @return bool True if collection has measure values
      */
     public function isMeasured()
     {
@@ -179,6 +179,9 @@ abstract class Collection extends Geometry
         return $array;
     }
 
+    /**
+     * @return int
+     */
     public function numGeometries()
     {
         return count($this->components);

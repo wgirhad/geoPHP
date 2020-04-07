@@ -26,6 +26,9 @@ class GeometryCollection extends MultiGeometry
         return Geometry::GEOMETRY_COLLECTION;
     }
 
+    /**
+     * @return int Returns the highest spatial dimension of components
+     */
     public function dimension()
     {
         $dimension = 0;
@@ -52,7 +55,6 @@ class GeometryCollection extends MultiGeometry
      * (since the lower-dimension geometries contribute zero "weight" to the centroid).
      *
      * @return Point
-     *
      * @throws \Exception
      */
     public function centroid()

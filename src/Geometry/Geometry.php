@@ -67,7 +67,7 @@ abstract class Geometry
     protected $data;
 
     /**
-     * @var \GEOSGeometry|null
+     * @var \GEOSGeometry|null|false
      */
     private $geos = null;
 
@@ -140,25 +140,28 @@ abstract class Geometry
     abstract public function length3D();
 
     /**
-     * @return float
+     * @return float|null
      */
     abstract public function x();
 
     /**
-     * @return float
+     * @return float|null
      */
     abstract public function y();
 
     /**
-     * @return float
+     * @return float|null
      */
     abstract public function z();
 
     /**
-     * @return float
+     * @return float|null
      */
     abstract public function m();
 
+    /**
+     * @return int|null
+     */
     abstract public function numGeometries();
 
     /**
@@ -249,9 +252,9 @@ abstract class Geometry
     // ----------------------------------------------------------
 
     /**
-     * check if Geometry has Z (altitude) coordinate
+     * Check if Geometry has Z (altitude) coordinate
      *
-     * @return true or false depending on point has Z value
+     * @return bool True if collection has Z value
      */
     public function is3D()
     {
@@ -259,9 +262,9 @@ abstract class Geometry
     }
 
     /**
-     * check if Geometry has a measure value
+     * Check if Geometry has a measure value
      *
-     * @return true if is a measured value
+     * @return bool True if collection has measure value
      */
     public function isMeasured()
     {
