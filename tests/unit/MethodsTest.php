@@ -64,7 +64,7 @@ class MethodsTest extends TestCase
    * @param \geoPHP\Geometry\Geometry $geometry
    * @param string $method_name
    * @param array $argument
-   * @param $file
+   * @param string $file
    */
   function _methods_tester($geometry, $method_name, $argument, $file) {
 
@@ -293,7 +293,7 @@ class MethodsTest extends TestCase
 
   /**
    * @param \geoPHP\Geometry\Geometry $geometry
-   * @throws Exception
+   * @throws \Exception
    */
   function _methods_tester_with_geos($geometry) {
     // Cannot test methods if GEOS is not intstalled

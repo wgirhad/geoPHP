@@ -3,6 +3,7 @@
 namespace geoPHP\Tests\Geometry;
 
 use \geoPHP\Exception\InvalidGeometryException;
+use geoPHP\Geometry\Geometry;
 use \geoPHP\Geometry\Point;
 use \geoPHP\Geometry\LineString;
 use PHPUnit\Framework\TestCase;
@@ -40,7 +41,7 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      *
-     * @param $points
+     * @param array $points
      */
     public function testConstructor($points)
     {
@@ -115,7 +116,7 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      *
-     * @param $points
+     * @param array $points
      */
     public function testNumPoints($points)
     {
@@ -126,7 +127,7 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      *
-     * @param $points
+     * @param array $points
      */    
     public function testPointN($points)
     {
@@ -167,8 +168,8 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerCentroid
      *
-     * @param $points
-     * @param $centroidPoint
+     * @param array $points
+     * @param Point $centroidPoint
      */
     public function testCentroid($points, $centroidPoint)
     {
@@ -190,8 +191,8 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerIsSimple
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param bool  $result
      */
     public function testIsSimple($points, $result)
     {
@@ -210,8 +211,8 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerLength
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param float $result
      */
     public function testLength($points, $result)
     {
@@ -230,8 +231,8 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerLength3D
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param float $result
      */
     public function testLength3D($points, $result)
     {
@@ -284,40 +285,40 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerLengths
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param array $results
      */
-    public function testGreatCircleLength($points, $result)
+    public function testGreatCircleLength($points, $results)
     {
         $line = LineString::fromArray($points);
 
-        $this->assertEquals($line->greatCircleLength(), $result['greatCircle'], '', 1e-8);
+        $this->assertEquals($line->greatCircleLength(), $results['greatCircle'], '', 1e-8);
     }
 
     /**
      * @dataProvider providerLengths
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param array $results
      */
-    public function testHaversineLength($points, $result)
+    public function testHaversineLength($points, $results)
     {
         $line = LineString::fromArray($points);
 
-        $this->assertEquals($line->haversineLength(), $result['haversine'], '', 1e-7);
+        $this->assertEquals($line->haversineLength(), $results['haversine'], '', 1e-7);
     }
 
     /**
      * @dataProvider providerLengths
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param array $results
      */
-    public function testVincentyLength($points, $result)
+    public function testVincentyLength($points, $results)
     {
         $line = LineString::fromArray($points);
 
-        $this->assertEquals($line->vincentyLength(), $result['vincenty'], '', 1e-8);
+        $this->assertEquals($line->vincentyLength(), $results['vincenty'], '', 1e-8);
     }
 
     public function testVincentyLengthAntipodalPoints()
@@ -357,8 +358,8 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerDistance
      *
-     * @param $otherGeometry
-     * @param $expectedDistance
+     * @param Geometry $otherGeometry
+     * @param float $expectedDistance
      */
     public function testDistance($otherGeometry, $expectedDistance)
     {
@@ -394,9 +395,9 @@ class LineStringTest extends TestCase
     /**
      * @dataProvider providerElevationGainAndLoss
      *
-     * @param $tolerance
-     * @param $gain
-     * @param $loss
+     * @param float|null $tolerance
+     * @param float $gain
+     * @param float $loss
      */
     public function testElevationGainAndLoss($tolerance, $gain, $loss)
     {

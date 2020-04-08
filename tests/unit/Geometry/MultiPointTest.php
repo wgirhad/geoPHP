@@ -30,7 +30,7 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      *
-     * @param $points
+     * @param Point[] $points
      */
     public function testValidComponents($points)
     {
@@ -47,7 +47,7 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerInvalidComponents
      *
-     * @param $components
+     * @param mixed $components
      */
     public function testConstructorWithInvalidComponents($components)
     {
@@ -91,8 +91,8 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerCentroid
      *
-     * @param $components
-     * @param $centroid
+     * @param array $components
+     * @param array $centroid
      */
     public function testCentroid($components, $centroid)
     {
@@ -114,8 +114,8 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerIsSimple
      *
-     * @param $points
-     * @param $result
+     * @param array $points
+     * @param bool  $result
      */
     public function testIsSimple($points, $result)
     {
@@ -127,7 +127,7 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      *
-     * @param $points
+     * @param array $points
      */
     public function testNumPoints($points)
     {

@@ -3,6 +3,7 @@
 namespace geoPHP\Tests\Geometry;
 
 use \geoPHP\Exception\InvalidGeometryException;
+use geoPHP\Geometry\Geometry;
 use \geoPHP\Geometry\Point;
 use \PHPUnit\Framework\TestCase;
 
@@ -29,8 +30,8 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerValidCoordinatesXY
      *
-     * @param $x
-     * @param $y
+     * @param int|float $x
+     * @param int|float $y
      */
     public function testValidCoordinatesXY($x, $y)
     {
@@ -61,9 +62,9 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerValidCoordinatesXYZ_XYM
      *
-     * @param $x
-     * @param $y
-     * @param $z
+     * @param int|float $x
+     * @param int|float $y
+     * @param int|float $z
      */
     public function testValidCoordinatesXYZ($x, $y, $z)
     {
@@ -85,9 +86,9 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerValidCoordinatesXYZ_XYM
      *
-     * @param $x
-     * @param $y
-     * @param $m
+     * @param int|float $x
+     * @param int|float $y
+     * @param int|float $m
      */
     function testValidCoordinatesXYM($x, $y, $m)
     {
@@ -119,10 +120,10 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerValidCoordinatesXYZM
      *
-     * @param $x
-     * @param $y
-     * @param $z
-     * @param $m
+     * @param int|float $x
+     * @param int|float $y
+     * @param int|float $z
+     * @param int|float $m
      */
     public function testValidCoordinatesXYZM($x, $y, $z, $m)
     {
@@ -170,10 +171,10 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerEmpty
      *
-     * @param $x
-     * @param $y
-     * @param $z
-     * @param $m
+     * @param int|float|null $x
+     * @param int|float|null $y
+     * @param int|float|null $z
+     * @param int|float|null $m
      */
     public function testEmpty($x = null, $y = null, $z = null, $m = null)
     {
@@ -200,10 +201,10 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerInvalidCoordinates
      *
-     * @param $x
-     * @param $y
-     * @param null $z
-     * @param null $m
+     * @param mixed $x
+     * @param mixed $y
+     * @param mixed $z
+     * @param mixed $m
      */
     public function testConstructorWithInvalidCoordinates($x, $y, $z = null, $m = null)
     {
@@ -249,10 +250,10 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerValidCoordinatesXYZM
      *
-     * @param $x
-     * @param $y
-     * @param $z
-     * @param $m
+     * @param int|float $x
+     * @param int|float $y
+     * @param int|float $z
+     * @param int|float $m
      */
     public function testInvertXY($x, $y, $z, $m)
     {
@@ -355,8 +356,8 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerDistance
      *
-     * @param $otherGeometry
-     * @param $expectedDistance
+     * @param Geometry $otherGeometry
+     * @param float $expectedDistance
      */
     public function testDistance($otherGeometry, $expectedDistance)
     {
@@ -368,7 +369,7 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerDistance
      *
-     * @param $otherGeometry
+     * @param Geometry $otherGeometry
      */
     public function testDistanceEmpty($otherGeometry)
     {
@@ -423,7 +424,7 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerMethodsNotValidForPointReturnsNull
      *
-     * @param $methodName
+     * @param string $methodName
      */
     public function testPlaceholderMethodsReturnsNull($methodName)
     {
@@ -438,7 +439,7 @@ class PointTest extends TestCase
     /**
      * @dataProvider providerMethodsNotValidForPointReturns0
      *
-     * @param $methodName
+     * @param string $methodName
      */
     public function testPlaceholderMethods($methodName)
     {

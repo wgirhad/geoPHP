@@ -31,15 +31,16 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerIs3D
-     * @param $components
-     * @param $value
+     *
+     * @param Point[] $components
+     * @param bool    $result
      */
-    public function testIs3D($components, $value)
+    public function testIs3D($components, $result)
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->is3D(), $value);
+        $this->assertEquals($stub->is3D(), $result);
     }
 
     public function providerIsMeasured()
@@ -55,15 +56,16 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerIsMeasured
-     * @param $components
-     * @param $value
+     *
+     * @param Point[] $components
+     * @param bool    $result
      */
-    public function testIsMeasured($components, $value)
+    public function testIsMeasured($components, $result)
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->isMeasured(), $value);
+        $this->assertEquals($stub->isMeasured(), $result);
     }
 
     public function providerIsEmpty()
@@ -77,15 +79,16 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerIsEmpty
-     * @param $components
-     * @param $value
+     *
+     * @param Point[] $components
+     * @param bool    $result
      */
-    public function testIsEmpty($components, $value)
+    public function testIsEmpty($components, $result)
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->isEmpty(), $value);
+        $this->assertEquals($stub->isEmpty(), $result);
     }
 
     public function testNonApplicableMethods()

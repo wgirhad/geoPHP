@@ -56,8 +56,8 @@ class File20120702Test extends TestCase
 
   /**
    * @param Geometry $geometry
-   * @param $method_name
-   * @param $argument
+   * @param string $method_name
+   * @param mixed $argument
    */
   function _methods_tester($geometry, $method_name, $argument) {
 
