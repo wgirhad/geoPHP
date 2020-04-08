@@ -1,5 +1,4 @@
 # docs available at http://docs.travis-ci.com/user/languages/php/
-# example available at https://github.com/travis-ci/travis-ci-php-example
 language: php
 
 before_script:
@@ -9,6 +8,9 @@ cache:
   directories:
   - $HOME/.composer/cache/files
 
+before_install:
+  - if [[ $PHPSTAN = 0 ]]; then composer remove --dev phpstan/phpstan; fi
+
 install:
   - composer install --prefer-dist --no-interaction
   # TODO Install geos library -- as a matrix test
@@ -17,22 +19,30 @@ install:
 script:
   - mkdir -p build/logs
   - composer cs
-  - composer stan
+  - if [[ $PHPSTAN = 1 ]]; then composer stan; fi
   - composer unit-clover
   - composer test-input
   - composer performance
 
-# run tests on the following versions
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
-  - 7.4
+env:
+  global: PHPSTAN=1
 
 matrix:
   fast_finish: false
+  # run tests on the following versions
+  include:
+    - php: 5.6
+      env: PHPSTAN=0
+    - php: 7.0
+      env: PHPSTAN=0
+    - php: 7.1
+    - php: 7.2
+    - php: 7.3
+    - php: 7.4
+    - php: nightly
+  allow_failures:
+    - php: nightly
+
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -v
