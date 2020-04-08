@@ -6,12 +6,15 @@ before_script:
 
 cache:
   directories:
+  - vendor
   - $HOME/.composer/cache/files
 
-before_install:
-  - if [[ $PHPSTAN = 0 ]]; then composer remove --dev phpstan/phpstan; fi
-
 install:
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then
+      export COMPOSER_FLAGS="--ignore-platform-reqs"
+    fi
+  - if [[ $PHPSTAN = 0 ]]; then composer remove --dev phpstan/phpstan; fi
   - composer install --prefer-dist --no-interaction
   # TODO Install geos library -- as a matrix test
   # TODO optionally set up a postgis database for testing
@@ -19,7 +22,7 @@ install:
 script:
   - mkdir -p build/logs
   - composer cs
-  - if [[ $PHPSTAN = 1 ]]; then composer stan; fi
+  - if [[ $PHPSTAN = 1 ]]; then vendor/bin/phpstan analyze; fi
   - composer unit-clover
   - composer test-input
   - composer performance
