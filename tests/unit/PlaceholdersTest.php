@@ -5,7 +5,7 @@ namespace geoPHP\Tests;
 use \geoPHP\geoPHP;
 use PHPUnit\Framework\TestCase;
 
-class PlaceholdersTests extends TestCase
+class PlaceholdersTest extends TestCase
 {
 
   function testPlaceholders()

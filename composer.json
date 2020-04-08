@@ -25,7 +25,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "geoPHP\\": "tests/"
+      "geoPHP\\Tests\\": "tests/unit"
     }
   },
   "require": {

@@ -5,7 +5,7 @@ namespace geoPHP\Tests;
 use \geoPHP\geoPHP;
 use PHPUnit\Framework\TestCase;
 
-class AdaptersTests extends TestCase
+class AdaptersTest extends TestCase
 {
 
   function testAdapters()
