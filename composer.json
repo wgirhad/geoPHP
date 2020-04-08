@@ -40,5 +40,30 @@
   },
   "suggest": {
     "ext-geos": "GEOS allows more advanced operations"
+  },
+  "scripts": {
+    "tests": [
+      "@cs",
+      "@cs-warning",
+      "@stan",
+      "@unit",
+      "@test-input",
+      "@performance"
+    ],
+    "tests-ci": [
+      "@cs",
+      "@stan",
+      "@unit-clover",
+      "@test-input",
+      "@performance"
+    ],
+    "cs": "vendor/bin/phpcs --cache -n -p src/",
+    "cs-warning": "vendor/bin/phpcs --cache -p -w src/ || true",
+    "cs-fix": "vendor/bin/phpcbf --cache -n -p src/",
+    "stan" : "vendor/bin/phpstan analyze",
+    "unit": "GEOS_DISABLED=1 vendor/bin/phpunit --coverage-html build/coverage/",
+    "unit-clover": "GEOS_DISABLED=1 vendor/bin/phpunit --coverage-clover build/logs/clover.xml",
+    "test-input": "cd tests && php test.php && cd ..",
+    "performance": "cd tests && php geometryPerformance.php && cd .."
   }
 }

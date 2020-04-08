@@ -1,7 +1,8 @@
 /vendor
-/tests/coverage/
+/build
 composer.lock
 composer.phar
+.phpunit.result.cache
 
 # JetBrains (PhpStorm)
 .idea/

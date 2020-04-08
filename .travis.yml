@@ -16,11 +16,11 @@ install:
 
 script:
   - mkdir -p build/logs
-  - GEOS_DISABLED=1 vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-  - cd tests
-  - php test.php
-  - php performanceTest.php
-  - cd ..
+  - composer cs
+  - composer stan
+  - composer unit-clover
+  - composer test-input
+  - composer performance
 
 # run tests on the following versions
 php:
