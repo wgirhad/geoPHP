@@ -10,12 +10,12 @@ cache:
   - $HOME/.composer/cache/files
 
 install:
-  - |
-    if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then
-      export COMPOSER_FLAGS="--ignore-platform-reqs"
-    fi
   - if [[ $PHPSTAN = 0 ]]; then composer remove --dev phpstan/phpstan; fi
-  - composer install --prefer-dist --no-interaction
+    - |
+    if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then
+    export COMPOSER_FLAGS="--ignore-platform-reqs"
+    fi
+  - composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
   # TODO Install geos library -- as a matrix test
   # TODO optionally set up a postgis database for testing
 
