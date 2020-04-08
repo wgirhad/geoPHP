@@ -64,6 +64,14 @@ abstract class Curve extends Collection
     }
 
     /**
+     * @return Point[]
+     */
+    public function getPoints()
+    {
+        return $this->getComponents();
+    }
+
+    /**
      * The boundary of a non-closed Curve consists of its end Points
      *
      * @return LineString|MultiPoint

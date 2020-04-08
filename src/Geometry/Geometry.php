@@ -454,7 +454,8 @@ abstract class Geometry
     {
         return $this->getBBox();
     }
-    public function dump() {
+    public function dump()
+    {
         return $this->getComponents();
     }
     public function getCentroid()
