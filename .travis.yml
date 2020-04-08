@@ -11,9 +11,9 @@ cache:
 
 install:
   - if [[ $PHPSTAN = 0 ]]; then composer remove --dev phpstan/phpstan; fi
-    - |
+  - |
     if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then
-    export COMPOSER_FLAGS="--ignore-platform-reqs"
+      export COMPOSER_FLAGS="--ignore-platform-reqs"
     fi
   - composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
   # TODO Install geos library -- as a matrix test
