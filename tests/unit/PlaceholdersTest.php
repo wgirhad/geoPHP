@@ -10,11 +10,11 @@ class PlaceholdersTest extends TestCase
 
   function testPlaceholders()
   {
-    foreach (scandir('./input') as $file) {
+    foreach (scandir('tests/input') as $file) {
       $parts = explode('.',$file);
       if ($parts[0]) {
         $format = $parts[1];
-        $value = file_get_contents('./input/'.$file);
+        $value = file_get_contents('tests/input/'.$file);
         //echo "\nloading: " . $file . " for format: " . $format;
         $geometry = geoPHP::load($value, $format);
 

@@ -14,7 +14,7 @@ class File20120702Test extends TestCase
   function testMethods()
   {
     $format = 'gpx';
-    $value = file_get_contents('input/20120702.gpx');
+    $value = file_get_contents('tests/input/20120702.gpx');
     $geometry = geoPHP::load($value, $format);
 
     $methods = array(

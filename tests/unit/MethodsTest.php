@@ -10,11 +10,11 @@ class MethodsTest extends TestCase
 
   function testMethods()
   {
-    foreach (scandir('./input') as $file) {
+    foreach (scandir('tests/input') as $file) {
       $parts = explode('.',$file);
       if ($parts[0]) {
         $format = $parts[1];
-        $value = file_get_contents('./input/'.$file);
+        $value = file_get_contents('tests/input/'.$file);
         //echo "\nloading: " . $file . " for format: " . $format;
         $geometry = geoPHP::load($value, $format);
 
@@ -108,8 +108,7 @@ class MethodsTest extends TestCase
           $this->assertNotNull($geometry->$method_name($argument), $failedOnMessage);
         }
         if ($geometry->geometryType() == 'MultiLineString') {
-          //TODO: Add a method startPoint() to MultiLineString.
-          //$this->assertNotNull($geometry->$method_name($argument), $failedOnMessage);
+            $this->assertNull($geometry->$method_name($argument), $failedOnMessage);
         }
         break;
       case 'endPoint':
@@ -120,8 +119,7 @@ class MethodsTest extends TestCase
           $this->assertNotNull($geometry->$method_name($argument), $failedOnMessage);
         }
         if ($geometry->geometryType() == 'MultiLineString') {
-          //TODO: Add a method endPoint() to MultiLineString.
-          //$this->assertNotNull($geometry->$method_name($argument), 'Failed on ' . $method_name);
+            $this->assertNull($geometry->$method_name($argument), $failedOnMessage);
         }
         break;
       case 'isRing':
@@ -154,8 +152,7 @@ class MethodsTest extends TestCase
           $this->assertNotNull($geometry->$method_name($argument), $failedOnMessage);
         }
         if ($geometry->geometryType() == 'MultiLineString') {
-          //TODO: Add a method pointN() to MultiLineString.
-          //$this->assertNotNull($geometry->$method_name($argument), $failedOnMessage);
+            $this->assertNull($geometry->$method_name($argument), $failedOnMessage);
         }
         break;
       case 'exteriorRing':

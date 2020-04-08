@@ -10,11 +10,11 @@ class AdaptersTest extends TestCase
 
   function testAdapters()
   {
-    foreach (scandir('./input') as $file) {
+    foreach (scandir('tests/input') as $file) {
       $parts = explode('.',$file);
       if ($parts[0]) {
         $format = $parts[1];
-        $input = file_get_contents('./input/'.$file);
+        $input = file_get_contents('tests/input/'.$file);
         //echo "\nloading: " . $file . " for format: " . $format;
         $geometry = geoPHP::load($input, $format);
 
