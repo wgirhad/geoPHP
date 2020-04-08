@@ -35,7 +35,8 @@
     "php": ">=5.6.0",
     "phpunit/phpunit": "5.* || 8.*",
     "php-coveralls/php-coveralls": "2.*",
-    "squizlabs/php_codesniffer": "3.*"
+    "squizlabs/php_codesniffer": "3.*",
+    "phpstan/phpstan": "^0.12.18"
   },
   "suggest": {
     "ext-geos": "GEOS allows more advanced operations"
