@@ -4,9 +4,9 @@ require '../vendor/autoload.php';
 
 use \geoPHP\geoPHP;
 
-run_test();
+runTest();
 
-function run_test() {
+function runTest() {
   set_time_limit(0);
 
   set_error_handler("FailOnError");
@@ -19,30 +19,29 @@ function run_test() {
   else {
     print "GEOS is not installed.\n";
   }
+  $isVerbose = getenv("VERBOSE") == 1 || getopt('v');
 
   $start = microtime(true);
   foreach (scandir('./input') as $file) {
-    $parts = explode('.',$file);
+    $parts = explode('.', $file);
     if ($parts[0]) {
+      $startFile = microtime(true);
       $format = $parts[1];
-      $value = file_get_contents('./input/'.$file);
-      print '---- Testing ' . $file . "\n";
+      $value = file_get_contents('./input/' . $file);
+      print '-- Testing ' . $file . "\n";
+
       $geometry = geoPHP::load($value, $format);
-      if (getenv("VERBOSE") == 1) {
-        echo "-- Adapters\n";
-        test_adapters($geometry, $format, $value);
-        echo "-- Methods\n";
-        test_methods($geometry);
-        echo "-- Geometry\n";
-        test_geometry($geometry);
-        echo "-- Detection\n";
-        test_detection($value, $format, $file);
-      } else {
-        test_adapters($geometry, $format, $value);
-        test_methods($geometry);
-        test_geometry($geometry);
-        test_detection($value, $format, $file);
-      }
+
+      echo $isVerbose ? "---- Adapters\n" : '';
+      testAdapters($geometry, $format, $value);
+      echo $isVerbose ? "---- Methods\n" : '';
+      testGeosMethods($geometry);
+      echo $isVerbose ? "---- Geometry\n" : '';
+      test_geometry($geometry);
+      echo $isVerbose ? "---- Detection\n" : '';
+      testDetection($value, $format);
+
+      print '   ' . sprintf('%.3f', microtime(true) - $startFile) . " s\n";
     }
   }
   print "\nSuccessfully completed under " . sprintf('%.3f', microtime(true) - $start)
@@ -60,7 +59,7 @@ function test_geometry($geometry) {
     $geometry->boundary();
   } catch (\geoPHP\Exception\UnsupportedMethodException $e) {
     // TODO remove this once Polygon::boundary() get implemented
-    if (getenv("VERBOSE") == 1) {
+    if (getenv("VERBOSE") == 1 || getopt('v')) {
       print "\e[33m\t" . $e->getMessage() . "\e[39m\n";
     }
   }
@@ -133,7 +132,7 @@ function test_geometry($geometry) {
     $geometry->coveredBy($geometry);
     $geometry->hausdorffDistance($geometry);
   } catch (\Exception $e) {
-    if (getenv("VERBOSE") == 1) {
+    if (getenv("VERBOSE") == 1 || getopt('v')) {
       print "\e[33m\t" . $e->getMessage() . "\e[39m\n";
     }
   }
@@ -145,14 +144,14 @@ function test_geometry($geometry) {
  * @param string $format
  * @param string $input
  */
-function test_adapters($geometry, $format, $input) {
+function testAdapters($geometry, $format, $input) {
   // Test adapter output and input. Do a round-trip and re-test
   foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
     if ($adapter_key == 'google_geocode') {
       //Don't test google geocoder regularily. Uncomment to test
       continue;
     }
-    if (getenv("VERBOSE") == 1) {
+    if (getenv("VERBOSE") == 1 || getopt('v')) {
       print ' ' . $adapter_class . "\n";
     }
     $output = $geometry->out($adapter_key);
@@ -175,7 +174,7 @@ function test_adapters($geometry, $format, $input) {
   // Test to make sure adapter work the same wether GEOS is ON or OFF
   // Cannot test methods if GEOS is not intstalled
   if (!geoPHP::geosInstalled()) return;
-  if (getenv("VERBOSE") == 1) {
+  if (getenv("VERBOSE") == 1 || getopt('v')) {
     echo "Testing with GEOS\n";
   }
   foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
@@ -184,7 +183,7 @@ function test_adapters($geometry, $format, $input) {
       continue;
     }
 
-    if (getenv("VERBOSE") == 1) {
+    if (getenv("VERBOSE") == 1 || getopt('v')) {
       echo ' ' . $adapter_class . "\n";
     }
     // Turn GEOS on
@@ -221,7 +220,7 @@ function test_adapters($geometry, $format, $input) {
         }
       }
     } catch (\geoPHP\Exception\UnsupportedMethodException $e) {
-      if (getenv("VERBOSE") == 1) {
+      if (getenv("VERBOSE") == 1 || getopt('v')) {
         print "\e[33m\t" . $e->getMessage() . "\e[39m\n";
       }
     }
@@ -229,7 +228,7 @@ function test_adapters($geometry, $format, $input) {
 }
 
 
-function test_methods($geometry) {
+function testGeosMethods($geometry) {
   // Cannot test methods if GEOS is not intstalled
   if (!geoPHP::geosInstalled()) return;
 
@@ -303,7 +302,7 @@ function test_methods($geometry) {
         }
       }
     } catch (\geoPHP\Exception\UnsupportedMethodException $e) {
-      if (getenv("VERBOSE") == 1) {
+      if (getenv("VERBOSE") == 1 || getopt('v')) {
         print "\e[33m\t" . $e->getMessage() . "\e[39m\n";
       }
     }
@@ -313,7 +312,7 @@ function test_methods($geometry) {
   }
 }
 
-function test_detection($value, $format, $file) {
+function testDetection($value, $format) {
   $detected = geoPHP::detectFormat($value);
   if ($detected != $format) {
     if ($detected) {

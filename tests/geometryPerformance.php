@@ -1,10 +1,12 @@
 <?php
 
 /**
- * Some very simple performance test.
- * Run before and after you modify geometries and their methods.
+ * Some very simple performance test for Geometries.
+ * Run before and after you modify geometries.
+ * For example adding an array_merge() in a heavily used method can decrease performance dramatically.
  *
- * For example adding an array_merge() to a heavily used method can decrease performance by one magnitude.
+ * Please note, that this is not a real CI test, it will not fail on performance drops, just helps spotting them.
+ *
  * Feel free to add more test methods.
  */
 
@@ -122,14 +124,19 @@ testStart("Test (500 points) LineString::isSimple():");
 $shortClosedLineString->isSimple();
 testEnd();
 
-$components = [];
-testStart("Creating GeometryCollection:");
+$polygon = [];
+$rings = [];
+testStart("Creating Polygon (50 ring, each has 500 point):");
 for($i=0; $i < 50; $i++) {
-    $rings = [];
-    for($j=0; $j < 50; $j++) {
-        $rings[] = $shortClosedLineString;
-    }
-    $components[] = new Polygon($rings);
+    $rings[] = $shortClosedLineString;
+}
+$polygon = new Polygon($rings);
+testEnd();
+
+$components = [];
+testStart("Creating GeometryCollection (50 polygon):");
+for($i=0; $i < 50; $i++) {
+    $components[] = $polygon;
 }
 $collection = new GeometryCollection($components);
 testEnd();
