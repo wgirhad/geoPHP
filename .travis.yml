@@ -14,13 +14,16 @@ cache:
   - $HOME/.composer/cache/files
 
 install:
-  - if [[ -z $PHPSTAN ]]; then composer remove --dev phpstan/phpstan; fi
-  - if [[ $DISABLE_UNIT ]]; then composer remove --dev phpunit/phpunit; fi
+  - if [[ -z $PHPSTAN ]]; then export COMPOSER_REMOVE="phpstan/phpstan"; fi
+  - if [[ $DISABLE_UNIT ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpunit/phpunit"; fi
+  - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
   - |
-    if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then
-      export COMPOSER_FLAGS="--ignore-platform-reqs"
+    if [[ $COMPSER_REMOVE ]]; then
+      composer remove --dev --prefer-dist --no-interaction $COMPOSER_FLAGS $COMPOSER_REMOVE
+    else
+      composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
     fi
-  - composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
+
   # TODO Install geos library -- as a matrix test
   # TODO optionally set up a postgis database for testing
 
@@ -66,7 +69,8 @@ jobs:
     - stage: Test
       php: nightly
   allow_failures:
-    - php: nightly
+    - stage: Test
+      php: nightly
 
 after_success:
   - if [ -f "build/logs/clover.xml" ]; then travis_retry php vendor/bin/php-coveralls -v; fi
