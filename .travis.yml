@@ -1,6 +1,10 @@
 # docs available at http://docs.travis-ci.com/user/languages/php/
 language: php
 
+os: linux
+dist: xenial
+version: ~> 1
+
 before_script:
   - composer self-update
 
@@ -10,7 +14,8 @@ cache:
   - $HOME/.composer/cache/files
 
 install:
-  - if [[ $PHPSTAN = 0 ]]; then composer remove --dev phpstan/phpstan; fi
+  - if [[ -z $PHPSTAN ]]; then composer remove --dev phpstan/phpstan; fi
+  - if [[ $DISABLE_UNIT ]]; then composer remove --dev phpunit/phpunit; fi
   - |
     if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then
       export COMPOSER_FLAGS="--ignore-platform-reqs"
@@ -21,28 +26,44 @@ install:
 
 script:
   - mkdir -p build/logs
-  - composer cs
-  - if [[ $PHPSTAN = 1 ]]; then vendor/bin/phpstan analyze; fi
-  - composer unit-clover
+  - if [[ -z $DISABLE_UNIT ]]; then composer unit-clover; fi
   - composer test-input
   - composer performance
 
-env:
-  global: PHPSTAN=1
-
-matrix:
+jobs:
   fast_finish: false
-  # run tests on the following versions
   include:
-    - php: 5.6
-      env: PHPSTAN=0
-    - php: 7.0
-      env: PHPSTAN=0
-    - php: 7.1
-    - php: 7.2
-    - php: 7.3
-    - php: 7.4
-    - php: nightly
+    - stage: Smoke
+      php: 7.4
+      env: PHPCS
+      script: composer cs
+    - stage: Smoke
+      php: 7.4
+      env: PHPCS_WARNING
+      script: composer cs-warning
+    - stage: Smoke
+      php: 7.4
+      env: PHPStan
+      script: vendor/bin/phpstan analyse
+
+    - stage: Test
+      php: 5.5
+      dist: trusty
+      env: DISABLE_UNIT
+    - stage: Test
+      php: 5.6
+    - stage: Test
+      php: 7.0
+    - stage: Test
+      php: 7.1
+    - stage: Test
+      php: 7.2
+    - stage: Test
+      php: 7.3
+    - stage: Test
+      php: 7.4
+    - stage: Test
+      php: nightly
   allow_failures:
     - php: nightly
 
