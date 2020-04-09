@@ -35,21 +35,22 @@ jobs:
   include:
     - stage: Smoke
       php: 7.4
-      env: PHPCS
+      env: PHPCS=1
       script: composer cs
     - stage: Smoke
       php: 7.4
-      env: PHPCS_WARNING
+      env: PHPCS_WARNING=1
       script: composer cs-warning
     - stage: Smoke
       php: 7.4
-      env: PHPStan
+      env: PHPStan=1
       script: vendor/bin/phpstan analyse
 
     - stage: Test
       php: 5.5
       dist: trusty
-      env: DISABLE_UNIT
+      name: PHP 5.5 without Unit tests
+      env: DISABLE_UNIT=1
     - stage: Test
       php: 5.6
     - stage: Test
@@ -67,6 +68,5 @@ jobs:
   allow_failures:
     - php: nightly
 
-
 after_success:
-  - travis_retry php vendor/bin/php-coveralls -v
+  - if [ -f "build/logs/clover.xml" ]; then travis_retry php vendor/bin/php-coveralls -v; fi
