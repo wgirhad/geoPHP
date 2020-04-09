@@ -18,12 +18,11 @@ install:
   - if [[ $DISABLE_UNIT ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpunit/phpunit"; fi
   - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
   - |
-    echo "PARAMS: $COMPOSER_FLAGS $COMPOSER_REMOVE"
     if [[ $COMPOSER_REMOVE ]]; then
-      composer remove --dev --prefer-dist --no-interaction $COMPOSER_FLAGS $COMPOSER_REMOVE
-    else
-      composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
+      echo "Removing $COMPOSER_REMOVE dependencies"
+      composer remove --dev --no-update --no-interaction $COMPOSER_FLAGS $COMPOSER_REMOVE
     fi
+  - composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
 
   # TODO Install geos library -- as a matrix test
   # TODO optionally set up a postgis database for testing
@@ -35,7 +34,6 @@ script:
   - composer performance
 
 jobs:
-  fast_finish: false
   include:
     - stage: Smoke
       php: 7.4
@@ -67,11 +65,11 @@ jobs:
       php: 7.3
     - stage: Test
       php: 7.4
-    - stage: Test
-      php: nightly
+
+    - php: nightly
   allow_failures:
-    - stage: Test
-      php: nightly
+    - php: nightly
+  fast_finish: true
 
 after_success:
   - if [ -f "build/logs/clover.xml" ]; then travis_retry php vendor/bin/php-coveralls -v; fi
