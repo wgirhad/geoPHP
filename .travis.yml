@@ -35,6 +35,8 @@ script:
 
 jobs:
   include:
+    - php: nightly
+
     - stage: Smoke
       php: 7.4
       env: PHPCS=1
@@ -66,7 +68,6 @@ jobs:
     - stage: Test
       php: 7.4
 
-    - php: nightly
   allow_failures:
     - php: nightly
   fast_finish: true
