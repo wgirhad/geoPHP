@@ -43,7 +43,7 @@ jobs:
       script: composer cs-warning
     - stage: Smoke
       php: 7.4
-      env: PHPStan=1
+      env: PHPSTAN=1
       script: vendor/bin/phpstan analyse
 
     - stage: Test
