@@ -18,7 +18,8 @@ install:
   - if [[ $DISABLE_UNIT ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpunit/phpunit"; fi
   - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
   - |
-    if [[ $COMPSER_REMOVE ]]; then
+    echo "PARAMS: $COMPOSER_FLAGS $COMPOSER_REMOVE"
+    if [[ $COMPOSER_REMOVE ]]; then
       composer remove --dev --prefer-dist --no-interaction $COMPOSER_FLAGS $COMPOSER_REMOVE
     else
       composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
