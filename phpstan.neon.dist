@@ -7,3 +7,4 @@ parameters:
     - tests/unit
   ignoreErrors:
     - "#^Unsafe usage of new static\\(\\)\\.$#"
+  inferPrivatePropertyTypeFromConstructor: true

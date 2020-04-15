@@ -61,8 +61,8 @@
     "cs-warning": "vendor/bin/phpcs --cache -p -w src/ || true",
     "cs-fix": "vendor/bin/phpcbf --cache -n -p src/",
     "stan" : "vendor/bin/phpstan analyze",
-    "unit": "GEOS_DISABLED=1 vendor/bin/phpunit --coverage-html build/coverage/",
-    "unit-clover": "GEOS_DISABLED=1 vendor/bin/phpunit --coverage-clover build/logs/clover.xml",
+    "unit": "GEOS_DISABLED=1 vendor/bin/phpunit --color=always --coverage-html build/coverage/",
+    "unit-clover": "GEOS_DISABLED=1 vendor/bin/phpunit --color=always --coverage-clover build/logs/clover.xml",
     "test-input": "cd tests && php test.php && cd ..",
     "performance": "cd tests && php geometryPerformance.php && cd .."
   }

@@ -70,6 +70,7 @@ jobs:
     - php: nightly
 
   allow_failures:
+    - stage: Allowed Failures
     - php: nightly
 
   fast_finish: true

@@ -276,11 +276,6 @@ parameters:
 			path: src/Geometry/Point.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between float\\|null and 0 will always evaluate to false\\.$#"
-			count: 1
-			path: src/Geometry/Point.php
-
-		-
 			message: "#^Return type \\(null\\) of method geoPHP\\\\Geometry\\\\Point\\:\\:explode\\(\\) should be compatible with return type \\(array\\<array\\<geoPHP\\\\Geometry\\\\Point\\>\\|geoPHP\\\\Geometry\\\\LineString\\>\\) of method geoPHP\\\\Geometry\\\\Geometry\\:\\:explode\\(\\)$#"
 			count: 1
 			path: src/Geometry/Point.php
