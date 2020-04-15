@@ -66,11 +66,10 @@ jobs:
     - stage: Test
       php: 7.4
 
-    - stage: Allowed Failures
     - php: nightly
 
+# FIXME: allow_failures doesn't appear to work with stages defined. How to solve that?
   allow_failures:
-    - stage: Allowed Failures
     - php: nightly
 
   fast_finish: true

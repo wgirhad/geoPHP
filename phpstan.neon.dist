@@ -8,3 +8,4 @@ parameters:
   ignoreErrors:
     - "#^Unsafe usage of new static\\(\\)\\.$#"
   inferPrivatePropertyTypeFromConstructor: true
+  treatPhpDocTypesAsCertain: false

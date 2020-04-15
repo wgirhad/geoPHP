@@ -76,11 +76,6 @@ parameters:
 			path: src/Adapter/GeoRSS.php
 
 		-
-			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Adapter/GoogleGeocode.php
-
-		-
 			message: "#^Method geoPHP\\\\Adapter\\\\GoogleGeocode\\:\\:read\\(\\) should return geoPHP\\\\Geometry\\\\Geometry but returns null\\.$#"
 			count: 1
 			path: src/Adapter/GoogleGeocode.php
@@ -269,16 +264,6 @@ parameters:
 			message: "#^Method geoPHP\\\\Geometry\\\\MultiPolygon\\:\\:centroid\\(\\) should return geoPHP\\\\Geometry\\\\Point but returns geoPHP\\\\Geometry\\\\Geometry\\|null\\.$#"
 			count: 1
 			path: src/Geometry/MultiPolygon.php
-
-		-
-			message: "#^Result of \\|\\| is always false\\.$#"
-			count: 1
-			path: src/Geometry/Point.php
-
-		-
-			message: "#^Return type \\(null\\) of method geoPHP\\\\Geometry\\\\Point\\:\\:explode\\(\\) should be compatible with return type \\(array\\<array\\<geoPHP\\\\Geometry\\\\Point\\>\\|geoPHP\\\\Geometry\\\\LineString\\>\\) of method geoPHP\\\\Geometry\\\\Geometry\\:\\:explode\\(\\)$#"
-			count: 1
-			path: src/Geometry/Point.php
 
 		-
 			message: "#^Parameter \\#2 \\$allowEmptyComponents of method geoPHP\\\\Geometry\\\\Surface\\:\\:__construct\\(\\) expects bool, null given\\.$#"

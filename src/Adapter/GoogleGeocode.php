@@ -35,7 +35,7 @@ class GoogleGeocode implements GeoAdapter
     /**
      * Makes a geocoding (lat/lon lookup) with an address string or array geometry objects
      *
-     * @param string              $address        Address to geocode
+     * @param string|string[]     $address        Address to geocode
      * @param string              $apiKey         Your application's Google Maps Geocoding API key
      * @param string              $returnType     Type of Geometry to return. Can either be 'points' or 'bounds' (polygon)
      * @param array|bool|Geometry $bounds         Limit the search area to within this region.

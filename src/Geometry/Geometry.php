@@ -221,7 +221,7 @@ abstract class Geometry
      * Get all line segments
      * @param bool $toArray return segments as LineString or array of start and end points. Explode(true) is faster
      *
-     * @return LineString[] | Point[][]
+     * @return LineString[] | Point[][] | null
      */
     abstract public function explode($toArray = false);
 
