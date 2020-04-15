@@ -269,23 +269,17 @@ class Point extends Geometry
                 + pow(($this->y() - $geometry->y()), 2)
             );
         }
-        if (
-            $geometry->geometryType() == Geometry::MULTI_POINT
-            || $geometry->geometryType() == Geometry::GEOMETRY_COLLECTION
-        ) {
+        if ($geometry instanceof MultiGeometry) {
             $distance = null;
             foreach ($geometry->getComponents() as $component) {
                 $checkDistance = $this->distance($component);
-                if ($checkDistance === 0) {
+                if ($checkDistance === 0.0) {
                     return 0.0;
                 }
                 if ($checkDistance === null) {
                     continue;
                 }
-                if ($distance === null) {
-                    $distance = $checkDistance;
-                }
-                if ($checkDistance < $distance) {
+                if ($distance === null || $checkDistance < $distance) {
                     $distance = $checkDistance;
                 }
             }
@@ -324,14 +318,11 @@ class Point extends Geometry
                     $dy = $y - $y3;
                     $checkDistance = sqrt(($dx * $dx) + ($dy * $dy));
                 }
-                if ($distance === null) {
-                    $distance = $checkDistance;
-                }
-                if ($checkDistance < $distance) {
-                    $distance = $checkDistance;
-                }
-                if ($distance === 0.0) {
+                if ($checkDistance === 0.0) {
                     return 0.0;
+                }
+                if ($distance === null || $checkDistance < $distance) {
+                    $distance = $checkDistance;
                 }
             }
             return $distance;
@@ -362,27 +353,27 @@ class Point extends Geometry
 
     public function area()
     {
-        return 0;
+        return 0.0;
     }
 
     public function length()
     {
-        return 0;
+        return 0.0;
     }
 
     public function length3D()
     {
-        return 0;
+        return 0.0;
     }
 
     public function greatCircleLength($radius = null)
     {
-        return 0;
+        return 0.0;
     }
 
     public function haversineLength()
     {
-        return 0;
+        return 0.0;
     }
 
     public function zDifference()

@@ -71,7 +71,7 @@ class LineString extends Curve
         return $this->getCentroidAndLength();
     }
 
-    public function getCentroidAndLength(&$length = 0)
+    public function getCentroidAndLength(&$length = 0.0)
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -86,7 +86,7 @@ class LineString extends Curve
 
         $x = 0;
         $y = 0;
-        $length = 0;
+        $length = 0.0;
         /** @var Point $previousPoint */
         $previousPoint = null;
         foreach ($this->getPoints() as $point) {
@@ -102,7 +102,7 @@ class LineString extends Curve
             }
             $previousPoint = $point;
         }
-        if ($length == 0) {
+        if ($length === 0.0) {
             return $this->startPoint();
         }
         return new Point($x / $length, $y / $length);
@@ -121,7 +121,7 @@ class LineString extends Curve
             return $this->getGeos()->length();
             // @codeCoverageIgnoreEnd
         }
-        $length = 0;
+        $length = 0.0;
         /** @var Point $previousPoint */
         $previousPoint = null;
         foreach ($this->getPoints() as $point) {
@@ -138,7 +138,7 @@ class LineString extends Curve
 
     public function length3D()
     {
-        $length = 0;
+        $length = 0.0;
         /** @var Point $previousPoint */
         $previousPoint = null;
         foreach ($this->getPoints() as $point) {
@@ -160,7 +160,7 @@ class LineString extends Curve
      */
     public function greatCircleLength($radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS)
     {
-        $length = 0;
+        $length = 0.0;
         $rad = M_PI / 180;
         $points = $this->getPoints();
         $numPoints = $this->numPoints() - 1;
@@ -199,7 +199,7 @@ class LineString extends Curve
      */
     public function haversineLength()
     {
-        $distance = 0;
+        $distance = 0.0;
         $points = $this->getPoints();
         $numPoints = $this->numPoints() - 1;
         for ($i = 0; $i < $numPoints; ++$i) {
@@ -229,7 +229,7 @@ class LineString extends Curve
      */
     public function vincentyLength()
     {
-        $length = 0;
+        $length = 0.0;
         $rad = M_PI / 180;
         $points = $this->getPoints();
         $numPoints = $this->numPoints() - 1;
@@ -494,7 +494,7 @@ class LineString extends Curve
                 /** @var LineString $seg2 */
                 foreach ($geometrySegments as $seg2) {
                     if ($seg1->lineSegmentIntersect($seg2)) {
-                        return 0;
+                        return 0.0;
                     }
                     // Because line-segments are straight, the shortest distance will occur at an endpoint.
                     // If they are parallel an endpoint calculation is still accurate.
@@ -504,14 +504,11 @@ class LineString extends Curve
                     $checkDistance4 = $seg2->endPoint()->distance($seg1);
 
                     $checkDistance = min($checkDistance1, $checkDistance2, $checkDistance3, $checkDistance4);
-                    if ($distance === null) {
-                        $distance = $checkDistance;
+                    if ($checkDistance === 0.0) {
+                        return 0.0;
                     }
-                    if ($checkDistance < $distance) {
+                    if ($distance === null || $checkDistance < $distance) {
                         $distance = $checkDistance;
-                    }
-                    if ($distance === 0.0) {
-                        return 0;
                     }
                 }
             }

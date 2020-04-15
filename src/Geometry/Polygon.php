@@ -66,12 +66,12 @@ class Polygon extends Surface
      * @param bool|false $exteriorOnly Calculate the area of exterior ring only, or the polygon with holes
      * @param bool|false $signed       Usually we want to get positive area, but vertices order (CW or CCW) can be determined from signed area.
      *
-     * @return float|null|number
+     * @return float|null
      */
     public function area($exteriorOnly = false, $signed = false)
     {
         if ($this->isEmpty()) {
-            return 0;
+            return 0.0;
         }
 
         if ($this->getGeos() && $exteriorOnly == false) {
@@ -88,7 +88,7 @@ class Polygon extends Surface
         if ($pointCount === 0) {
             return null;
         }
-        $a = 0;
+        $a = 0.0;
         foreach ($points as $k => $p) {
             $j = ($k + 1) % $pointCount;
             $a = $a + ($p->x() * $points[$j]->y()) - ($p->y() * $points[$j]->x());
@@ -105,7 +105,7 @@ class Polygon extends Surface
                 $area -= $innerPoly->area();
             }
         }
-        return (float) $area;
+        return $area;
     }
 
     /**
