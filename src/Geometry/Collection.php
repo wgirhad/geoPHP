@@ -141,6 +141,9 @@ abstract class Collection extends Geometry
         $maxX = $maxY = $minX = $minY = 0;
         foreach ($this->components as $i => $component) {
             $componentBoundingBox = $component->getBBox();
+            if ($componentBoundingBox === null) {
+                continue;
+            }
 
             // On the first run through, set the bounding box to the component's bounding box
             if ($i == 0) {
