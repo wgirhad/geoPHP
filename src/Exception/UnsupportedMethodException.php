@@ -12,12 +12,12 @@ class UnsupportedMethodException extends \Exception
      * Public constructor.
      *
      * @param string $method Name of the unsupported method
-     * @param int $code
      * @param string|null $message Additional message
+     * @param int $code
      */
-    public function __construct($method, $code = 0, $message = null)
+    public function __construct(string $method, ?string $message = null, int $code = 0)
     {
-        $message = 'The method ' . $method . '() is not supported yet.' . ($message ? ' ' . $message : '');
+        $message = 'Method ' . $method . '() is not supported yet.' . ($message ? ' ' . $message : '');
         parent::__construct($message, $code);
     }
 
@@ -27,8 +27,8 @@ class UnsupportedMethodException extends \Exception
      * @param string $methodName Name of the unsupported method
      * @return UnsupportedMethodException
      */
-    public static function geos($methodName)
+    public static function geos(string $methodName): self
     {
-        return new self($methodName, null, 'Please install GEOS extension.');
+        return new self($methodName, 'Please install GEOS extension.', 1);
     }
 }
