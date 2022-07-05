@@ -18,20 +18,23 @@ use geoPHP\Geometry\Polygon;
 use geoPHP\Geometry\GeometryCollection;
 use geoPHP\geoPHP;
 
+/** Performance test will fail if running takes longer than MAX_RUN_TIME_SEC. (Yes, it's a bit of a dirty method.) */
+const MAX_RUN_TIME_SEC = 10;
+
 function testStart($message) {
     $GLOBALS['runTime'] = microtime(true);
-    echo $message . "\n";
+    echo "\e[37m" . $message . "\e[39m\n";
 }
 function testEnd($result=null, $ready=false) {
     if ($ready) {
         echo "\nTotal run time: " . round(microtime(true) - $GLOBALS['startTime'], 4) . ' sec,';
     } else {
-        echo '  Time: ' . round(microtime(true) - $GLOBALS['runTime'], 4) . ' sec,';
+        echo "\tTime: " . round(microtime(true) - $GLOBALS['runTime'], 4) . ' sec,';
     }
     echo
-            ' Memory: ' . round(memory_get_usage()/1024/1024 - $GLOBALS['startMem'], 4) . 'MB' .
-            ' Memory peak: ' . round(memory_get_peak_usage()/1024/1024, 4) . 'MB' .
-            ($result ? ' Result: ' . $result : '') .
+            "\tMemory: " . round(memory_get_usage()/1024/1024 - $GLOBALS['startMem'], 4) . 'MB' .
+            "\tMemory peak: " . round(memory_get_peak_usage()/1024/1024, 4) . 'MB' .
+            ($result ? "\tResult: " . $result : '') .
             "\n";
 }
 
@@ -116,13 +119,14 @@ testStart("Test LineString::vincentyLength():");
 $res = $lineString->vincentyLength();
 testEnd($res);
 
+$shorterLine = new LineString(array_slice($points, 0, min($pointCount, 200)));
+testStart("Test LineString::isSimple() (200 points long line):");
+$res = $shorterLine->isSimple();
+testEnd($res ? 'simple' : 'not simple');
+
 $somePoint = array_slice($points, 0, min($pointCount, 499));
 $somePoint[] = $somePoint[0];
 $shortClosedLineString = new LineString($somePoint);
-
-testStart("Test (500 points) LineString::isSimple():");
-$shortClosedLineString->isSimple();
-testEnd();
 
 $polygon = [];
 $rings = [];
@@ -151,3 +155,11 @@ testEnd(count($res));
 //////////////////////////////////////////////////////////////////////////
 
 testEnd(null, true);
+
+if (microtime(true) - $startTime > MAX_RUN_TIME_SEC) {
+    print "\e[31mTOO SLOW!\e[39m" . PHP_EOL;
+    exit(1);
+} else {
+    print "\e[32mOK\e[32m" . PHP_EOL;
+    exit(0);
+}
