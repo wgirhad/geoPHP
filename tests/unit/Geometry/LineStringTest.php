@@ -58,7 +58,7 @@ class LineStringTest extends TestCase
     public function testConstructorEmptyComponentThrowsException()
     {
         $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageRegExp('/Cannot create a collection of empty Points.+/');
+        $this->expectExceptionMessageMatches('/Cannot create a collection of empty Points.+/');
 
         // Empty points
         new LineString([new Point(), new Point(), new Point()]);
@@ -67,7 +67,7 @@ class LineStringTest extends TestCase
     public function testConstructorNonArrayComponentThrowsException()
     {
         $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageRegExp('/Component geometries must be passed as array/');
+        $this->expectExceptionMessageMatches('/Component geometries must be passed as array/');
 
         new LineString('foo');
     }
@@ -75,7 +75,7 @@ class LineStringTest extends TestCase
     public function testConstructorSinglePointThrowsException()
     {
         $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageRegExp('/Cannot construct a [a-zA-Z_\\\\]+LineString with a single point/');
+        $this->expectExceptionMessageMatches('/Cannot construct a [a-zA-Z_\\\\]+LineString with a single point/');
 
         new LineString([new Point(1, 2)]);
     }
@@ -83,7 +83,7 @@ class LineStringTest extends TestCase
     public function testConstructorWrongComponentTypeThrowsException()
     {
         $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageRegExp('/Cannot create a collection of [a-zA-Z_\\\\]+ components, expected type is.+/');
+        $this->expectExceptionMessageMatches('/Cannot create a collection of [a-zA-Z_\\\\]+ components, expected type is.+/');
 
         new LineString([new LineString(), new LineString()]);
     }

@@ -46,10 +46,8 @@ class PointTest extends TestCase
         $this->assertNull($point->z());
         $this->assertNull($point->m());
 
-//        $this->assertIsFloat($point->x());
-//        $this->assertIsFloat($point->y());
-        $this->assertTrue(is_float($point->x()));
-        $this->assertTrue(is_float($point->y()));
+        $this->assertIsFloat($point->x());
+        $this->assertIsFloat($point->y());
     }
 
     public function providerValidCoordinatesXYZ_or_XYM()
@@ -79,12 +77,9 @@ class PointTest extends TestCase
         $this->assertEquals($z, $point->z());
         $this->assertNull($point->m());
 
-//        $this->assertIsFloat($point->x());
-//        $this->assertIsFloat($point->y());
-//        $this->assertIsFloat($point->z());
-        $this->assertTrue(is_float($point->x()));
-        $this->assertTrue(is_float($point->y()));
-        $this->assertTrue(is_float($point->z()));
+        $this->assertIsFloat($point->x());
+        $this->assertIsFloat($point->y());
+        $this->assertIsFloat($point->z());
     }
 
     /**
@@ -103,12 +98,9 @@ class PointTest extends TestCase
         $this->assertEquals($m, $point->m());
         $this->assertNull($point->z());
 
-//        $this->assertIsFloat($point->x());
-//        $this->assertIsFloat($point->y());
-//        $this->assertIsFloat($point->m());
-        $this->assertTrue(is_float($point->x()));
-        $this->assertTrue(is_float($point->y()));
-        $this->assertTrue(is_float($point->m()));
+        $this->assertIsFloat($point->x());
+        $this->assertIsFloat($point->y());
+        $this->assertIsFloat($point->m());
     }
 
     public function providerValidCoordinatesXYZM()
@@ -139,14 +131,10 @@ class PointTest extends TestCase
         $this->assertEquals($z, $point->z());
         $this->assertEquals($m, $point->m());
 
-//        $this->assertIsFloat($point->x());
-//        $this->assertIsFloat($point->y());
-//        $this->assertIsFloat($point->z());
-//        $this->assertIsFloat($point->m());
-        $this->assertTrue(is_float($point->x()));
-        $this->assertTrue(is_float($point->y()));
-        $this->assertTrue(is_float($point->z()));
-        $this->assertTrue(is_float($point->m()));
+        $this->assertIsFloat($point->x());
+        $this->assertIsFloat($point->y());
+        $this->assertIsFloat($point->z());
+        $this->assertIsFloat($point->m());
     }
 
     public function testConstructorWithoutParameters()
@@ -273,8 +261,7 @@ class PointTest extends TestCase
         $point = new Point(1, 2);
         $components = $point->getComponents();
 
-        //$this->assertIsArray($components);
-        $this->assertTrue(is_array($components) );
+        $this->assertIsArray($components);
         $this->assertCount(1, $components);
         $this->assertSame($point, $components[0]);
     }

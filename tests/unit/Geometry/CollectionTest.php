@@ -15,7 +15,7 @@ use \geoPHP\Geometry\LineString;
 use \PHPUnit\Framework\TestCase;
 
 /**
- * This class... TODO: Complete this
+ * Unit tests of Collections
  */
 class CollectionTest extends TestCase
 {
