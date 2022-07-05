@@ -10,6 +10,7 @@
 namespace geoPHP;
 
 use geoPHP\Adapter\GeoHash;
+use geoPHP\Exception\IOException;
 use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
@@ -87,7 +88,7 @@ class geoPHP
      * @var mixed|null $otherArgs Arguments will be passed to the geo adapter
      *
      * @return Collection|Geometry
-     * @throws \Exception
+     * @throws \Exception|IOException
      */
     public static function load($data)
     {

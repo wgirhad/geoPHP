@@ -5,6 +5,7 @@ namespace geoPHP\Adapter;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use geoPHP\Exception\IOException;
 use geoPHP\Geometry\Collection;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
@@ -52,7 +53,7 @@ class GPX implements GeoAdapter
      *                   Can be overwritten with an associative array, with type name in keys.
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
      * @return Geometry|GeometryCollection
-     * @throws \Exception If GPX is not a valid XML
+     * @throws IOException If GPX is not a valid XML
      */
     public function read($gpx, $allowedElements = null)
     {
@@ -63,10 +64,11 @@ class GPX implements GeoAdapter
         // Load into DOMDocument
         $xmlObject = new DOMDocument('1.0', 'UTF-8');
         $xmlObject->preserveWhiteSpace = false;
-        @$xmlObject->loadXML($gpx);
-        if ($xmlObject === false) {
-            throw new \Exception("Invalid GPX: " . $gpx);
+        $loadFailed = ! @$xmlObject->loadXML($gpx);
+        if ($xmlObject === false || !$loadFailed) {
+            throw IOException::invalidGPX('Can not load XML.');
         }
+        var_dump($xmlObject);
 
         $this->parseGarminRpt = strpos($gpx, 'gpxx:rpt') > 0;
 
@@ -97,7 +99,7 @@ class GPX implements GeoAdapter
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception("Cannot Read Geometry From GPX: " . $gpx);
+            throw IOException::invalidGPX("Cannot Read Geometry From GPX. " . $e->getMessage());
         }
 
         return $geom;
