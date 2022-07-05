@@ -29,14 +29,13 @@
     }
   },
   "require": {
-    "php": "5.5 - 8.0"
+    "php": "^7.0|^8.0"
   },
   "require-dev": {
-    "php": "5.5 - 8.0",
-    "phpunit/phpunit": "5.* || 8.*",
+    "phpunit/phpunit": "^9.0",
     "php-coveralls/php-coveralls": "2.*",
     "squizlabs/php_codesniffer": "3.*",
-    "phpstan/phpstan": "^0.12.18"
+    "phpstan/phpstan": "^1.8.0"
   },
   "suggest": {
     "ext-geos": "GEOS allows more advanced operations"

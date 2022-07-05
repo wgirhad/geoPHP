@@ -2,7 +2,7 @@
 language: php
 
 os: linux
-dist: xenial
+dist: bionic
 version: ~> 1
 
 before_script:
@@ -36,37 +36,42 @@ script:
 jobs:
   include:
     - stage: Smoke
-      php: 7.4
+      php: 8.1
       env: PHPCS=1
       script: composer cs
     - stage: Smoke
-      php: 7.4
+      php: 8.1
       env: PHPCS_WARNING=1
       script: composer cs-warning
     - stage: Smoke
-      php: 7.4
+      php: 8.1
       env: PHPSTAN=1
       script: vendor/bin/phpstan analyse
 
     - stage: Test
-      php: 5.5
-      dist: trusty
-      name: PHP 5.5 without Unit tests
+      php: 7.0
+      dist: xenial
+      name: PHP 7.0 without Unit tests
       env: DISABLE_UNIT=1
     - stage: Test
-      php: 5.6
-    - stage: Test
-      php: 7.0
-    - stage: Test
       php: 7.1
+      name: PHP 7.1 without Unit tests
+      env: DISABLE_UNIT=1
     - stage: Test
       php: 7.2
+      name: PHP 7.2 without Unit tests
+      env: DISABLE_UNIT=1
     - stage: Test
       php: 7.3
     - stage: Test
       php: 7.4
+    - stage: Test
+      php: 8.0
+    - stage: Test
+      php: 8.1
 
-    - php: nightly
+    - stage: Test
+      php: nightly
 
 # FIXME: allow_failures doesn't appear to work with stages defined. How to solve that?
   allow_failures:
