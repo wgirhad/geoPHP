@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class LineStringTest extends TestCase
 {
+    public const DELTA = 1e-8;
 
     private function createPoints($coordinateArray)
     {
@@ -118,7 +119,7 @@ class LineStringTest extends TestCase
 
     public function testDimension()
     {
-        $this->assertSame((new LineString())->dimension(), 1);
+        $this->assertSame(1, (new LineString())->dimension());
     }
 
     /**
@@ -136,7 +137,7 @@ class LineStringTest extends TestCase
      * @dataProvider providerValidComponents
      *
      * @param array $points
-     */    
+     */
     public function testPointN($points)
     {
         $components = $this->createPoints($points);
@@ -231,7 +232,7 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray($points);
 
-        $this->assertSame($line->length(), $result);
+        $this->assertEqualsWithDelta($result, $line->length(), self::DELTA);
     }
 
     public function providerLength3D() {
@@ -251,7 +252,7 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray($points);
 
-        $this->assertSame($line->length3D(), $result);
+        $this->assertEqualsWithDelta($result, $line->length3D(), self::DELTA);
     }
 
     public function providerLengths() {
@@ -305,7 +306,7 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray($points);
 
-        $this->assertEquals($line->greatCircleLength(), $results['greatCircle'], '', 1e-8);
+        $this->assertEqualsWithDelta($results['greatCircle'], $line->greatCircleLength(), self::DELTA);
     }
 
     /**
@@ -318,7 +319,7 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray($points);
 
-        $this->assertEquals($line->haversineLength(), $results['haversine'], '', 1e-7);
+        $this->assertEqualsWithDelta($results['haversine'], $line->haversineLength(), self::DELTA);
     }
 
     /**
@@ -331,7 +332,7 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray($points);
 
-        $this->assertEquals($line->vincentyLength(), $results['vincenty'], '', 1e-8);
+        $this->assertEqualsWithDelta($results['vincenty'], $line->vincentyLength(), self::DELTA);
     }
 
     public function testVincentyLengthAntipodalPoints()
@@ -348,13 +349,13 @@ class LineStringTest extends TestCase
         $point3 = new Point(5, 6);
         $line = new LineString([$point1, $point2, $point3]);
 
-        $this->assertEquals($line->explode(), [new LineString([$point1, $point2]), new LineString([$point2, $point3])]);
+        $this->assertEquals([new LineString([$point1, $point2]), new LineString([$point2, $point3])], $line->explode());
 
-        $this->assertSame($line->explode(true), [[$point1, $point2], [$point2, $point3]]);
+        $this->assertSame([[$point1, $point2], [$point2, $point3]], $line->explode(true));
 
-        $this->assertSame((new LineString())->explode(), []);
+        $this->assertSame([], (new LineString())->explode());
 
-        $this->assertSame((new LineString())->explode(true), []);
+        $this->assertSame([], (new LineString())->explode(true));
     }
 
     public function providerDistance()
@@ -386,21 +387,21 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray([[0, 0], [0, 10]]);
 
-        $this->assertSame($line->distance($otherGeometry), $expectedDistance);
+        $this->assertSame($expectedDistance, $line->distance($otherGeometry));
     }
 
     public function testMinimumAndMaximumZAndMAndDifference()
     {
         $line = LineString::fromArray([[0, 0, 100.0, 0.0], [1, 1, 50.0, -0.5], [2, 2, 150.0, -1.0], [3, 3, 75.0, 0.5]]);
 
-        $this->assertSame($line->minimumZ(), 50.0);
-        $this->assertSame($line->maximumZ(), 150.0);
+        $this->assertSame(50.0, $line->minimumZ());
+        $this->assertSame(150.0, $line->maximumZ());
 
-        $this->assertSame($line->minimumM(), -1.0);
-        $this->assertSame($line->maximumM(), 0.5);
+        $this->assertSame(-1.0, $line->minimumM());
+        $this->assertSame(0.5, $line->maximumM());
 
-        $this->assertSame($line->zDifference(), 25.0);
-        $this->assertSame(LineString::fromArray([[0, 1], [2, 3]])->zDifference(), null);
+        $this->assertSame(25.0, $line->zDifference());
+        $this->assertNull(LineString::fromArray([[0, 1], [2, 3]])->zDifference());
     }
 
     /**
@@ -430,8 +431,8 @@ class LineStringTest extends TestCase
                 [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 120] ]
         );
 
-        $this->assertSame($line->elevationGain($tolerance), $gain);
+        $this->assertSame($gain, $line->elevationGain($tolerance));
 
-        $this->assertSame($line->elevationLoss($tolerance), $loss);
+        $this->assertSame($loss, $line->elevationLoss($tolerance));
     }
 }

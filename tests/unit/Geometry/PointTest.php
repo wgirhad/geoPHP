@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PointTest extends TestCase
 {
+    public const DELTA = 1e-8;
 
     public function providerValidCoordinatesXY()
     {
@@ -326,16 +327,16 @@ class PointTest extends TestCase
         $this->assertNan($pointAsArray[1]);
 
         $pointAsArray = (new Point(1, 2))->asArray();
-        $this->assertSame($pointAsArray, [1.0, 2.0]);
+        $this->assertSame([1.0, 2.0], $pointAsArray);
 
         $pointAsArray = (new Point(1, 2, 3))->asArray();
-        $this->assertSame($pointAsArray, [1.0, 2.0, 3.0]);
+        $this->assertSame([1.0, 2.0, 3.0], $pointAsArray);
 
         $pointAsArray = (new Point(1, 2, null, 3))->asArray();
-        $this->assertSame($pointAsArray, [1.0, 2.0, null, 3.0]);
+        $this->assertSame([1.0, 2.0, null, 3.0], $pointAsArray);
 
         $pointAsArray = (new Point(1, 2, 3, 4))->asArray();
-        $this->assertSame($pointAsArray, [1.0, 2.0, 3.0, 4.0]);
+        $this->assertSame([1.0, 2.0, 3.0, 4.0], $pointAsArray);
     }
 
     public function testBoundary()
@@ -364,8 +365,8 @@ class PointTest extends TestCase
         $point = new Point(1, 2, 3, 4);
         $point->flatten();
 
-        $this->assertEquals($point->x(), 1);
-        $this->assertEquals($point->y(), 2);
+        $this->assertEquals(1, $point->x());
+        $this->assertEquals(2, $point->y());
         $this->assertNull($point->z());
         $this->assertNull($point->m());
         $this->assertFalse($point->is3D());
@@ -414,7 +415,7 @@ class PointTest extends TestCase
     {
         $point = new Point(0, 0);
 
-        $this->assertSame($point->distance($otherGeometry), $expectedDistance);
+        $this->assertEqualsWithDelta($expectedDistance, $point->distance($otherGeometry), self::DELTA);
     }
 
     /**
@@ -433,23 +434,23 @@ class PointTest extends TestCase
     {
         $point = new Point(1, 2, 3, 4);
 
-        $this->assertSame( $point->dimension(), 0 );
+        $this->assertSame(0, $point->dimension());
 
-        $this->assertSame( $point->numPoints(), 1 );
+        $this->assertSame(1, $point->numPoints());
 
-        $this->assertSame( $point->getPoints(), [$point] );
+        $this->assertSame([$point], $point->getPoints());
 
-        $this->assertTrue( $point->isSimple());
+        $this->assertTrue($point->isSimple());
     }
 
     public function testMinMaxMethods()
     {
         $point = new Point(1, 2, 3, 4);
 
-        $this->assertEquals($point->minimumZ(), 3);
-        $this->assertEquals($point->maximumZ(), 3);
-        $this->assertEquals($point->minimumM(), 4);
-        $this->assertEquals($point->maximumM(), 4);
+        $this->assertEquals(3, $point->minimumZ());
+        $this->assertEquals(3, $point->maximumZ());
+        $this->assertEquals(4, $point->minimumM());
+        $this->assertEquals(4, $point->maximumM());
     }
 
     public function providerMethodsNotValidForPointReturnsNull()
@@ -500,7 +501,7 @@ class PointTest extends TestCase
      */
     public function testPlaceholderMethods($methodName)
     {
-        $this->assertSame( (new Point(1, 2, 3, 4))->$methodName(null), 0.0 );
+        $this->assertSame(0.0, (new Point(1, 2, 3, 4))->$methodName(null));
     }
 
 }

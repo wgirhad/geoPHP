@@ -40,7 +40,7 @@ class CollectionTest extends TestCase
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->is3D(), $result);
+        $this->assertEquals($result, $stub->is3D());
     }
 
     public function providerIsMeasured()
@@ -65,7 +65,7 @@ class CollectionTest extends TestCase
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->isMeasured(), $result);
+        $this->assertEquals($result, $stub->isMeasured());
     }
 
     public function providerIsEmpty()
@@ -88,7 +88,7 @@ class CollectionTest extends TestCase
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->isEmpty(), $result);
+        $this->assertEquals($result, $stub->isEmpty());
     }
 
     public function testNonApplicableMethods()
@@ -116,7 +116,7 @@ class CollectionTest extends TestCase
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
 
-        $this->assertEquals($stub->asArray(), $expected);
+        $this->assertEquals($expected, $stub->asArray());
     }
 
     public function testFlatten()
@@ -151,8 +151,8 @@ class CollectionTest extends TestCase
         foreach ($segments as $i => $segment) {
             $this->assertCount(2, $segment->getComponents());
 
-            $this->assertSame($segment->startPoint(), $points[$i]);
-            $this->assertSame($segment->endPoint(), $points[$i + 1]);
+            $this->assertSame($points[$i], $segment->startPoint());
+            $this->assertSame($points[$i + 1], $segment->endPoint());
         }
     }
 }
