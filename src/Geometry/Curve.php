@@ -55,7 +55,11 @@ abstract class Curve extends Collection
 
     public function isClosed()
     {
-        return ($this->startPoint() && $this->endPoint() ? $this->startPoint()->equals($this->endPoint()) : false);
+        if ($this->isEmpty() || !$this->startPoint() || !$this->endPoint()) {
+            return false;
+        } else {
+            return $this->startPoint()->equals($this->endPoint());
+        }
     }
 
     public function isRing()
