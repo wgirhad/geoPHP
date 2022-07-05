@@ -65,10 +65,9 @@ class GPX implements GeoAdapter
         $xmlObject = new DOMDocument('1.0', 'UTF-8');
         $xmlObject->preserveWhiteSpace = false;
         $loadFailed = ! @$xmlObject->loadXML($gpx);
-        if ($xmlObject === false || !$loadFailed) {
+        if ($xmlObject === false || $loadFailed) {
             throw IOException::invalidGPX('Can not load XML.');
         }
-        var_dump($xmlObject);
 
         $this->parseGarminRpt = strpos($gpx, 'gpxx:rpt') > 0;
 
