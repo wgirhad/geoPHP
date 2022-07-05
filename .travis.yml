@@ -49,11 +49,6 @@ jobs:
       script: vendor/bin/phpstan analyse
 
     - stage: Test
-      php: 7.0
-      dist: xenial
-      name: PHP 7.0 without Unit tests
-      env: DISABLE_UNIT=1
-    - stage: Test
       php: 7.1
       name: PHP 7.1 without Unit tests
       env: DISABLE_UNIT=1
