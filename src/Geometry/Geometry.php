@@ -382,6 +382,11 @@ abstract class Geometry
         return $result;
     }
 
+    public function __toString()
+    {
+        return $this->out($this->getSRID() ? 'ewkt' : 'wkt');
+    }
+
     public function coordinateDimension()
     {
         return 2 + ($this->hasZ() ? 1 : 0) + ($this->isMeasured() ? 1 : 0);
