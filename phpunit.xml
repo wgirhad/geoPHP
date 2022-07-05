@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.7/phpunit.xsd"
-        colors="true"
-        beStrictAboutTestsThatDoNotTestAnything="true"
-        beStrictAboutOutputDuringTests="true"
-        verbose="false"
->
-    <testsuites>
-        <testsuite name="funiQ\geoPHP tests">
-            <directory>tests/unit/Geometry</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory>src/</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-text" target="php://stdout"/>
-        <!--<log type="coverage-html" target="build/coverage" />-->
-        <!--<log type="coverage-clover" target="build/logs/clover.xml" />-->
-    </logging>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+    colors="true"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    beStrictAboutOutputDuringTests="true"
+    verbose="false">
+  <testsuites>
+    <testsuite name="funiQ/geoPHP tests">
+      <directory>tests/unit/Geometry</directory>
+      <directory>tests/unit/Adapter</directory>
+    </testsuite>
+  </testsuites>
+  <coverage
+      includeUncoveredFiles="true"
+      cacheDirectory="build/cache/">
+    <include>
+      <directory>src/</directory>
+    </include>
+    <report>
+      <text outputFile="php://stdout" showUncoveredFiles="false" showOnlySummary="false"/>
+      <clover outputFile="build/clover.xml"/>
+      <html outputDirectory="build/coverage"/>
+    </report>
+  </coverage>
 </phpunit>

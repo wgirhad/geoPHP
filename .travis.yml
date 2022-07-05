@@ -29,7 +29,7 @@ install:
 
 script:
   - mkdir -p build/logs
-  - if [[ -z $DISABLE_UNIT ]]; then composer unit-clover; fi
+  - if [[ -z $DISABLE_UNIT ]]; then composer unit; fi
   - composer test-input
   - composer performance
 
