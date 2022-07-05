@@ -12,16 +12,19 @@ use geoPHP\geoPHP;
  */
 class MultiLineString extends MultiCurve
 {
-
     public function __construct($components = [])
     {
         parent::__construct($components, true, LineString::class);
     }
 
-    /**
-     * @var LineString[] The elements of a MultiLineString are LineStrings
-     */
-    protected $components = [];
+    public static function fromArray($array)
+    {
+        $points = [];
+        foreach ($array as $point) {
+            $points[] = LineString::fromArray($point);
+        }
+        return new static($points);
+    }
 
     public function geometryType()
     {

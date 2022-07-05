@@ -52,6 +52,15 @@ class Polygon extends Surface
         }
     }
 
+    public static function fromArray($array)
+    {
+        $rings = [];
+        foreach ($array as $ring) {
+            $rings[] = LineString::fromArray($ring);
+        }
+        return new static($rings);
+    }
+
     public function geometryType()
     {
         return Geometry::POLYGON;

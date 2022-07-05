@@ -22,6 +22,15 @@ class MultiPoint extends MultiGeometry
         parent::__construct($components, true, Point::class);
     }
 
+    public static function fromArray($array)
+    {
+        $points = [];
+        foreach ($array as $point) {
+            $points[] = Point::fromArray($point);
+        }
+        return new static($points);
+    }
+
     /**
      * @return string
      */
@@ -37,15 +46,6 @@ class MultiPoint extends MultiGeometry
     public function dimension()
     {
         return 0;
-    }
-
-    public static function fromArray($array)
-    {
-        $points = [];
-        foreach ($array as $point) {
-            $points[] = Point::fromArray($point);
-        }
-        return new static($points);
     }
 
     /**

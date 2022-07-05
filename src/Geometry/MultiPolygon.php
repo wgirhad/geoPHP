@@ -18,6 +18,15 @@ class MultiPolygon extends MultiSurface
         parent::__construct($components, true, Polygon::class);
     }
 
+    public static function fromArray($array)
+    {
+        $points = [];
+        foreach ($array as $point) {
+            $points[] = Polygon::fromArray($point);
+        }
+        return new static($points);
+    }
+
     public function geometryType()
     {
         return Geometry::MULTI_POLYGON;
