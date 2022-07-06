@@ -5,10 +5,18 @@
     <file>src</file>
     <file>tests</file>
 
+    <!-- Default command line arguments -->
     <arg name="basepath" value="."/>
+    <arg name="cache" value="build/cache/phpcs.cache"/>
     <arg name="colors"/>
-    <arg name="parallel" value="75"/>
-    <arg value="np"/>
+    <arg name="parallel" value="50"/>
+    <arg name="report" value="full,summary"/>
+    <!-- No warnings -->
+    <arg value="n"/>
+    <!-- Show progress -->
+    <arg value="p"/>
+    <!-- Show sniff codes -->
+    <arg value="s"/>
 
     <!-- Don't hide tokenizer exceptions -->
     <rule ref="Internal.Tokenizer.Exception">
@@ -30,7 +38,7 @@
     <rule ref="Squiz.WhiteSpace.ControlStructureSpacing"/>
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="Generic.Commenting.Todo"><severity>1</severity></rule>
     <rule ref="Generic.ControlStructures.DisallowYodaConditions"/>
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
@@ -75,11 +83,6 @@
     <!-- Private properties MUST not be prefixed with an underscore -->
     <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
         <type>error</type>
-    </rule>
-
-    <!-- The testing bootstrap file uses string concats to stop IDEs seeing the class aliases -->
-    <rule ref="Generic.Strings.UnnecessaryStringConcat">
-        <exclude-pattern>tests/bootstrap.php</exclude-pattern>
     </rule>
 
 </ruleset>

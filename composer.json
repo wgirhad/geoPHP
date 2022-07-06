@@ -55,9 +55,9 @@
       "@test-input",
       "@performance"
     ],
-    "cs":          "phpcs --cache=build/phpcs-cache -n -s --report-full --report-summary",
-    "cs-warning":  "phpcs --cache=build/phpcs-cache -w -s --report-full --report-summary || true",
-    "cs-fix":      "phpcbf --cache=build/phpcs-cache -n --report-full --report-summary",
+    "cs":          "phpcs",
+    "cs-warning":  "phpcs -w || true",
+    "cs-fix":      "phpcbf",
     "stan":        "phpstan analyze",
     "unit":        [
       "@putenv XDEBUG_MODE=coverage",
