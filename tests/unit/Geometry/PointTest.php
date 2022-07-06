@@ -50,7 +50,7 @@ class PointTest extends TestCase
         $this->assertIsFloat($point->y());
     }
 
-    public function providerValidCoordinatesXYZ_or_XYM()
+    public function providerValidCoordinatesXYZorXYM()
     {
         return [
             'null coordinates' => [0, 0, 0],
@@ -62,7 +62,7 @@ class PointTest extends TestCase
     }
 
     /**
-     * @dataProvider providerValidCoordinatesXYZ_or_XYM
+     * @dataProvider providerValidCoordinatesXYZorXYM
      *
      * @param int|float $x
      * @param int|float $y
@@ -83,13 +83,13 @@ class PointTest extends TestCase
     }
 
     /**
-     * @dataProvider providerValidCoordinatesXYZ_or_XYM
+     * @dataProvider providerValidCoordinatesXYZorXYM
      *
      * @param int|float $x
      * @param int|float $y
      * @param int|float $m
      */
-    function testValidCoordinatesXYM($x, $y, $m)
+    public function testValidCoordinatesXYM($x, $y, $m)
     {
         $point = new Point($x, $y, null, $m);
 
@@ -298,12 +298,15 @@ class PointTest extends TestCase
     public function testBBox()
     {
         $point = new Point(1, 2);
-        $this->assertSame($point->getBBox(), [
+        $this->assertSame(
+            $point->getBBox(),
+            [
                 'maxy' => 2.0,
                 'miny' => 2.0,
                 'maxx' => 1.0,
                 'minx' => 1.0,
-        ]);
+            ]
+        );
     }
 
     public function testAsArray()
@@ -386,7 +389,7 @@ class PointTest extends TestCase
             'MultiPoint, one of two is empty' => [MultiPoint::fromArray([[], [0, 10]]), 10.0],
 
             'GeometryCollection, closest component is 10' =>
-                [new GeometryCollection([new Point(0,10), new Point()]), 10.0]
+                [new GeometryCollection([new Point(0, 10), new Point()]), 10.0]
             // FIXME: this geometry collection crashes GEOS
             // TODO: test other types
         ];
@@ -467,7 +470,7 @@ class PointTest extends TestCase
      */
     public function testPlaceholderMethodsReturnsNull($methodName)
     {
-        $this->assertNull( (new Point(1, 2, 3, 4))->$methodName(null) );
+        $this->assertNull((new Point(1, 2, 3, 4))->$methodName(null));
     }
 
     public function providerMethodsNotValidForPointReturns0()
@@ -490,5 +493,4 @@ class PointTest extends TestCase
     {
         $this->assertSame(0.0, (new Point(1, 2, 3, 4))->$methodName(null));
     }
-
 }

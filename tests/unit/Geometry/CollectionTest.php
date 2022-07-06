@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains the CollectionTest class.
  * For more information see the class description below.
@@ -9,17 +10,16 @@
 
 namespace geoPHP\Tests\Geometry;
 
-use \geoPHP\Geometry\Collection;
-use \geoPHP\Geometry\Point;
-use \geoPHP\Geometry\LineString;
-use \PHPUnit\Framework\TestCase;
+use geoPHP\Geometry\Collection;
+use geoPHP\Geometry\Point;
+use geoPHP\Geometry\LineString;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests of Collections
  */
 class CollectionTest extends TestCase
 {
-
     public function providerIs3D()
     {
         return [

@@ -2,10 +2,10 @@
 
 namespace geoPHP\Tests\Geometry;
 
-use \geoPHP\Exception\InvalidGeometryException;
-use \geoPHP\Geometry\Point;
-use \geoPHP\Geometry\MultiPoint;
-use \PHPUnit\Framework\TestCase;
+use geoPHP\Exception\InvalidGeometryException;
+use geoPHP\Geometry\Point;
+use geoPHP\Geometry\MultiPoint;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests of MultiPoint geometry
@@ -15,7 +15,6 @@ use \PHPUnit\Framework\TestCase;
  */
 class MultiPointTest extends TestCase
 {
-
     public function providerValidComponents()
     {
         return [
@@ -69,15 +68,15 @@ class MultiPointTest extends TestCase
 
     public function testIs3D()
     {
-        $this->assertTrue( (new Point(1, 2, 3))->is3D() );
-        $this->assertTrue( (new Point(1, 2, 3, 4))->is3D() );
-        $this->assertTrue( (new Point(null, null, 3, 4))->is3D() );
+        $this->assertTrue((new Point(1, 2, 3))->is3D());
+        $this->assertTrue((new Point(1, 2, 3, 4))->is3D());
+        $this->assertTrue((new Point(null, null, 3, 4))->is3D());
     }
 
     public function testIsMeasured()
     {
-        $this->assertTrue( (new Point(1, 2, null, 4))->isMeasured() );
-        $this->assertTrue( (new Point(null, null , null, 4))->isMeasured() );
+        $this->assertTrue((new Point(1, 2, null, 4))->isMeasured());
+        $this->assertTrue((new Point(null, null, null, 4))->isMeasured());
     }
 
     public function providerCentroid()
@@ -161,5 +160,4 @@ class MultiPointTest extends TestCase
 
         $this->assertTrue($point->isSimple());
     }
-
 }

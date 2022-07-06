@@ -91,8 +91,8 @@ class LineStringTest extends TestCase
     public function testFromArray()
     {
         $this->assertEquals(
-                LineString::fromArray([[1,2,3,4], [5,6,7,8]]),
-                new LineString([new Point(1,2,3,4), new Point(5,6,7,8)])
+            LineString::fromArray([[1,2,3,4], [5,6,7,8]]),
+            new LineString([new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)])
         );
     }
 
@@ -145,12 +145,12 @@ class LineStringTest extends TestCase
 
         $this->assertNull($line->pointN(0));
 
-        for ($i=1; $i < count($components); $i++) {
+        for ($i = 1; $i < count($components); $i++) {
             // positive n
-            $this->assertEquals($components[$i-1], $line->pointN($i));
+            $this->assertEquals($components[$i - 1], $line->pointN($i));
 
             // negative n
-            $this->assertEquals($components[count($components)-$i], $line->pointN(-$i));
+            $this->assertEquals($components[count($components) - $i], $line->pointN(-$i));
         }
     }
 
@@ -215,7 +215,8 @@ class LineStringTest extends TestCase
         $this->assertSame($line->isSimple(), $result);
     }
 
-    public function providerLength() {
+    public function providerLength()
+    {
         return [
                 [[[0, 0], [10, 0]], 10.0],
                 [[[1, 1], [2, 2], [2, 3.5], [1, 3], [1, 2], [2, 1]], 6.44646111349608],
@@ -235,7 +236,8 @@ class LineStringTest extends TestCase
         $this->assertEqualsWithDelta($result, $line->length(), self::DELTA);
     }
 
-    public function providerLength3D() {
+    public function providerLength3D()
+    {
         return [
                 [[[0, 0, 0], [10, 0, 10]], 14.142135623731],
                 [[[1, 1, 0], [2, 2, 2], [2, 3.5, 0], [1, 3, 2], [1, 2, 0], [2, 1, 2]], 11.926335310544],
@@ -255,7 +257,8 @@ class LineStringTest extends TestCase
         $this->assertEqualsWithDelta($result, $line->length3D(), self::DELTA);
     }
 
-    public function providerLengths() {
+    public function providerLengths()
+    {
         return [
                 [[[0, 0], [0, 0]], [
                         'greatCircle' => 0.0,
@@ -427,7 +430,7 @@ class LineStringTest extends TestCase
     public function testElevationGainAndLoss($tolerance, $gain, $loss)
     {
         $line = LineString::fromArray(
-                [[0, 0, 100], [0, 0, 102], [0, 0, 105], [0, 0, 103], [0, 0, 110], [0, 0, 118],
+            [[0, 0, 100], [0, 0, 102], [0, 0, 105], [0, 0, 103], [0, 0, 110], [0, 0, 118],
                 [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 120] ]
         );
 
