@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace geoPHP;
 
 use geoPHP\Adapter\GeoHash;
@@ -43,19 +44,19 @@ class geoPHP
     const CLASS_NAMESPACE = 'geoPHP\\';
 
     private static $adapterMap = [
-            'wkt'            => 'WKT',
-            'ewkt'           => 'EWKT',
-            'wkb'            => 'WKB',
-            'ewkb'           => 'EWKB',
-            'json'           => 'GeoJSON',
-            'geojson'        => 'GeoJSON',
-            'kml'            => 'KML',
-            'gpx'            => 'GPX',
-            'georss'         => 'GeoRSS',
-            'google_geocode' => 'GoogleGeocode',
-            'geohash'        => 'GeoHash',
-            'twkb'           => 'TWKB',
-            'osm'            => 'OSM',
+        'wkt'            => 'WKT',
+        'ewkt'           => 'EWKT',
+        'wkb'            => 'WKB',
+        'ewkb'           => 'EWKB',
+        'json'           => 'GeoJSON',
+        'geojson'        => 'GeoJSON',
+        'kml'            => 'KML',
+        'gpx'            => 'GPX',
+        'georss'         => 'GeoRSS',
+        'google_geocode' => 'GoogleGeocode',
+        'geohash'        => 'GeoHash',
+        'twkb'           => 'TWKB',
+        'osm'            => 'OSM',
     ];
 
     public static function getAdapterMap()
@@ -64,13 +65,13 @@ class geoPHP
     }
 
     private static $geometryList = [
-            'point'              => 'Point',
-            'linestring'         => 'LineString',
-            'polygon'            => 'Polygon',
-            'multipoint'         => 'MultiPoint',
-            'multilinestring'    => 'MultiLineString',
-            'multipolygon'       => 'MultiPolygon',
-            'geometrycollection' => 'GeometryCollection',
+        'point'              => 'Point',
+        'linestring'         => 'LineString',
+        'polygon'            => 'Polygon',
+        'multipoint'         => 'MultiPoint',
+        'multilinestring'    => 'MultiLineString',
+        'multipolygon'       => 'MultiPolygon',
+        'geometrycollection' => 'GeometryCollection',
     ];
 
     public static function getGeometryList()
@@ -371,11 +372,16 @@ class geoPHP
             }
         }
 
-        // Detect HEX encoded WKB or EWKB (PostGIS format) -- first byte is 48, second byte is 49 (hex '01' => first-byte = 1)
-        // The shortest possible WKB string (LINESTRING EMPTY) is 18 hex-chars (9 encoded bytes) long
-        // This differentiates it from a geohash, which is always shorter than 13 characters.
+        /* Detect HEX encoded WKB or EWKB (PostGIS format)
+         * first byte is 48, second byte is 49 (hex '01' => first-byte = 1)
+         * The shortest possible WKB string (LINESTRING EMPTY) is 18 hex-chars (9 encoded bytes) long
+         * This differentiates it from a geohash, which is always shorter than 13 characters.
+         */
         if ($bytes[1] == 48 && ($bytes[2] == 49 || $bytes[2] == 48) && strlen($input) > 12) {
-            if ((current(unpack($bytes[2] == 49 ? 'V' : 'N', hex2bin(substr($bin, 2, 8)))) & Adapter\WKB::SRID_MASK) == Adapter\WKB::SRID_MASK) {
+            if (
+                (current(unpack($bytes[2] == 49 ? 'V' : 'N', hex2bin(substr($bin, 2, 8)))) & Adapter\WKB::SRID_MASK)
+                == Adapter\WKB::SRID_MASK
+            ) {
                 return 'ewkb:true';
             } else {
                 return 'wkb:true';

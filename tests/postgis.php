@@ -1,20 +1,17 @@
 <?php
 
-require '../vendor/autoload.php';
+require_once dirname(__FILE__) . '../vendor/autoload.php';
 
 use geoPHP\geoPHP;
-
-// Uncomment to test
- run_test();
 
 function run_test()
 {
 
     header("Content-type: text");
 
-  // Your database test table should contain 3 columns: name (text), type (text), geom (geometry)
-  // CREATE EXTENSION postgis;
-  // CREATE TABLE geophp (id serial, name TEXT, type TEXT, geom Geometry, PRIMARY KEY (id));
+    // Your database test table should contain 3 columns: name (text), type (text), geom (geometry)
+    // CREATE EXTENSION postgis;
+    // CREATE TABLE geophp (id serial, name TEXT, type TEXT, geom Geometry, PRIMARY KEY (id));
 
     $host =     'localhost';
     $database = 'test';
@@ -32,11 +29,11 @@ function run_test()
         die("Table \"" . $table . "\" doesn't exists.\n");
     }
 
-  // Truncate
+    // Truncate
     pg_query($connection, "TRUNCATE TABLE $table");
 
-  // Working with PostGIS and EWKB
-  // ----------------------------
+    // Working with PostGIS and EWKB
+    // ----------------------------
 
     foreach (scandir('./input') as $file) {
         $parts = explode('.', $file);
@@ -67,36 +64,56 @@ function run_test()
 function test_postgis($table, $name, $type, $geom, $connection, $format)
 {
 
-  // Let's insert into the database using GeomFromWKB
+    // Let's insert into the database using GeomFromWKB
     $insert_string = pg_escape_bytea($geom->out($format));
 
-    pg_query($connection, "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromWKB('$insert_string'))");
+    pg_query(
+        $connection,
+        "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromWKB('$insert_string'))"
+    );
 
-  // SELECT using asBinary PostGIS
-    $result = pg_fetch_all(pg_query($connection, "SELECT ST_AsBinary(geom) as geom FROM $table WHERE name='$name'")) ?: [];
+    // SELECT using asBinary PostGIS
+    $result = pg_fetch_all(
+        pg_query(
+            $connection,
+            "SELECT ST_AsBinary(geom) as geom FROM $table WHERE name='$name'"
+        )
+    ) ?: [];
+
     foreach ($result as $item) {
         $wkb = pg_unescape_bytea($item['geom']); // Make sure to unescape the hex blob
         $geom = geoPHP::load($wkb, $format); // We now a full geoPHP Geometry object
     }
 
-  // SELECT and INSERT directly, with no wrapping functions
+    // SELECT and INSERT directly, with no wrapping functions
     $result = pg_fetch_all(pg_query($connection, "SELECT geom as geom FROM $table WHERE name='$name'")) ?: [];
     foreach ($result as $item) {
         $geom = geoPHP::load($item['geom'], $format, true); // We now have a geoPHP Geometry
 
-      // Let's re-insert directly into postGIS
+        // Let's re-insert directly into postGIS
         $insert_string = $geom->out($format, true);
         pg_query($connection, "INSERT INTO $table (name, type, geom) values ('$name', '$type', '$insert_string')");
     }
 
-  // SELECT and INSERT using as EWKT (ST_GeomFromEWKT and ST_AsEWKT)
-    $result = pg_fetch_all(pg_query($connection, "SELECT ST_AsEWKT(geom) as geom FROM $table WHERE name='$name'")) ?: [];
+    // SELECT and INSERT using as EWKT (ST_GeomFromEWKT and ST_AsEWKT)
+    $result = pg_fetch_all(
+        pg_query(
+            $connection,
+            "SELECT ST_AsEWKT(geom) as geom FROM $table WHERE name='$name'"
+        )
+    ) ?: [];
+
     foreach ($result as $item) {
         $wkt = $item['geom']; // Make sure to unescape the hex blob
         $geom = geoPHP::load($item['geom'], 'ewkt'); // We now a full geoPHP Geometry object
 
-      // Let's re-insert directly into postGIS
+        // Let's re-insert directly into postGIS
         $insert_string = $geom->out('ewkt');
-        pg_query($connection, "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromEWKT('$insert_string'))");
+        pg_query(
+            $connection,
+            "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromEWKT('$insert_string'))"
+        );
     }
 }
+
+run_test();

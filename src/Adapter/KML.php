@@ -105,7 +105,9 @@ class KML implements GeoAdapter
             return new GeometryCollection($geometries);
         } else {
             // The document does not have a placemark, try to create a valid geometry from the root element
-            $nodeName = $this->xmlObject->documentElement->nodeName == 'multigeometry' ? 'geometrycollection' : $this->xmlObject->documentElement->nodeName;
+            $nodeName = $this->xmlObject->documentElement->nodeName == 'multigeometry'
+                ? 'geometrycollection'
+                : $this->xmlObject->documentElement->nodeName;
             if (array_key_exists($nodeName, geoPHP::getGeometryList())) {
                 $function = 'parse' . geoPHP::getGeometryList()[$nodeName];
                 return $this->$function($this->xmlObject->documentElement);
@@ -333,9 +335,13 @@ class KML implements GeoAdapter
         $str = '';
         if (!empty($components)) {
             /** @noinspection PhpParamsInspection */
-            $str = '<' . $this->nss . 'outerBoundaryIs>' . $this->linestringToKML($components[0], 'LinearRing') . '</' . $this->nss . 'outerBoundaryIs>';
+            $str = '<' . $this->nss . 'outerBoundaryIs>'
+                . $this->linestringToKML($components[0], 'LinearRing')
+                . '</' . $this->nss . 'outerBoundaryIs>';
             foreach (array_slice($components, 1) as $comp) {
-                $str .= '<' . $this->nss . 'innerBoundaryIs>' . $this->linestringToKML($comp) . '</' . $this->nss . 'innerBoundaryIs>';
+                $str .= '<' . $this->nss . 'innerBoundaryIs>'
+                    . $this->linestringToKML($comp)
+                    . '</' . $this->nss . 'innerBoundaryIs>';
             }
         }
 

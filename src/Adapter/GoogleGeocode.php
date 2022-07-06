@@ -36,7 +36,8 @@ class GoogleGeocode implements GeoAdapter
      *
      * @param string|string[]     $address        Address to geocode
      * @param string              $apiKey         Your application's Google Maps Geocoding API key
-     * @param string              $returnType     Type of Geometry to return. Can either be 'points' or 'bounds' (polygon)
+     * @param string              $returnType     Type of Geometry to return.
+     *                                            Can either be 'points' or 'bounds' (polygon)
      * @param array|bool|Geometry $bounds         Limit the search area to within this region.
      *        For example by default geocoding "Cairo" will return the location of Cairo Egypt.
      *        If you pass a polygon of Illinois, it will return Cairo IL.
@@ -55,7 +56,9 @@ class GoogleGeocode implements GeoAdapter
             $bounds = $bounds->getBBox();
         }
         if (gettype($bounds) == 'array') {
-            $boundsString = '&bounds=' . $bounds['miny'] . ',' . $bounds['minx'] . '|' . $bounds['maxy'] . ',' . $bounds['maxx'];
+            $boundsString = '&bounds='
+                            . $bounds['miny'] . ',' . $bounds['minx'] . '|'
+                            . $bounds['maxy'] . ',' . $bounds['maxx'];
         } else {
             $boundsString = '';
         }
@@ -114,7 +117,8 @@ class GoogleGeocode implements GeoAdapter
      * @param Geometry $geometry
      * @param string   $apiKey     Your application's Google Maps Geocoding API key
      * @param string   $returnType Should be either 'string' or 'array' or 'both'
-     * @param string   $language   The language in which to return results. If not set, geocoder tries to use the native language of the domain.
+     * @param string   $language   The language in which to return results.
+     *                             If not set, geocoder tries to use the native language of the domain.
      *
      * @return string|Object[]|null A formatted address or array of address components
      * @throws \Exception If geocoding fails

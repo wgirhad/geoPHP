@@ -174,17 +174,25 @@ class OSM implements GeoAdapter
             // Assemble relation geometries
             $geometryCollection = [];
             if (!empty($relationPolygons)) {
-                $geometryCollection[] = count($relationPolygons) == 1 ? $relationPolygons[0] : new MultiPolygon($relationPolygons);
+                $geometryCollection[] = count($relationPolygons) == 1
+                    ? $relationPolygons[0]
+                    : new MultiPolygon($relationPolygons);
             }
             if (!empty($relationLines)) {
-                $geometryCollection[] = count($relationLines) == 1 ? $relationLines[0] : new MultiLineString($relationLines);
+                $geometryCollection[] = count($relationLines) == 1
+                    ? $relationLines[0]
+                    : new MultiLineString($relationLines);
             }
             if (!empty($relationPoints)) {
-                $geometryCollection[] = count($relationPoints) == 1 ? $relationPoints[0] : new MultiPoint($relationPoints);
+                $geometryCollection[] = count($relationPoints) == 1
+                    ? $relationPoints[0]
+                    : new MultiPoint($relationPoints);
             }
 
             if (!empty($geometryCollection)) {
-                $geometries[] = count($geometryCollection) == 1 ? $geometryCollection[0] : new GeometryCollection($geometryCollection);
+                $geometries[] = count($geometryCollection) == 1
+                    ? $geometryCollection[0]
+                    : new GeometryCollection($geometryCollection);
             }
         }
 
@@ -219,7 +227,6 @@ class OSM implements GeoAdapter
             }
         }
 
-        //var_dump($geometries);
         return count($geometries) == 1 ? $geometries[0] : new GeometryCollection($geometries);
     }
 
@@ -229,7 +236,7 @@ class OSM implements GeoAdapter
         // Construct lines
         /** @var LineString[] $lineStrings */
         $lineStrings = [];
-        while (count($relationWays) > 0) {
+        while (count($relationWays)) {
             $line = array_shift($relationWays);
             if ($line[0] !== $line[count($line) - 1]) {
                 do {
@@ -277,7 +284,8 @@ class OSM implements GeoAdapter
         /* TODO: what to do with broken rings?
          * I propose to force-close if start -> end point distance is less then 10% of line length, otherwise drop it.
          * But if dropped, its inner ring will be outers, which is not good.
-         * We should save the role for each ring (outer, inner, mixed) during ring creation and check it during ring grouping
+         * We should save the role for each ring (outer, inner, mixed) during ring creation
+         * and check it during grouping rings.
          */
 
         // Construct rings
@@ -471,7 +479,11 @@ class OSM implements GeoAdapter
      */
     protected function processPoint($point, $isWayPoint = false)
     {
-        $nodePosition = sprintf(self::OSM_COORDINATE_PRECISION . '_' . self::OSM_COORDINATE_PRECISION, $point->y(), $point->x());
+        $nodePosition = sprintf(
+            self::OSM_COORDINATE_PRECISION . '_' . self::OSM_COORDINATE_PRECISION,
+            $point->y(),
+            $point->x()
+        );
         if (!isset($this->nodes[$nodePosition])) {
             $this->nodes[$nodePosition] = ['id' => --$this->idCounter, "used" => $isWayPoint];
             return $this->idCounter;
@@ -488,11 +500,11 @@ class OSM implements GeoAdapter
      */
     protected function processLineString($line)
     {
-        $nodes = [];
+        $processedNodes = [];
         foreach ($line->getPoints() as $point) {
-            $nodes[] = $this->processPoint($point, true);
+            $processedNodes[] = $this->processPoint($point, true);
         }
-        $this->ways[--$this->idCounter] = $nodes;
+        $this->ways[--$this->idCounter] = $processedNodes;
     }
 
     /**

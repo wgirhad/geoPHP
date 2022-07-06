@@ -393,7 +393,9 @@ abstract class Geometry
 
     /**
      * Utility function to check if any line segments intersect
-     * Derived from @source http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+     * Derived from:
+     * @source http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+     *
      * @param Point $segment1Start
      * @param Point $segment1End
      * @param Point $segment2Start

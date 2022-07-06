@@ -72,7 +72,8 @@ class Polygon extends Surface
 
     /**
      * @param bool|false $exteriorOnly Calculate the area of exterior ring only, or the polygon with holes
-     * @param bool|false $signed       Usually we want to get positive area, but vertices order (CW or CCW) can be determined from signed area.
+     * @param bool|false $signed       Usually we want to get positive area,
+     *                                 but vertices order (CW or CCW) can be determined from signed area.
      *
      * @return float|null
      */

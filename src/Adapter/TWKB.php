@@ -28,7 +28,7 @@ use geoPHP\Geometry\Polygon;
 /**
  * PHP Geometry <-> TWKB encoder/decoder
  *
- * "Tiny Well-known Binary is is a multi-purpose format for serializing vector geometry data into a byte buffer,
+ * "Tiny Well-known Binary is a multi-purpose format for serializing vector geometry data into a byte buffer,
  * with an emphasis on minimizing size of the buffer."
  * @see https://github.com/TWKB/Specification/blob/master/twkb.md
  *
@@ -325,21 +325,39 @@ class TWKB implements GeoAdapter
      * @param null $decimalDigitsXY Coordinate precision of X and Y. Default is 5 decimals
      * @param null $decimalDigitsZ Coordinate precision of Z. Default is 0 decimal
      * @param null $decimalDigitsM Coordinate precision of M. Default is 0 decimal
-     * @param bool $includeSizes Includes the size in bytes of the remainder of the geometry after the size attribute. Default is false
+     * @param bool $includeSizes Includes the size in bytes of the remainder of the geometry after the size attribute.
+     *                           Default is false
      * @param bool $includeBoundingBoxes Includes the coordinates of bounding box' two corner. Default is false
      *
      * @return string binary or hexadecimal representation of TWKB
      */
-    public function write(Geometry $geometry, $writeAsHex = false, $decimalDigitsXY = null, $decimalDigitsZ = null, $decimalDigitsM = null, $includeSizes = false, $includeBoundingBoxes = false)
-    {
+    public function write(
+        Geometry $geometry,
+        $writeAsHex = false,
+        $decimalDigitsXY = null,
+        $decimalDigitsZ = null,
+        $decimalDigitsM = null,
+        $includeSizes = false,
+        $includeBoundingBoxes = false
+    ) {
         $this->writer = new BinaryWriter();
 
         $this->writeOptions = [
-                'decimalDigitsXY' => $decimalDigitsXY !== null ? $decimalDigitsXY : $this->writeOptions['decimalDigitsXY'],
-                'decimalDigitsZ' => $decimalDigitsZ !== null ? $decimalDigitsZ : $this->writeOptions['decimalDigitsZ'],
-                'decimalDigitsM' => $decimalDigitsM !== null ? $decimalDigitsM : $this->writeOptions['decimalDigitsM'],
-                'includeSize' => $includeSizes ? true : $this->writeOptions['includeSize'],
-                'includeBoundingBoxes' => $includeBoundingBoxes ? true : $this->writeOptions['includeBoundingBoxes']
+                'decimalDigitsXY' => $decimalDigitsXY !== null
+                    ? $decimalDigitsXY
+                    : $this->writeOptions['decimalDigitsXY'],
+                'decimalDigitsZ' => $decimalDigitsZ !== null
+                    ? $decimalDigitsZ
+                    : $this->writeOptions['decimalDigitsZ'],
+                'decimalDigitsM' => $decimalDigitsM !== null
+                    ? $decimalDigitsM
+                    : $this->writeOptions['decimalDigitsM'],
+                'includeSize' => $includeSizes
+                    ? true
+                    : $this->writeOptions['includeSize'],
+                'includeBoundingBoxes' => $includeBoundingBoxes
+                    ? true
+                    : $this->writeOptions['includeBoundingBoxes']
         ];
         $this->writeOptions = array_merge(
             $this->writeOptions,
@@ -421,14 +439,20 @@ class TWKB implements GeoAdapter
             if ($geometry->hasZ()) {
                 $bBox['minz'] = $geometry->minimumZ();
                 $bBox['maxz'] = $geometry->maximumZ();
-                $twkbBox .= $this->writer->writeSVarInt(round($bBox['minz'] * $this->writeOptions['zFactor']));
-                $twkbBox .= $this->writer->writeSVarInt(round(($bBox['maxz'] - $bBox['minz']) * $this->writeOptions['zFactor']));
+                $twkbBox .= $this->writer->writeSVarInt(
+                    round($bBox['minz'] * $this->writeOptions['zFactor'])
+                );
+                $twkbBox .= $this->writer->writeSVarInt(
+                    round(($bBox['maxz'] - $bBox['minz']) * $this->writeOptions['zFactor'])
+                );
             }
             if ($geometry->isMeasured()) {
                 $bBox['minm'] = $geometry->minimumM();
                 $bBox['maxm'] = $geometry->maximumM();
                 $twkbBox .= $this->writer->writeSVarInt($bBox['minm'] * $this->writeOptions['mFactor']);
-                $twkbBox .= $this->writer->writeSVarInt(($bBox['maxm'] - $bBox['minm']) * $this->writeOptions['mFactor']);
+                $twkbBox .= $this->writer->writeSVarInt(
+                    ($bBox['maxm'] - $bBox['minm']) * $this->writeOptions['mFactor']
+                );
             }
             $twkbGeom = $twkbBox . $twkbGeom;
         }
@@ -439,7 +463,8 @@ class TWKB implements GeoAdapter
                 $extendedPrecision |= ($geometry->hasZ() ? 0x1 : 0) | ($this->writeOptions['decimalDigitsZ'] << 2);
             }
             if ($geometry->isMeasured()) {
-                $extendedPrecision |= ($geometry->isMeasured() ? 0x2 : 0) | ($this->writeOptions['decimalDigitsM'] << 5);
+                $extendedPrecision |= ($geometry->isMeasured() ? 0x2 : 0)
+                    | ($this->writeOptions['decimalDigitsM'] << 5);
             }
             $twkbHead .= $this->writer->writeUInt8($extendedPrecision);
         }
@@ -470,7 +495,12 @@ class TWKB implements GeoAdapter
             $twkb .= $this->writer->writeSVarInt($m - $this->lastPoint->m());
         }
 
-        $this->lastPoint = new Point($x, $y, $this->writeOptions['hasZ'] ? $z : null, $this->writeOptions['hasM'] ? $m : null);
+        $this->lastPoint = new Point(
+            $x,
+            $y,
+            $this->writeOptions['hasZ'] ? $z : null,
+            $this->writeOptions['hasM'] ? $m : null
+        );
 
         return $twkb;
     }

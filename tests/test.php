@@ -4,8 +4,6 @@ require '../vendor/autoload.php';
 
 use geoPHP\geoPHP;
 
-runTest();
-
 function runTest()
 {
     set_time_limit(0);
@@ -289,7 +287,8 @@ function testGeosMethods($geometry)
                 $bb = $geos_result->getBoundingBox();
                 $scale = sqrt((($bb['maxy'] - $bb['miny']) ^ 2) + (($bb['maxx'] - $bb['minx']) ^ 2));
 
-              // The difference in the output of GEOS and native-PHP methods should be less than 0.5 scaled haustorff units
+              // The difference in the output of GEOS and native-PHP methods
+              // should be less than 0.5 scaled haustorff units
                 if ($haus_dist / $scale > 0.5) {
                     echo "\e[33mOutput mismatch on " . $method . "\e[39m\n";
                     echo 'GEOS : ' . $geos_result->out('wkt') . "\n";
@@ -337,3 +336,5 @@ function FailOnError($error_level, $error_message, $error_file, $error_line)
     echo "\e[31mFAIL\e[39m\n";
     exit(1);
 }
+
+runTest();

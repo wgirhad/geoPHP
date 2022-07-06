@@ -119,14 +119,17 @@ class GPX implements GeoAdapter
         );
 
         if (isset($this->trackFromRoute)) {
-            $trackFromRoute = new LineString($this->trackFromRoute);
-            $trackFromRoute->setData('gpxType', 'track');
-            $trackFromRoute->setData('type', 'planned route');
-            $geometries[] = $trackFromRoute;
+            $trackFromRouteGeom = new LineString($this->trackFromRoute);
+            $trackFromRouteGeom->setData('gpxType', 'track');
+            $trackFromRouteGeom->setData('type', 'planned route');
+            $geometries[] = $trackFromRouteGeom;
         }
 
         $geometry = geoPHP::buildGeometry($geometries);
-        if (in_array('metadata', $this->gpxTypes->get('gpxType')) && $xmlObject->getElementsByTagName('metadata')->length === 1) {
+        if (
+            in_array('metadata', $this->gpxTypes->get('gpxType'))
+            && $xmlObject->getElementsByTagName('metadata')->length === 1
+        ) {
             $metadata = self::parseNodeProperties(
                 $xmlObject->getElementsByTagName('metadata')->item(0),
                 $this->gpxTypes->get('metadataType')
@@ -370,7 +373,8 @@ class GPX implements GeoAdapter
         $indent = $tag === 'trkpt' ? "\t\t" : ($tag === 'rtept' ? "\t" : '');
 
         if ($geom->hasZ() || $geom->getData() !== null) {
-            $node = $indent . "<" . $this->nss . $tag . " lat=\"" . $geom->getY() . "\" lon=\"" . $geom->getX() . "\">\n";
+            $node = $indent . "<" . $this->nss . $tag
+                    . " lat=\"" . $geom->getY() . "\" lon=\"" . $geom->getX() . "\">\n";
             if ($geom->hasZ()) {
                 $geom->setData('ele', $geom->z());
             }
@@ -441,16 +445,17 @@ class GPX implements GeoAdapter
         $wayPoints = $routes = $tracks = "";
 
         foreach ($geometry->getComponents() as $component) {
-            if (strpos($component->geometryType(), 'Point') !== false) {
+            $type = $component->geometryType();
+            if (strpos($type, 'Point') !== false) {
                 $wayPoints .= $this->geometryToGPX($component);
             }
-            if (strpos($component->geometryType(), 'LineString') !== false && $component->getData('gpxType') === 'route') {
+            if (strpos($type, 'LineString') !== false && $component->getData('gpxType') === 'route') {
                 $routes .= $this->geometryToGPX($component);
             }
-            if (strpos($component->geometryType(), 'LineString') !== false && $component->getData('gpxType') !== 'route') {
+            if (strpos($type, 'LineString') !== false && $component->getData('gpxType') !== 'route') {
                 $tracks .= $this->geometryToGPX($component);
             }
-            if (strpos($component->geometryType(), 'Point') === false && strpos($component->geometryType(), 'LineString') === false) {
+            if (strpos($type, 'Point') === false && strpos($type, 'LineString') === false) {
                 return $this->geometryToGPX($component);
             }
         }

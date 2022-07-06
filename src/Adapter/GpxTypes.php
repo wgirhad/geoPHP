@@ -11,8 +11,6 @@ namespace geoPHP\Adapter;
  */
 class GpxTypes
 {
-    // TODO: convert these static properties to constants once HHVM fixes this bug: https://github.com/facebook/hhvm/issues/4277
-
     /**
      * @var array Allowed elements in <gpx>
      * @see http://www.topografix.com/gpx/1/1/#type_gpxType
@@ -120,7 +118,8 @@ class GpxTypes
      * Returns an array of allowed elements for the given GPX type
      * eg. "gpxType" returns ['metadata', 'wpt', 'rte', 'trk']
      *
-     * @param string $type One of the following GPX types: gpxType, trkType, rteType, wptType, trkptType, rteptType, metadataType
+     * @param string $type One of the following GPX types:
+     *                     gpxType, trkType, rteType, wptType, trkptType, rteptType, metadataType
      * @return string[]
      */
     public function get($type)

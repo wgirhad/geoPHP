@@ -28,25 +28,25 @@ class GeoHash implements GeoAdapter
      */
     private static $neighbours =  [
         // north
-            'top' =>  [
-                    'even' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy',
-                    'odd' => 'bc01fg45238967deuvhjyznpkmstqrwx'
-            ],
+        'top' =>  [
+            'even' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy',
+            'odd' => 'bc01fg45238967deuvhjyznpkmstqrwx'
+        ],
         // east
-            'right' =>  [
-                    'even' => 'bc01fg45238967deuvhjyznpkmstqrwx',
-                    'odd' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy'
-            ],
+        'right' =>  [
+            'even' => 'bc01fg45238967deuvhjyznpkmstqrwx',
+            'odd' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy'
+        ],
         // west
-            'left' =>  [
-                    'even' => '238967debc01fg45kmstqrwxuvhjyznp',
-                    'odd' => '14365h7k9dcfesgujnmqp0r2twvyx8zb'
-            ],
+        'left' =>  [
+            'even' => '238967debc01fg45kmstqrwxuvhjyznp',
+            'odd' => '14365h7k9dcfesgujnmqp0r2twvyx8zb'
+        ],
         // south
-            'bottom' =>  [
-                    'even' => '14365h7k9dcfesgujnmqp0r2twvyx8zb',
-                    'odd' => '238967debc01fg45kmstqrwxuvhjyznp'
-            ]
+        'bottom' =>  [
+            'even' => '14365h7k9dcfesgujnmqp0r2twvyx8zb',
+            'odd' => '238967debc01fg45kmstqrwxuvhjyznp'
+        ]
     ];
 
     /**
@@ -54,25 +54,25 @@ class GeoHash implements GeoAdapter
      */
     private static $borders =  [
         // north
-            'top' =>  [
-                    'even' => 'prxz',
-                    'odd' => 'bcfguvyz'
-            ],
+        'top' =>  [
+            'even' => 'prxz',
+            'odd' => 'bcfguvyz'
+        ],
         // east
-            'right' =>  [
-                    'even' => 'bcfguvyz',
-                    'odd' => 'prxz'
-            ],
+        'right' =>  [
+            'even' => 'bcfguvyz',
+            'odd' => 'prxz'
+        ],
         // west
-            'left' =>  [
-                    'even' => '0145hjnp',
-                    'odd' => '028b'
-            ],
+        'left' =>  [
+            'even' => '0145hjnp',
+            'odd' => '028b'
+        ],
         // south
-            'bottom' =>  [
-                    'even' => '028b',
-                    'odd' => '0145hjnp'
-            ]
+        'bottom' =>  [
+            'even' => '028b',
+            'odd' => '0145hjnp'
+        ]
     ];
 
     /**
@@ -172,8 +172,8 @@ class GeoHash implements GeoAdapter
         }
 
         if (
-                $point->x() < $minLongitude || $point->y() < $minLatitude ||
-                $point->x() > $maxLongitude || $point->y() > $maxLatitude
+            $point->x() < $minLongitude || $point->y() < $minLatitude ||
+            $point->x() > $maxLongitude || $point->y() > $maxLatitude
         ) {
             throw new \Exception("Point coordinates ({$point->x()}, {$point->y()}) are out of lat/lon range");
         }
@@ -290,8 +290,14 @@ class GeoHash implements GeoAdapter
         $result['minLongitude'] = $minLongitude;
         $result['maxLatitude'] = $maxLatitude;
         $result['maxLongitude'] = $maxLongitude;
-        $result['centerLatitude'] = round(($minLatitude + $maxLatitude) / 2, max(1, -round(log10($latitudeError))) - 1);
-        $result['centerLongitude'] = round(($minLongitude + $maxLongitude) / 2, max(1, -round(log10($longitudeError))) - 1);
+        $result['centerLatitude'] = round(
+            ($minLatitude + $maxLatitude) / 2,
+            max(1, -round(log10($latitudeError))) - 1
+        );
+        $result['centerLongitude'] = round(
+            ($minLongitude + $maxLongitude) / 2,
+            max(1, -round(log10($longitudeError))) - 1
+        );
         return $result;
     }
 

@@ -65,7 +65,8 @@ class MultiLineString extends MultiCurve
     }
 
     /**
-     * The boundary of a MultiLineString is a MultiPoint consists of the start and end points of its non-closed LineStrings
+     * The boundary of a MultiLineString is a MultiPoint, consists of the start and end points
+     * of its non-closed LineStrings
      *
      * @return MultiPoint
      */
