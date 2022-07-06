@@ -56,7 +56,7 @@
       "@performance"
     ],
     "cs":          "phpcs",
-    "cs-warning":  "phpcs -w || true",
+    "cs-warning":  "phpcs -w",
     "cs-fix":      "phpcbf",
     "stan":        "phpstan analyze",
     "unit":        [

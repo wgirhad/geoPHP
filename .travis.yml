@@ -12,6 +12,7 @@ cache:
   directories:
   - vendor
   - $HOME/.composer/cache/files
+  - build/cache
 
 install:
   - if [[ -z $PHPSTAN ]]; then export COMPOSER_REMOVE="phpstan/phpstan"; fi
@@ -28,7 +29,7 @@ install:
   # TODO optionally set up a postgis database for testing
 
 script:
-  - mkdir -p build/logs
+  - mkdir -p build/cache
   - if [[ -z $DISABLE_UNIT ]]; then composer unit; fi
   - composer test-input
   - composer performance
@@ -71,6 +72,7 @@ jobs:
 # FIXME: allow_failures doesn't appear to work with stages defined. How to solve that?
   allow_failures:
     - php: nightly
+    - env: PHPCS_WARNING=1
 
   fast_finish: true
 

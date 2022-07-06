@@ -14,7 +14,7 @@
   </testsuites>
   <coverage
       includeUncoveredFiles="true"
-      cacheDirectory="build/cache/">
+      cacheDirectory="build/cache/phpunit">
     <include>
       <directory>src/</directory>
     </include>
