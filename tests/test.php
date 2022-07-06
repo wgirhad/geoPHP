@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 require '../vendor/autoload.php';
 

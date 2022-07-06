@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 namespace geoPHP\Tests;
 
@@ -66,7 +67,7 @@ class GeosTest extends TestCase
             $argument = $method['argument'];
           }
           $error_message = 'Failed on "' . $method_name .'" method with test file "' . $file . '"';
-          
+
           // GEOS don't like empty points
           if ($geometry->geometryType() == 'Point' && $geometry->isEmpty()) {
             continue;
