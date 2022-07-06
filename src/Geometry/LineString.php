@@ -15,7 +15,6 @@ use geoPHP\geoPHP;
  */
 class LineString extends Curve
 {
-
     public function geometryType()
     {
         return Geometry::LINE_STRING;

@@ -21,7 +21,6 @@ namespace geoPHP\Adapter;
  */
 class BinaryWriter
 {
-
     const BIG_ENDIAN = 0;
     const LITTLE_ENDIAN = 1;
 

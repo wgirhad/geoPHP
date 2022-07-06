@@ -7,7 +7,6 @@ namespace geoPHP\Exception;
  */
 class IOException extends \Exception
 {
-
     /**
      * @param string|null $message Additional message
      * @param int         $code

@@ -23,7 +23,6 @@ use geoPHP\Geometry\Polygon;
  */
 class GeoRSS implements GeoAdapter
 {
-
     /**
      * @var \DOMDocument $xmlObject
      */

@@ -43,7 +43,6 @@ use geoPHP\Geometry\Polygon;
  */
 class TWKB implements GeoAdapter
 {
-
     protected $writeOptions = [
             'decimalDigitsXY' => 5,
             'decimalDigitsZ' =>  0,

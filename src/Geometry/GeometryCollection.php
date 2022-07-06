@@ -9,7 +9,6 @@ use geoPHP\geoPHP;
  */
 class GeometryCollection extends MultiGeometry
 {
-
     /**
      * @param Geometry[] $components Array of geometries. Components of GeometryCollection can be
      *     any of valid Geometry types, including empty geometry

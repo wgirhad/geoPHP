@@ -31,7 +31,6 @@ use geoPHP\Geometry\Polygon;
  */
 class KML implements GeoAdapter
 {
-
     /**
      * @var \DOMDocument
      */

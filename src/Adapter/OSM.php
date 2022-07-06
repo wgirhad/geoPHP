@@ -163,7 +163,7 @@ class OSM implements GeoAdapter
                     $relationWays[$ref] = $ways[$ref]['nodes'];
                 }
             }
-            
+
             if (in_array($relationType, $polygonalTypes)) {
                 $relationPolygons = $this->processMultipolygon($relationWays, $nodes);
             }
@@ -222,10 +222,10 @@ class OSM implements GeoAdapter
         //var_dump($geometries);
         return count($geometries) == 1 ? $geometries[0] : new GeometryCollection($geometries);
     }
-    
+
     protected function processRoutes(&$relationWays, &$nodes)
     {
-    
+
         // Construct lines
         /** @var LineString[] $lineStrings */
         $lineStrings = [];
@@ -260,7 +260,7 @@ class OSM implements GeoAdapter
                 // If line members are not ordered, we need to repeat end matching some times
                 } while ($waysAdded > 0);
             }
-            
+
             // Create the new LineString
             $linePoints = [];
             foreach ($line as $lineNode) {
@@ -268,10 +268,10 @@ class OSM implements GeoAdapter
             }
             $lineStrings[] = new LineString($linePoints);
         }
-        
+
         return $lineStrings;
     }
-    
+
     protected function processMultipolygon(&$relationWays, &$nodes)
     {
         /* TODO: what to do with broken rings?
@@ -314,7 +314,7 @@ class OSM implements GeoAdapter
                 // If ring members are not ordered, we need to repeat end matching some times
                 } while ($waysAdded > 0 && $ring[0] !== $ring[count($ring) - 1]);
             }
-            
+
             // Create the new Polygon
             if ($ring[0] === $ring[count($ring) - 1]) {
                 $ringPoints = [];
@@ -338,7 +338,7 @@ class OSM implements GeoAdapter
             }
         }
         $containmentCount = count($containment);
-        
+
         /*
         print '&nbsp; &nbsp;';
         for($i=0; $i<count($rings); $i++) {
@@ -406,7 +406,7 @@ class OSM implements GeoAdapter
             }
             ++$round;
         }
-        
+
         return $relationPolygons;
     }
 

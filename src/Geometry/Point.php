@@ -11,7 +11,6 @@ use geoPHP\Exception\InvalidGeometryException;
  */
 class Point extends Geometry
 {
-
     protected $x = null;
 
     protected $y = null;

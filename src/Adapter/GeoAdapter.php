@@ -19,7 +19,6 @@ use geoPHP\Geometry\Geometry;
  */
 interface GeoAdapter
 {
-
     /**
      * Read input and return a Geometry
      *

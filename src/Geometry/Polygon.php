@@ -15,7 +15,6 @@ use geoPHP\geoPHP;
  */
 class Polygon extends Surface
 {
-
     /**
      * @param LineString[] $components
      * @param bool|false $forceCreate

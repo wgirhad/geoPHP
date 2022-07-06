@@ -11,7 +11,6 @@ namespace geoPHP\Adapter;
  */
 class GpxTypes
 {
-
     // TODO: convert these static properties to constants once HHVM fixes this bug: https://github.com/facebook/hhvm/issues/4277
 
     /**

@@ -7,7 +7,6 @@ namespace geoPHP\Exception;
  */
 class UnsupportedMethodException extends \Exception
 {
-
     /**
      * Public constructor.
      *

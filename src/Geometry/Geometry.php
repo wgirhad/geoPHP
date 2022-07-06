@@ -25,7 +25,6 @@ use geoPHP\geoPHP;
  */
 abstract class Geometry
 {
-
     /**
      * Type constants
      */

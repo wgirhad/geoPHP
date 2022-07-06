@@ -27,8 +27,8 @@ use geoPHP\Geometry\MultiLineString;
  */
 class GPX implements GeoAdapter
 {
-
-    protected $nss = ''; // Name-space string. eg 'georss:'
+    /** @var string $nss Name-space string. eg 'georss:' */
+    protected $nss = '';
 
     /**
      * @var GpxTypes

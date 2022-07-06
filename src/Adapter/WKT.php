@@ -18,8 +18,7 @@ use geoPHP\Geometry\MultiPolygon;
  */
 class WKT implements GeoAdapter
 {
-
-    protected $hasZ      = false;
+    protected $hasZ = false;
 
     protected $measured  = false;
 

@@ -9,7 +9,6 @@ use geoPHP\Geometry\Geometry;
  */
 class EWKT extends WKT
 {
-
     /**
      * Serialize geometries into an EWKT string.
      *

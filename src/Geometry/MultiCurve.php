@@ -10,7 +10,6 @@ namespace geoPHP\Geometry;
  */
 abstract class MultiCurve extends MultiGeometry
 {
-
     public function __construct($components = [], $allowEmptyComponents = true, $allowedComponentType = Curve::class)
     {
         parent::__construct($components, $allowEmptyComponents, $allowedComponentType);

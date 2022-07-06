@@ -28,7 +28,6 @@ use geoPHP\Geometry\MultiPolygon;
  */
 class GoogleGeocode implements GeoAdapter
 {
-
     /** @var \stdClass $result */
     protected $result;
 

@@ -15,7 +15,6 @@ use geoPHP\geoPHP;
  */
 abstract class Collection extends Geometry
 {
-
     /** @var Geometry[]|Collection[] */
     protected $components = [];
 

@@ -15,7 +15,6 @@ namespace geoPHP\Geometry;
  */
 abstract class Surface extends Collection
 {
-
     public function __construct($components = [], $allowEmptyComponents = true, $allowedComponentType = Curve::class)
     {
         parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
