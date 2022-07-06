@@ -55,12 +55,16 @@
       "@test-input",
       "@performance"
     ],
-    "cs": "vendor/bin/phpcs --cache -n -p src/",
-    "cs-warning": "vendor/bin/phpcs --cache -p -w src/ || true",
-    "cs-fix": "vendor/bin/phpcbf --cache -n -p src/",
-    "stan" : "vendor/bin/phpstan analyze",
-    "unit": "XDEBUG_MODE=coverage GEOS_DISABLED=1 vendor/bin/phpunit",
-    "test-input": "cd tests && php test.php && cd ..",
+    "cs":          "phpcs --cache=build/phpcs-cache -n -s --report-full --report-summary",
+    "cs-warning":  "phpcs --cache=build/phpcs-cache -w -s --report-full --report-summary || true",
+    "cs-fix":      "phpcbf --cache=build/phpcs-cache -n --report-full --report-summary",
+    "stan":        "phpstan analyze",
+    "unit":        [
+      "@putenv XDEBUG_MODE=coverage",
+      "@putenv GEOS_DISABLED=1",
+      "phpunit"
+    ],
+    "test-input":  "cd tests && php test.php && cd ..",
     "performance": "cd tests && php geometryPerformance.php && cd .."
   }
 }
