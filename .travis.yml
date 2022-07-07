@@ -13,6 +13,7 @@ cache:
   - vendor
   - $HOME/.composer/cache/files
   - build/cache
+  - /tmp/phpstan
 
 install:
   - if [[ -z $PHPSTAN ]]; then export COMPOSER_REMOVE="phpstan/phpstan"; fi

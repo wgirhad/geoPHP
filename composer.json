@@ -49,16 +49,14 @@
       "@test-input",
       "@performance"
     ],
-    "tests-ci": [
+    "analyze": [
       "@cs",
-      "@stan",
-      "@test-input",
-      "@performance"
+      "@stan"
     ],
     "cs":          "phpcs",
     "cs-warning":  "phpcs -w",
     "cs-fix":      "phpcbf",
-    "stan":        "phpstan analyze",
+    "stan":        "phpstan analyze --no-progress",
     "unit":        [
       "@putenv XDEBUG_MODE=coverage",
       "@putenv GEOS_DISABLED=1",
