@@ -43,7 +43,7 @@ class GoogleGeocode implements GeoAdapter
      *        If you pass a polygon of Illinois, it will return Cairo IL.
      * @param boolean             $returnMultiple - Return all results in a multipoint or multipolygon
      *
-     * @return Geometry|GeometryCollection
+     * @return Geometry
      * @throws \Exception If geocoding fails
      */
     public function read($address, $apiKey = null, $returnType = 'point', $bounds = false, $returnMultiple = false)
@@ -93,7 +93,7 @@ class GoogleGeocode implements GeoAdapter
                 }
             }
         } elseif ($this->result->status == 'ZERO_RESULTS') {
-            return null;
+            return new GeometryCollection();
         } else {
             if ($this->result->status) {
                 throw new \Exception(
@@ -105,7 +105,7 @@ class GoogleGeocode implements GeoAdapter
                 throw new \Exception('Unknown error in Google Reverse Geocoder');
             }
         }
-        return false;
+        return new GeometryCollection();
     }
 
     /**
@@ -120,7 +120,7 @@ class GoogleGeocode implements GeoAdapter
      * @param string   $language   The language in which to return results.
      *                             If not set, geocoder tries to use the native language of the domain.
      *
-     * @return string|Object[]|null A formatted address or array of address components
+     * @return string|Object[] A formatted address or array of address components
      * @throws \Exception If geocoding fails
      */
     public function write(Geometry $geometry, $apiKey = null, $returnType = 'string', $language = null)
@@ -162,7 +162,7 @@ class GoogleGeocode implements GeoAdapter
                 throw new \Exception('Unknown error in Google Reverse Geocoder');
             }
         }
-        return false;
+        return '';
     }
 
     private function getPoint($delta = 0)

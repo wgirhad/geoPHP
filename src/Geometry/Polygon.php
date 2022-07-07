@@ -12,6 +12,8 @@ use geoPHP\geoPHP;
  *
  * @method LineString[] getComponents()
  * @property LineString[] $components
+ *
+ * @phpstan-consistent-constructor
  */
 class Polygon extends Surface
 {
@@ -128,7 +130,6 @@ class Polygon extends Surface
 
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
             // @codeCoverageIgnoreEnd
         }
@@ -269,7 +270,7 @@ class Polygon extends Surface
         $vertices = $this->getPoints();
 
         // Check if the point sits exactly on a vertex
-        if ($this->pointOnVertex($point, $vertices)) {
+        if ($this->pointOnVertex($point)) {
             return $pointOnVertex ? true : false;
         }
 

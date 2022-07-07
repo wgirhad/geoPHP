@@ -179,10 +179,6 @@ class KML implements GeoAdapter
         $outerRingElement = @$this->childElements($outerBoundaryElement, 'linearring')[0];
         $components[] = $this->parseLineString($outerRingElement);
 
-        if (count($components) != 1) {
-            throw new \Exception("Invalid KML");
-        }
-
         /** @noinspection SpellCheckingInspection */
         $innerBoundaryElementIs = $this->childElements($xml, 'innerboundaryis');
         foreach ($innerBoundaryElementIs as $innerBoundaryElement) {

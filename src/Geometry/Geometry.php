@@ -113,7 +113,7 @@ abstract class Geometry
     /**
      * Returns the closure of the combinatorial boundary of the geometric object
      *
-     * @return Geometry
+     * @return Geometry|null
      */
     abstract public function boundary();
 
@@ -219,8 +219,6 @@ abstract class Geometry
     /**
      * Get all line segments
      * @param bool $toArray return segments as LineString or array of start and end points. Explode(true) is faster
-     *
-     * @return LineString[] | Point[][] | null
      */
     abstract public function explode($toArray = false);
 
@@ -332,7 +330,7 @@ abstract class Geometry
     public function envelope()
     {
         if ($this->isEmpty()) {
-            $type = geoPHP::CLASS_NAMESPACE . 'Geometry\\' . $this->geometryType();
+            $type = 'geoPHP\\Geometry\\' . $this->geometryType();
             return new $type();
         }
         if ($this->geometryType() === Geometry::POINT) {
@@ -371,7 +369,7 @@ abstract class Geometry
             $format = str_replace('xdr', '', $format);
         }
 
-        $processorType = geoPHP::CLASS_NAMESPACE . 'Adapter\\' . geoPHP::getAdapterMap()[$format];
+        $processorType = 'geoPHP\\Adapter\\' . geoPHP::getAdapterMap()[$format];
         $processor = new $processorType();
         array_unshift($args, $this);
 
@@ -717,7 +715,7 @@ abstract class Geometry
     public function makeValid()
     {
         if ($this->getGeos()) {
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @phpstan-ignore-next-line */
             return geoPHP::geosToGeometry($this->getGeos()->makeValid());
         }
         throw UnsupportedMethodException::geos(__METHOD__);
@@ -731,7 +729,7 @@ abstract class Geometry
     public function buildArea()
     {
         if ($this->getGeos()) {
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @phpstan-ignore-next-line */
             return geoPHP::geosToGeometry($this->getGeos()->buildArea());
         }
         throw UnsupportedMethodException::geos(__METHOD__);
@@ -897,7 +895,7 @@ abstract class Geometry
     public function project(Geometry $point, $normalized = null)
     {
         if ($this->getGeos()) {
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @phpstan-ignore-next-line */
             return $this->getGeos()->project($point->getGeos(), $normalized);
         }
         throw UnsupportedMethodException::geos(__METHOD__);

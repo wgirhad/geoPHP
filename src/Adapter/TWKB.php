@@ -460,11 +460,10 @@ class TWKB implements GeoAdapter
         if ($geometry->hasZ() || $geometry->isMeasured()) {
             $extendedPrecision = 0;
             if ($geometry->hasZ()) {
-                $extendedPrecision |= ($geometry->hasZ() ? 0x1 : 0) | ($this->writeOptions['decimalDigitsZ'] << 2);
+                $extendedPrecision |= 0x1 | ($this->writeOptions['decimalDigitsZ'] << 2);
             }
             if ($geometry->isMeasured()) {
-                $extendedPrecision |= ($geometry->isMeasured() ? 0x2 : 0)
-                    | ($this->writeOptions['decimalDigitsM'] << 5);
+                $extendedPrecision |= 0x2 | ($this->writeOptions['decimalDigitsM'] << 5);
             }
             $twkbHead .= $this->writer->writeUInt8($extendedPrecision);
         }

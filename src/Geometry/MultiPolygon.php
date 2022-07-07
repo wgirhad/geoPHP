@@ -9,6 +9,8 @@ use geoPHP\geoPHP;
  *
  * @method Polygon[] getComponents()
  * @property Polygon[] $components
+ *
+ * @phpstan-consistent-constructor
  */
 class MultiPolygon extends MultiSurface
 {
@@ -34,12 +36,11 @@ class MultiPolygon extends MultiSurface
     public function centroid()
     {
         if ($this->isEmpty()) {
-            return null;
+            return new Point();
         }
 
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
             // @codeCoverageIgnoreEnd
         }

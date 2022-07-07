@@ -24,6 +24,6 @@ class IOException extends \Exception
      */
     public static function invalidGPX(?string $message): self
     {
-        return new static('Invalid GPX. ' . $message);
+        return new self('Invalid GPX. ' . $message);
     }
 }

@@ -234,7 +234,7 @@ abstract class Collection extends Geometry
     {
         $points = [];
         // Same as array_merge($points, $component->getPoints()), but 500× faster
-        static::getPointsRecursive($this, $points);
+        self::getPointsRecursive($this, $points);
         return $points;
     }
 
@@ -248,7 +248,7 @@ abstract class Collection extends Geometry
             if ($component instanceof Point) {
                 $points[] = $component;
             } else {
-                static::getPointsRecursive($component, $points);
+                self::getPointsRecursive($component, $points);
             }
         }
     }
@@ -302,8 +302,6 @@ abstract class Collection extends Geometry
     /**
      * Get all line segments
      * @param bool $toArray return segments as LineString or array of start and end points. Explode(true) is faster
-     *
-     * @return LineString[] | Point[][]
      */
     public function explode($toArray = false)
     {

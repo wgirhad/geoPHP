@@ -7,6 +7,8 @@ namespace geoPHP\Geometry;
  * TODO write this
  *
  * @package geoPHP\Geometry
+ * @method Curve[] getComponents()
+ * @property Curve[] $components
  */
 abstract class MultiCurve extends MultiGeometry
 {

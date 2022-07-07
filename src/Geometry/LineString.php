@@ -12,6 +12,8 @@ use geoPHP\geoPHP;
  * @method Point[] getComponents()
  * @property Point[] $components
  * @method Point geometryN($n)
+ *
+ * @phpstan-consistent-constructor
  */
 class LineString extends Curve
 {
@@ -78,7 +80,6 @@ class LineString extends Curve
 
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
             // @codeCoverageIgnoreEnd
         }
@@ -224,7 +225,7 @@ class LineString extends Curve
      * @license https://opensource.org/licenses/GPL-3.0 GPL
      * (note: geoPHP uses "GPL version 2 (or later)" license which is compatible with GPLv3)
      *
-     * @return float Length in meters
+     * @return float|null Length in meters
      */
     public function vincentyLength()
     {

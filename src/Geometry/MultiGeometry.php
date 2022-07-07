@@ -48,7 +48,7 @@ abstract class MultiGeometry extends Collection
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
-            return $this->getGeos()->boundary();
+            return geoPHP::geosToGeometry($this->getGeos()->boundary());
             // @codeCoverageIgnoreEnd
         }
 

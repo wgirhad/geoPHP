@@ -64,7 +64,6 @@ class File20120702Test extends TestCase
 
     if (!method_exists($geometry, $method_name)) {
       $this->fail("Method ".$method_name.'() doesn\'t exists.');
-      return;
     }
 
     $failedOnMessage = $geometry->geometryType() . ' failed on ' . $method_name ;

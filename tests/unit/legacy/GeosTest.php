@@ -13,7 +13,6 @@ class GeosTest extends TestCase
   {
     if (!geoPHP::geosInstalled()) {
       $this->markTestSkipped('GEOS not installed');
-      return;
     }
 
     foreach (scandir('./input') as $file) {
@@ -88,7 +87,7 @@ class GeosTest extends TestCase
             case 'overlaps':
             case 'covers':
             case 'coveredBy':
-              $this->assertInternalType('bool', $geometry->$method_name($argument), $error_message);
+              $this->assertIsBool($geometry->$method_name($argument), $error_message);
               break;
             case 'pointOnSurface':
             case 'buffer':
@@ -102,10 +101,10 @@ class GeosTest extends TestCase
               break;
             case 'distance':
             case 'hausdorffDistance':
-              $this->assertInternalType('double', $geometry->$method_name($argument), $error_message);
+              $this->assertIsFloat($geometry->$method_name($argument), $error_message);
               break;
             case 'relate':
-              $this->assertRegExp('/[0-9TF]{9}/', $geometry->$method_name($argument), $error_message);
+              $this->assertMatchesRegularExpression('/[0-9TF]{9}/', $geometry->$method_name($argument), $error_message);
               break;
             case 'checkValidity':
               $this->assertArrayHasKey('valid', $geometry->$method_name($argument), $error_message);

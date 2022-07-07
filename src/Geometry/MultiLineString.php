@@ -9,6 +9,8 @@ use geoPHP\geoPHP;
  *
  * @method LineString[] getComponents()
  * @property LineString[] $components
+ *
+ * @phpstan-consistent-constructor
  */
 class MultiLineString extends MultiCurve
 {
@@ -34,12 +36,11 @@ class MultiLineString extends MultiCurve
     public function centroid()
     {
         if ($this->isEmpty()) {
-            return null;
+            return new Point();
         }
 
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
             // @codeCoverageIgnoreEnd
         }
@@ -58,10 +59,10 @@ class MultiLineString extends MultiCurve
             $y += $componentCentroid->y() * $componentLength;
             $totalLength += $componentLength;
         }
-        if ($totalLength == 0) {
-            return $this->getPoints()[0];
-        }
-        return new Point($x / $totalLength, $y / $totalLength);
+
+        return $totalLength === 0
+            ? $this->getPoints()[0]
+            : new Point($x / $totalLength, $y / $totalLength);
     }
 
     /**

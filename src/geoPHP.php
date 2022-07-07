@@ -41,8 +41,6 @@ class geoPHP
      * which has the same surface area as the reference ellipsoid. */
     const EARTH_AUTHALIC_RADIUS       = 6371007.2;
 
-    const CLASS_NAMESPACE = 'geoPHP\\';
-
     private static $adapterMap = [
         'wkt'            => 'WKT',
         'ewkt'           => 'EWKT',
@@ -85,17 +83,14 @@ class geoPHP
      * If $data is an array, all passed in values will be combined into a single geometry
      *
      * @param mixed $data The data in any supported format, including geoPHP Geometry
-     * @var null|string $type Data type. Tries to detect if omitted
-     * @var mixed|null $otherArgs Arguments will be passed to the geo adapter
+     * @param mixed[] $args First argument is an optional type. Other arguments will be passed to the geo adapter
      *
      * @return Collection|Geometry
      * @throws \Exception|IOException
      */
-    public static function load($data)
+    public static function load($data, ...$args)
     {
-        $args = func_get_args();
-
-        $data = array_shift($args);
+        /** @var null|string $type Data type. Tries to detect if omitted */
         $type = count($args) && @array_key_exists($args[0], self::$adapterMap) ? strtolower(array_shift($args)) : null;
 
         // Auto-detect type if needed
@@ -119,7 +114,7 @@ class geoPHP
         if (!array_key_exists($type, self::$adapterMap)) {
             throw new \Exception('geoPHP could not find an adapter of type ' . htmlentities($type));
         }
-        $adapterType = self::CLASS_NAMESPACE . 'Adapter\\' . self::$adapterMap[$type];
+        $adapterType = 'geoPHP\\Adapter\\' . self::$adapterMap[$type];
 
         $adapter = new $adapterType();
 
@@ -237,8 +232,7 @@ class geoPHP
             if (count($reducedGeometries) == 1) {
                 return $reducedGeometries[0];
             } else {
-                $class = self::CLASS_NAMESPACE .
-                    'Geometry\\' .
+                $class = 'geoPHP\\Geometry\\' .
                     (strstr($geometryTypes[0], 'Multi') ? '' : 'Multi') .
                     $geometryTypes[0];
                 return new $class($reducedGeometries);
@@ -268,7 +262,7 @@ class geoPHP
      *
      * @see geos::geom::GeometryFactory::buildGeometry
      *
-     * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
+     * @param Geometry|Geometry[] $geometries
      * @return Geometry A Geometry of the "smallest", "most type-specific" class that can contain the elements.
      * @throws \Exception
      */
@@ -282,8 +276,9 @@ class geoPHP
         if ($geometries instanceof Geometry) {
             return $geometries;
         } elseif (!is_array($geometries)) {
-            return null;
-            //FIXME should be: throw new \Exception('Input is not a Geometry or array of Geometries');
+            return null;    //@phpstan-ignore-line
+            //FIXME should be:
+            //throw new \Exception('Input of buildGeometry() must be Geometry or array of Geometries');
         } elseif (count($geometries) == 1) {
             // If it's an array of one, then just parse the one
             return geoPHP::buildGeometry(array_shift($geometries));
@@ -291,7 +286,7 @@ class geoPHP
 
         /**
          * So now we either have an array of geometries
-         * @var Geometry[]|GeometryCollection[] $geometries
+         * @var Geometry[] $geometries
          */
 
         $geometryTypes = [];
@@ -305,10 +300,7 @@ class geoPHP
             }
         }
         $geometryTypes = array_unique($geometryTypes);
-        if (empty($geometryTypes)) {
-            return null;
-            // FIXME normally it never happens. Should be refactored
-        }
+
         if (count($geometryTypes) == 1 && !$hasData) {
             if ($geometryTypes[0] === Geometry::GEOMETRY_COLLECTION) {
                 return new GeometryCollection($geometries);
@@ -322,7 +314,7 @@ class geoPHP
                         return new GeometryCollection($geometries);
                     }
                 }
-                $class = self::CLASS_NAMESPACE . 'Geometry\\' . $newType;
+                $class = 'geoPHP\\Geometry\\' . $newType;
                 return new $class($geometries);
             }
         } else {

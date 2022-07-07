@@ -129,8 +129,8 @@ class OSM implements GeoAdapter
 
 
         // Processing OSM Relations
+        /** @var \DOMElement $relation */
         foreach ($this->xmlObj->getElementsByTagName('relation') as $relation) {
-            /** @var \DOMElement $relation */
             /** @var Point[] */
             $relationPoints = [];
             /** @var LineString[] */

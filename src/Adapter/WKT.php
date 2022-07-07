@@ -315,11 +315,11 @@ class WKT implements GeoAdapter
                 $p = $geometry->x() . ' ' . $geometry->y();
                 if ($geometry->hasZ()) {
                     $p .= ' ' . $geometry->getZ();
-                    $this->hasZ = $this->hasZ || $geometry->hasZ();
+                    $this->hasZ = true;
                 }
                 if ($geometry->isMeasured()) {
                     $p .= ' ' . $geometry->getM();
-                    $this->measured = $this->measured || $geometry->isMeasured();
+                    $this->measured = true;
                 }
                 return $p;
             case Geometry::LINE_STRING:

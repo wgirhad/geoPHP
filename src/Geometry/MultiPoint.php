@@ -13,6 +13,8 @@ use geoPHP\geoPHP;
  *
  * @method Point[] getComponents()
  * @property Point[] $components The elements of a MultiPoint are Points
+ *
+ * @phpstan-consistent-constructor
  */
 class MultiPoint extends MultiGeometry
 {
@@ -88,7 +90,6 @@ class MultiPoint extends MultiGeometry
 
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            /** @noinspection PhpUndefinedMethodInspection */
             return geoPHP::geosToGeometry($this->getGeos()->centroid());
             // @codeCoverageIgnoreEnd
         }
