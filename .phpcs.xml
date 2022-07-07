@@ -13,8 +13,6 @@
     <arg name="report" value="full,summary"/>
     <!-- No warnings -->
     <arg value="n"/>
-    <!-- Show progress -->
-    <arg value="p"/>
     <!-- Show sniff codes -->
     <arg value="s"/>
 

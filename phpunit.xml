@@ -20,7 +20,7 @@
     </include>
     <report>
       <text outputFile="php://stdout" showUncoveredFiles="false" showOnlySummary="false"/>
-      <clover outputFile="build/clover.xml"/>
+      <clover outputFile="build/logs/clover.xml"/>
       <html outputDirectory="build/coverage"/>
     </report>
   </coverage>
