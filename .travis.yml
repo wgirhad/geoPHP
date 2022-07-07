@@ -16,6 +16,7 @@ cache:
   - /tmp/phpstan
 
 install:
+  - composer validate
   - if [[ -z $PHPSTAN ]]; then export COMPOSER_REMOVE="phpstan/phpstan"; fi
   - if [[ $DISABLE_UNIT ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpunit/phpunit"; fi
   - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
@@ -24,7 +25,7 @@ install:
       echo "Removing $COMPOSER_REMOVE dependencies"
       composer remove --dev --no-update --no-interaction $COMPOSER_FLAGS $COMPOSER_REMOVE
     fi
-  - composer install --prefer-dist --no-interaction $COMPOSER_FLAGS
+  - composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
   # TODO Install geos library -- as a matrix test
   # TODO optionally set up a postgis database for testing
