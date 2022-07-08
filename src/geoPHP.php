@@ -329,9 +329,9 @@ class geoPHP
      *
      * @param string $input
      *
-     * @return string|false
+     * @return string|null Returns the name of input's format (e.g. 'gpx') or null if fails to detect.
      */
-    public static function detectFormat(string &$input)
+    public static function detectFormat(string &$input): ?string
     {
         $mem = fopen('php://memory', 'x+');
         fwrite($mem, $input, 11); // Write 11 bytes - we can detect the vast majority of formats in the first 11 bytes
@@ -342,7 +342,7 @@ class geoPHP
 
         // If bytes is empty, then we were passed empty input
         if (empty($bytes)) {
-            return false;
+            return null;
         }
 
         // First char is a tab, space or carriage-return. trim it and try again
