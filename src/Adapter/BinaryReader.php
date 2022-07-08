@@ -34,7 +34,7 @@ class BinaryReader
      *
      * @param string $input
      */
-    public function __construct($input)
+    public function __construct(string $input)
     {
 //      if (@is_readable($input)) {
 //          $this->buffer = fopen($input, 'r+');

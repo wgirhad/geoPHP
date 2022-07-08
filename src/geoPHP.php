@@ -323,15 +323,15 @@ class geoPHP
     }
 
     /**
-     * Detect a format given a value. This function is meant to be SPEEDY.
+     * Detects format of the given value. This function is meant to be SPEEDY.
      * It could make a mistake in XML detection if you are mixing or using namespaces in weird ways
-     * (ie, KML inside an RSS feed)
+     * (ie, KML inside an RSS feed).
      *
-     * @param mixed $input
+     * @param string $input
      *
      * @return string|false
      */
-    public static function detectFormat(&$input)
+    public static function detectFormat(string &$input)
     {
         $mem = fopen('php://memory', 'x+');
         fwrite($mem, $input, 11); // Write 11 bytes - we can detect the vast majority of formats in the first 11 bytes
