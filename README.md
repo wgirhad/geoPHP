@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/funiq/geoPHP.svg?branch=development)](https://travis-ci.org/funiq/geoPHP)
+[![Build Status](https://travis-ci.com/funiq/geoPHP.svg?branch=development)](https://travis-ci.com/funiq/geoPHP)
 [![Coverage Status](https://coveralls.io/repos/github/funiq/geoPHP/badge.svg?branch=development)](https://coveralls.io/github/funiq/geoPHP?branch=development)
 
 GeoPHP is a open-source native PHP library for doing geometry operations. It is a fork of famous [geoPHP](https://github.com/phayes/geoPHP) library by Patrick Hayes.
