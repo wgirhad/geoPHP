@@ -2,13 +2,12 @@
 
 namespace geoPHP\Exception;
 
-use RuntimeException;
 use Throwable;
 
 /**
- * Exception thrown when an error occurs on reading or writing
+ * Exception thrown if XML parser can't load input data.
  */
-class IOException extends RuntimeException implements Exception
+class InvalidXmlException extends IOException
 {
     /**
      * @param string|null    $message Additional message
@@ -17,7 +16,7 @@ class IOException extends RuntimeException implements Exception
      */
     public function __construct(?string $message = null, int $code = 0, ?Throwable $previous = null): void
     {
-        $message = 'IO error: ' . $message;
+        $message = 'Invalid XML.' . ($message ? ' ' . $message : '');
         parent::__construct($message, $code, $previous);
     }
 }

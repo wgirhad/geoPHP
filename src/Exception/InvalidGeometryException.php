@@ -2,13 +2,12 @@
 
 namespace geoPHP\Exception;
 
+use RuntimeException;
+
 /**
- * Class InvalidGeometryException
- * Invalid geometry means that it doesn't meet the basic requirements to be valid
+ * Exception thrown if a geometry doesn't meet the basic requirements of validity
  * Eg. a LineString with only one point
- *
- * @package geoPHP\Exception
  */
-class InvalidGeometryException extends \Exception
+class InvalidGeometryException extends RuntimeException implements Exception
 {
 }

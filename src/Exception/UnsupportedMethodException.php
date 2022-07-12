@@ -2,22 +2,22 @@
 
 namespace geoPHP\Exception;
 
+use LogicException;
+
 /**
- * Should be thrown if a method is not implemented yet
+ * Exception thrown if a method is not implemented yet
  */
-class UnsupportedMethodException extends \Exception
+class UnsupportedMethodException extends LogicException implements Exception
 {
     /**
-     * Public constructor.
-     *
      * @param string $method Name of the unsupported method
      * @param string|null $message Additional message
      * @param int $code
      */
-    public function __construct(string $method, ?string $message = null, int $code = 0)
+    public function __construct(string $method, ?string $message = null, int $code = 0, \Exception $previous = null)
     {
         $message = 'Method ' . $method . '() is not supported yet.' . ($message ? ' ' . $message : '');
-        parent::__construct($message, $code);
+        parent::__construct($message, $code, $previous);
     }
 
     /**
