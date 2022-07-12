@@ -2,6 +2,8 @@
 
 namespace geoPHP\Geometry;
 
+use geoPHP\Exception\Exception;
+use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
 /**
@@ -13,7 +15,7 @@ class GeometryCollection extends MultiGeometry
      * @param Geometry[] $components Array of geometries. Components of GeometryCollection can be
      *     any of valid Geometry types, including empty geometry
      *
-     * @throws \Exception
+     * @throws InvalidGeometryException
      */
     public function __construct($components = [])
     {
@@ -54,7 +56,7 @@ class GeometryCollection extends MultiGeometry
      * (since the lower-dimension geometries contribute zero "weight" to the centroid).
      *
      * @return Point
-     * @throws \Exception
+     * @throws Exception
      */
     public function centroid()
     {
@@ -89,7 +91,7 @@ class GeometryCollection extends MultiGeometry
 
         $reducedGeometry = geoPHP::geometryReduce($highestDimensionGeometries);
         if ($reducedGeometry->geometryType() === Geometry::GEOMETRY_COLLECTION) {
-            throw new \Exception('Internal error: GeometryCollection->centroid() calculation failed.');
+            throw new Exception('Internal error: GeometryCollection->centroid() calculation failed.');
         }
         return $reducedGeometry->centroid();
     }

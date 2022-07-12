@@ -26,7 +26,8 @@ class Point extends Geometry
      * @param int|float|null $y The y coordinate (or latitude)
      * @param int|float|null $z The z coordinate (or altitude) - optional
      * @param int|float|null $m Measure - optional
-     * @throws \Exception
+     *
+     * @throws InvalidGeometryException
      */
     public function __construct($x = null, $y = null, $z = null, $m = null)
     {
@@ -64,7 +65,8 @@ class Point extends Geometry
     /**
      * @param array $coordinates
      * @return Point
-     * @throws \Exception
+     *
+     * @throws InvalidGeometryException
      */
     public static function fromArray($coordinates)
     {

@@ -14,6 +14,15 @@ use geoPHP\Exception\InvalidGeometryException;
  */
 abstract class Curve extends Collection
 {
+    /**
+     * Constructor: Checks and sets component geometries
+     *
+     * @param Geometry[] $components Array of geometries
+     * @param bool|false $allowEmptyComponents Allow creating geometries with empty components
+     * @param string     $allowedComponentType A class the components must be instance of
+     *
+     * @throws InvalidGeometryException
+     */
     public function __construct($components = [], $allowEmptyComponents = false, $allowedComponentType = Point::class)
     {
         if (is_array($components) && count($components) == 1) {

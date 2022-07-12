@@ -25,7 +25,7 @@ abstract class Collection extends Geometry
      * @param bool|true  $allowEmptyComponents Allow creating geometries with empty components
      * @param string     $allowedComponentType A class the components must be instance of
      *
-     * @throws \Exception
+     * @throws InvalidGeometryException
      */
     public function __construct(
         $components = [],

@@ -27,7 +27,7 @@ class LineString extends Curve
      *
      * @param Point[] $points An array of at least two points with
      * which to build the LineString
-     * @throws \Exception
+     * @throws InvalidGeometryException
      */
     public function __construct($points = [])
     {

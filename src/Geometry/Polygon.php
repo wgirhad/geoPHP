@@ -20,7 +20,7 @@ class Polygon extends Surface
     /**
      * @param LineString[] $components
      * @param bool|false $forceCreate
-     * @throws \Exception
+     * @throws InvalidGeometryException
      */
     public function __construct($components = [], $forceCreate = false)
     {
@@ -382,6 +382,6 @@ class Polygon extends Surface
     public function boundary()
     {
         // TODO: Implement boundary() method.
-        throw new UnsupportedMethodException(__METHOD__);
+        throw new UnsupportedMethodException('Polygon::bountry() method not implemented yet.');
     }
 }
