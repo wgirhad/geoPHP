@@ -2,6 +2,7 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\InvalidXmlException;
 use geoPHP\Geometry\Collection;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
@@ -9,6 +10,7 @@ use geoPHP\Geometry\GeometryCollection;
 use geoPHP\Geometry\Point;
 use geoPHP\Geometry\LineString;
 use geoPHP\Geometry\Polygon;
+use geoPHP\Exception\IOException;
 
 /*
  * Copyright (c) Patrick Hayes
@@ -27,8 +29,6 @@ class GeoRSS implements GeoAdapter
      * @var \DOMDocument $xmlObject
      */
     protected $xmlObject;
-
-    private $namespace = false;
 
     private $nss = ''; // Name-space string. eg 'georss:'
 
@@ -54,12 +54,18 @@ class GeoRSS implements GeoAdapter
     public function write(Geometry $geometry, $namespace = false)
     {
         if ($namespace) {
-            $this->namespace = $namespace;
             $this->nss = $namespace . ':';
         }
         return $this->geometryToGeoRSS($geometry) ?: '';
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $text
+     * @return Geometry
+     * @throws IOException If fails to parse GeoRSS
+     */
     public function geomFromText($text)
     {
         // Change to lower-case, strip all CDATA, and de-namespace
@@ -67,34 +73,24 @@ class GeoRSS implements GeoAdapter
         $text = preg_replace('/<!\[cdata\[(.*?)\]\]>/s', '', $text);
 
         // Load into DOMDocument
-        $xmlObject = new \DOMDocument();
-        @$xmlObject->loadXML($text);
-        if ($xmlObject === false) {
-            throw new \Exception("Invalid GeoRSS: " . $text);
+        $this->xmlObject = new \DOMDocument();
+        $loadSuccess = @$this->xmlObject->loadXML($text);
+        if (!$loadSuccess) {
+            throw new InvalidXmlException();
         }
 
-        $this->xmlObject = $xmlObject;
-        try {
-            $geom = $this->geomFromXML();
-        } catch (\Exception $e) {
-            throw new \Exception("Cannot Read Geometry From GeoRSS: " . $e->getMessage());
-        }
-
-        return $geom;
+        return $this->geomFromXML();
     }
 
     protected function geomFromXML()
     {
-        $geometries = [];
-        $geometries = array_merge($geometries, $this->parsePoints());
-        $geometries = array_merge($geometries, $this->parseLines());
-        $geometries = array_merge($geometries, $this->parsePolygons());
-        $geometries = array_merge($geometries, $this->parseBoxes());
-        $geometries = array_merge($geometries, $this->parseCircles());
-
-        if (empty($geometries)) {
-            throw new \Exception("Invalid / Empty GeoRSS");
-        }
+        $geometries = array_merge(
+            $this->parsePoints(),
+            $this->parseLines(),
+            $this->parsePolygons(),
+            $this->parseBoxes(),
+            $this->parseCircles()
+        );
 
         return geoPHP::geometryReduce($geometries);
     }

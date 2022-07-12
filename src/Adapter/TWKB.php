@@ -14,6 +14,7 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\IOException;
 use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
@@ -80,6 +81,7 @@ class TWKB implements GeoAdapter
      * @return Geometry
      *
      * @throws \Exception
+     * @throws IOException
      */
     public function read($twkb, $isHexString = false)
     {
@@ -88,7 +90,7 @@ class TWKB implements GeoAdapter
         }
 
         if (empty($twkb)) {
-            throw new \Exception('Cannot read empty TWKB. Found ' . gettype($twkb));
+            throw new IOException('Cannot read empty TWKB. Found ' . gettype($twkb));
         }
 
         $this->reader = new BinaryReader($twkb);
@@ -189,7 +191,7 @@ class TWKB implements GeoAdapter
                 $geometry = $this->getMulti('Geometry', $options);
                 break;
             default:
-                throw new \Exception(
+                throw new IOException(
                     'Geometry type ' . $geometryType .
                         ' (' . (array_search($geometryType, self::$typeMap) ?: 'unknown') . ') not supported'
                 );

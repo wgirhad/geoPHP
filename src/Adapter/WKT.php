@@ -2,6 +2,7 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\FileFormatException;
 use geoPHP\Geometry\Collection;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
@@ -43,7 +44,7 @@ class WKT implements GeoAdapter
      *
      * @param string $wkt A WKT string
      * @return Geometry
-     * @throws \Exception
+     * @throws FileFormatException
      */
     public function read($wkt)
     {
@@ -81,14 +82,14 @@ class WKT implements GeoAdapter
             }
             return $geometry;
         }
-        throw new \Exception('Invalid Wkt');
+        throw new FileFormatException('Invalid Wkt');
     }
 
     /**
      * @param string $wkt
      *
      * @return Geometry|null
-     * @throws \Exception
+     * @throws FileFormatException
      */
     private function parseTypeAndGetData($wkt)
     {
@@ -104,9 +105,9 @@ class WKT implements GeoAdapter
                 $method = 'parse' . $geometryType;
                 return call_user_func([$this, $method], $dataString);
             }
-            throw new \Exception('Invalid WKT type "' . $m[1] . '"');
+            throw new FileFormatException('Invalid WKT type "' . $m[1] . '"');
         }
-        throw new \Exception('Cannot parse WKT');
+        throw new FileFormatException('Cannot parse WKT');
     }
 
     private function parsePoint($dataString)

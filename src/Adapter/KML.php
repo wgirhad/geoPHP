@@ -2,6 +2,8 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\FileFormatException;
+use geoPHP\Exception\InvalidXmlException;
 use geoPHP\Geometry\Collection;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
@@ -36,8 +38,6 @@ class KML implements GeoAdapter
      */
     protected $xmlObject;
 
-    private $namespace = false;
-
     private $nss = ''; // Name-space string. eg 'georss:'
 
     /**
@@ -46,31 +46,26 @@ class KML implements GeoAdapter
      * @param string $kml A KML string
      *
      * @return Geometry|GeometryCollection
+     * @throws InvalidXmlException If KML is not a valid XML
      */
     public function read($kml)
     {
-        return $this->geomFromText($kml);
-    }
-
-    public function geomFromText($text)
-    {
-
         // Change to lower-case and strip all CDATA
-        $text = mb_strtolower($text, mb_detect_encoding($text));
-        $text = preg_replace('/<!\[cdata\[(.*?)\]\]>/s', '', $text);
+        $kml = mb_strtolower($kml, mb_detect_encoding($kml));
+        $kml = preg_replace('/<!\[cdata\[(.*?)\]\]>/s', '', $kml);
 
         // Load into DOMDocument
-        $xmlObject = new \DOMDocument();
-        @$xmlObject->loadXML($text);
-        if ($xmlObject === false) {
-            throw new \Exception("Invalid KML: " . $text);
+        $this->xmlObject = new \DOMDocument();
+        $loadSuccess = @$this->xmlObject->loadXML($kml);
+        if (!$loadSuccess) {
+            throw new InvalidXmlException();
         }
 
-        $this->xmlObject = $xmlObject;
+        // TODO refactor
         try {
             $geom = $this->geomFromXML();
         } catch (\Exception $e) {
-            throw new \Exception("Cannot Read Geometry From KML. " . $e->getMessage());
+            throw new FileFormatException("Cannot Read Geometry From KML. " . $e->getMessage());
         }
 
         return $geom;
@@ -241,7 +236,6 @@ class KML implements GeoAdapter
     public function write(Geometry $geometry, $namespace = false)
     {
         if ($namespace) {
-            $this->namespace = $namespace;
             $this->nss = $namespace . ':';
         }
         return $this->geometryToKML($geometry);

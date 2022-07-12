@@ -5,7 +5,8 @@ namespace geoPHP\Adapter;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use geoPHP\Exception\IOException;
+use geoPHP\Exception\FileFormatException;
+use geoPHP\Exception\InvalidXmlException;
 use geoPHP\Geometry\Collection;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
@@ -53,7 +54,8 @@ class GPX implements GeoAdapter
      *                   Can be overwritten with an associative array, with type name in keys.
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
      * @return Geometry|GeometryCollection
-     * @throws IOException If GPX is not a valid XML
+     * @throws InvalidXmlException If GPX is not a valid XML
+     * @throws FileFormatException If cannot parse GPX
      */
     public function read($gpx, $allowedElements = null)
     {
@@ -62,11 +64,11 @@ class GPX implements GeoAdapter
         //libxml_use_internal_errors(true); // why?
 
         // Load into DOMDocument
-        $xmlObject = new DOMDocument('1.0', 'UTF-8');
+        $xmlObject = new DOMDocument();
         $xmlObject->preserveWhiteSpace = false;
-        $loadFailed = ! @$xmlObject->loadXML($gpx);
-        if ($xmlObject === false || $loadFailed) {
-            throw IOException::invalidGPX('Can not load XML.');
+        $loadSuccess = @$xmlObject->loadXML($gpx);
+        if (!$loadSuccess) {
+            throw new InvalidXmlException();
         }
 
         $this->parseGarminRpt = strpos($gpx, 'gpxx:rpt') > 0;
@@ -85,7 +87,7 @@ class GPX implements GeoAdapter
                    We try to lower-case tags and try to run again, but just once.
                 */
                 $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-                $caller = isset($backtrace[1]['function']) ? $backtrace[1]['function'] : null;
+                $caller = $backtrace[1]['function'] ?? null;
                 if ($caller && $caller !== __FUNCTION__) {
                     $gpx = preg_replace_callback(
                         "/(<\/?\w+)(.*?>)/",
@@ -98,7 +100,7 @@ class GPX implements GeoAdapter
                 }
             }
         } catch (\Exception $e) {
-            throw IOException::invalidGPX("Cannot Read Geometry From GPX. " . $e->getMessage());
+            throw new FileFormatException("Cannot Read Geometry From GPX. " . $e->getMessage(), 0, $e);
         }
 
         return $geom;

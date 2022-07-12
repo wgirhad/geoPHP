@@ -10,6 +10,9 @@
  */
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\FileFormatException;
+use geoPHP\Exception\InvalidXmlException;
+use geoPHP\Exception\IOException;
 use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
@@ -51,17 +54,16 @@ class OSM implements GeoAdapter
     public function read($osm)
     {
         // Load into DOMDocument
-        $xmlobj = new \DOMDocument();
-        $xmlobj->loadXML($osm);
-        if ($xmlobj === false) {
-            throw new \Exception("Invalid OSM XML: " . substr($osm, 0, 100));
+        $this->xmlObj = new \DOMDocument();
+        $loadSuccess = @$this->xmlObj->loadXML($osm);
+        if (!$loadSuccess) {
+            throw new InvalidXmlException();
         }
 
-        $this->xmlObj = $xmlobj;
         try {
             $geom = $this->geomFromXML();
         } catch (\Exception $e) {
-            throw new \Exception("Cannot read geometries from OSM XML: " . $e->getMessage());
+            throw new FileFormatException("Cannot read geometries from OSM XML: " . $e->getMessage());
         }
 
         return $geom;
@@ -529,28 +531,11 @@ class OSM implements GeoAdapter
 
     public static function downloadFromOSMByBbox($left, $bottom, $right, $top)
     {
-        /** @noinspection PhpUnusedParameterInspection */
-        set_error_handler(
-            function ($errNO, $errStr, $errFile, $errLine, $errContext) {
-                if (isset($errContext['http_response_header'])) {
-                    foreach ($errContext['http_response_header'] as $line) {
-                        if (strpos($line, 'Error: ') > -1) {
-                            throw new \Exception($line);
-                        }
-                    }
-                }
-                throw new \Exception('unknown error');
-            },
-            E_WARNING
-        );
-
-        try {
-            $osmFile = file_get_contents(self::OSM_API_URL . "map?bbox={$left},{$bottom},{$right},{$top}");
-            restore_error_handler();
+        $osmFile = file_get_contents(self::OSM_API_URL . "map?bbox={$left},{$bottom},{$right},{$top}");
+        if ($osmFile !== false) {
             return $osmFile;
-        } catch (\Exception $e) {
-            restore_error_handler();
-            throw new \Exception("Failed to download from OSM. " . $e->getMessage());
+        } else {
+            throw new IOException("Failed to download from OSM.");
         }
     }
 }

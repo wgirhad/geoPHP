@@ -2,6 +2,7 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\IOException;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
@@ -26,7 +27,7 @@ class GeoJSON implements GeoAdapter
      *
      * @param string|object $input The GeoJSON string or object
      * @return Geometry
-     * @throws \Exception
+     * @throws IOException
      */
     public function read($input)
     {
@@ -34,10 +35,10 @@ class GeoJSON implements GeoAdapter
             $input = json_decode($input);
         }
         if (!is_object($input)) {
-            throw new \Exception('Invalid JSON');
+            throw new IOException('Malformed JSON');
         }
         if (!isset($input->type) || !is_string($input->type)) {
-            throw new \Exception('Invalid GeoJSON');
+            throw new IOException('Invalid GeoJSON');
         }
 
         // Check to see if it's a FeatureCollection
@@ -75,7 +76,7 @@ class GeoJSON implements GeoAdapter
     /**
      * @param object $obj
      * @return Geometry
-     * @throws \Exception
+     * @throws IOException
      */
     private function geoJSONFeatureToGeometry($obj)
     {
@@ -117,13 +118,10 @@ class GeoJSON implements GeoAdapter
         switch (count($coordinates)) {
             case 2:
                 return new Point($coordinates[0], $coordinates[1]);
-                break;
             case 3:
                 return new Point($coordinates[0], $coordinates[1], $coordinates[2]);
-                break;
             case 4:
                 return new Point($coordinates[0], $coordinates[1], $coordinates[2], $coordinates[3]);
-                break;
             default:
                 return new Point();
         }
@@ -191,14 +189,14 @@ class GeoJSON implements GeoAdapter
 
     /**
      * @param object $obj
-     * @throws \Exception
+     * @throws IOException
      * @return GeometryCollection
      */
     private function geoJSONObjectToGeometryCollection($obj)
     {
         $geometries = [];
         if (!property_exists($obj, 'geometries')) {
-            throw new \Exception('Invalid GeoJSON: GeometryCollection with no component geometries');
+            throw new IOException('Invalid GeoJSON: GeometryCollection without geometry components');
         }
         foreach ($obj->geometries ?: [] as $componentObject) {
             $geometries[] = $this->geoJSONObjectToGeometry($componentObject);
