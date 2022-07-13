@@ -3,6 +3,7 @@
 namespace geoPHP\Tests\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
+use geoPHP\Geometry\LineString;
 use geoPHP\Geometry\Point;
 use geoPHP\Geometry\MultiPoint;
 use PHPUnit\Framework\TestCase;
@@ -11,42 +12,48 @@ use PHPUnit\Framework\TestCase;
  * Unit tests of MultiPoint geometry
  *
  * @group geometry
+ * @coversDefaultClass geoPHP\Geometry\MultiPoint
  *
+ * @uses geoPHP\Geometry\Point
  */
 class MultiPointTest extends TestCase
 {
     public function providerValidComponents()
     {
         return [
-            [[]],                                   // no components, empty MultiPoint
-            [[new Point()]],                        // empty component
-            [[new Point(1, 2)]],
-            [[new Point(1, 2), new Point(3, 4)]],
-            [[new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)]],
+            'no components'    => [[]],
+            'empty Point comp' => [[new Point()]],
+            'xy'               => [[new Point(1, 2)]],
+            '2 xy'             => [[new Point(1, 2), new Point(3, 4)]],
+            '2 xyzm'           => [[new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)]],
         ];
     }
 
     /**
      * @dataProvider providerValidComponents
-     *
-     * @param Point[] $points
+     * @covers ::__construct
      */
-    public function testValidComponents($points)
+    public function testValidComponents(array $points)
     {
-        $this->assertNotNull(new MultiPoint($points));
+        $multiPoint = new MultiPoint($points);
+
+        $this->assertNotNull($multiPoint);
+
+        $this->assertInstanceOf(MultiPoint::class, $multiPoint);
     }
 
     public function providerInvalidComponents()
     {
         return [
-            [[\geoPHP\Geometry\LineString::fromArray([[1,2],[3,4]])]],  // wrong component type
+            'LineString component' => [[LineString::fromArray([[1,2],[3,4]])]],
+            'non-array'            => [new Point()],
+            'string component'     => [["text"]],
         ];
     }
 
     /**
      * @dataProvider providerInvalidComponents
-     *
-     * @param mixed $components
+     * @covery ::__construct
      */
     public function testConstructorWithInvalidComponents($components)
     {
@@ -55,6 +62,20 @@ class MultiPointTest extends TestCase
         new MultiPoint($components);
     }
 
+    /**
+     * @covers ::fromArray
+     */
+    public function testFromArray()
+    {
+        $this->assertEquals(
+            MultiPoint::fromArray([[1,2,3,4], [5,6,7,8]]),
+            new MultiPoint([new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)])
+        );
+    }
+
+    /**
+     * @covery ::__construct
+     */
     public function testGeometryType()
     {
         $multiPoint = new MultiPoint();
@@ -66,6 +87,9 @@ class MultiPointTest extends TestCase
         $this->assertInstanceOf('\geoPHP\Geometry\Geometry', $multiPoint);
     }
 
+    /**
+     * @covery ::is3D
+     */
     public function testIs3D()
     {
         $this->assertTrue((new Point(1, 2, 3))->is3D());
@@ -73,6 +97,9 @@ class MultiPointTest extends TestCase
         $this->assertTrue((new Point(null, null, 3, 4))->is3D());
     }
 
+    /**
+     * @covery ::isMeasured
+     */
     public function testIsMeasured()
     {
         $this->assertTrue((new Point(1, 2, null, 4))->isMeasured());
@@ -89,11 +116,9 @@ class MultiPointTest extends TestCase
 
     /**
      * @dataProvider providerCentroid
-     *
-     * @param array $components
-     * @param array $centroid
+     * @covers ::centroid
      */
-    public function testCentroid($components, $centroid)
+    public function testCentroid(array $components, array $centroid)
     {
         $multiPoint = MultiPoint::fromArray($components);
 
@@ -112,11 +137,9 @@ class MultiPointTest extends TestCase
 
     /**
      * @dataProvider providerIsSimple
-     *
-     * @param array $points
-     * @param bool  $result
+     * @covers ::isSimple
      */
-    public function testIsSimple($points, $result)
+    public function testIsSimple(array $points, bool $result)
     {
         $multiPoint = MultiPoint::fromArray($points);
 
@@ -125,10 +148,9 @@ class MultiPointTest extends TestCase
 
     /**
      * @dataProvider providerValidComponents
-     *
-     * @param array $points
+     * @covers ::numPoints
      */
-    public function testNumPoints($points)
+    public function testNumPoints(array $points)
     {
         $multiPoint = new MultiPoint($points);
 
@@ -138,19 +160,24 @@ class MultiPointTest extends TestCase
 
     /**
      * @dataProvider providerValidComponents
-     *
-     * @param array $points
+     * @covers ::numGeometries
      */
-    public function testNumGeometries($points)
+    public function testNumGeometries(array $points)
     {
         $multiPoint = new MultiPoint($points);
 
         $this->assertEquals(count($points), $multiPoint->numGeometries());
     }
 
-    public function testTrivialAndNotValidMethods()
+    /**
+     * @dataProvider providerValidComponents
+     * @covers ::dimension
+     * @covers ::boundary
+     * @covers ::explode
+     */
+    public function testTrivialAndNotValidMethods(array $ponts)
     {
-        $point = new MultiPoint();
+        $point = new MultiPoint($ponts);
 
         $this->assertSame(0, $point->dimension());
 

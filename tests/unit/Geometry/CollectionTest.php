@@ -16,7 +16,12 @@ use geoPHP\Geometry\LineString;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit tests of Collections
+ * Unit tests of abstracts Collection class
+ *
+ * @coversDefaultClass geoPHP\Geometry\Collection
+ *
+ * @uses geoPHP\Geometry\Point
+ * @uses geoPHP\Geometry\LineString
  */
 class CollectionTest extends TestCase
 {
@@ -31,11 +36,9 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerIs3D
-     *
-     * @param Point[] $components
-     * @param bool    $result
+     * @covers ::is3D
      */
-    public function testIs3D($components, $result)
+    public function testIs3D(array $components, bool $result)
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
@@ -56,11 +59,9 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerIsMeasured
-     *
-     * @param Point[] $components
-     * @param bool    $result
+     * @covers ::isMeasured
      */
-    public function testIsMeasured($components, $result)
+    public function testIsMeasured(array $components, bool $result)
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
@@ -79,11 +80,9 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerIsEmpty
-     *
-     * @param Point[] $components
-     * @param bool    $result
+     * @covers ::isEmpty
      */
-    public function testIsEmpty($components, $result)
+    public function testIsEmpty(array $components, bool $result)
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
@@ -91,6 +90,12 @@ class CollectionTest extends TestCase
         $this->assertEquals($result, $stub->isEmpty());
     }
 
+    /**
+     * @covers ::x
+     * @covers ::y
+     * @covers ::z
+     * @covers ::m
+     */
     public function testNonApplicableMethods()
     {
         /** @var Collection $stub */
@@ -102,6 +107,9 @@ class CollectionTest extends TestCase
         $this->assertNull($stub->m());
     }
 
+    /**
+     * @covers ::asArray
+     */
     public function testAsArray()
     {
         $components = [
@@ -119,6 +127,9 @@ class CollectionTest extends TestCase
         $this->assertEquals($expected, $stub->asArray());
     }
 
+    /**
+     * @covers ::flatten
+     */
     public function testFlatten()
     {
         $components = [
@@ -136,6 +147,9 @@ class CollectionTest extends TestCase
         $this->assertFalse($stub->getPoints()[0]->hasZ());
     }
 
+    /**
+     * @covers ::explode
+     */
     public function testExplode()
     {
         $points = [new Point(1, 2), new Point(3, 4), new Point(5, 6), new Point(1, 2)];

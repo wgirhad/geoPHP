@@ -5,10 +5,16 @@ namespace geoPHP\Tests\Adapter;
 use geoPHP\Adapter\GeoHash;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Unit tests of GeoHash adapter
+ *
+ * @coversDefaultClass geoPHP\Adapter\GeoHash
+ */
 class GeoHashTest extends TestCase
 {
     /**
      * test cases for adjacent geohashes.
+     * @covers ::adjacent
      */
     public function testAdjacent()
     {

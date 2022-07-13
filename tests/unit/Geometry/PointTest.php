@@ -13,8 +13,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Unit tests of Point geometry
  *
+ * @coversDefaultClass geoPHP\Geometry\Point
  * @group geometry
- *
  */
 class PointTest extends TestCase
 {
@@ -33,9 +33,9 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerValidCoordinatesXY
-     *
-     * @param int|float $x
-     * @param int|float $y
+     * @covers ::__construct
+     * @covers ::x
+     * @covers ::y
      */
     public function testValidCoordinatesXY($x, $y)
     {
@@ -63,10 +63,10 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerValidCoordinatesXYZorXYM
-     *
-     * @param int|float $x
-     * @param int|float $y
-     * @param int|float $z
+     * @covers ::__construct
+     * @covers ::x
+     * @covers ::y
+     * @covers ::z
      */
     public function testValidCoordinatesXYZ($x, $y, $z)
     {
@@ -84,10 +84,10 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerValidCoordinatesXYZorXYM
-     *
-     * @param int|float $x
-     * @param int|float $y
-     * @param int|float $m
+     * @covers ::__construct
+     * @covers ::x
+     * @covers ::y
+     * @covers ::m
      */
     public function testValidCoordinatesXYM($x, $y, $m)
     {
@@ -116,11 +116,11 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerValidCoordinatesXYZM
-     *
-     * @param int|float $x
-     * @param int|float $y
-     * @param int|float $z
-     * @param int|float $m
+     * @covers ::__construct
+     * @covers ::x
+     * @covers ::y
+     * @covers ::z
+     * @covers ::m
      */
     public function testValidCoordinatesXYZM($x, $y, $z, $m)
     {
@@ -137,6 +137,13 @@ class PointTest extends TestCase
         $this->assertIsFloat($point->m());
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::x
+     * @covers ::y
+     * @covers ::z
+     * @covers ::m
+     */
     public function testConstructorWithoutParameters()
     {
         $point = new Point();
@@ -149,6 +156,9 @@ class PointTest extends TestCase
         $this->assertNull($point->m());
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function providerEmpty()
     {
         return [
@@ -163,11 +173,7 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerEmpty
-     *
-     * @param int|float|null $x
-     * @param int|float|null $y
-     * @param int|float|null $z
-     * @param int|float|null $m
+     * @covers ::__construct
      */
     public function testEmpty($x = null, $y = null, $z = null, $m = null)
     {
@@ -193,11 +199,7 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerInvalidCoordinates
-     *
-     * @param mixed $x
-     * @param mixed $y
-     * @param mixed $z
-     * @param mixed $m
+     * @covers ::__construct
      */
     public function testConstructorWithInvalidCoordinates($x, $y, $z = null, $m = null)
     {
@@ -206,6 +208,9 @@ class PointTest extends TestCase
         new Point($x, $y, $z, $m);
     }
 
+    /**
+     * @covers ::geometryType
+     */
     public function testGeometryType()
     {
         $point = new Point();
@@ -230,8 +235,9 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerIs3D
+     * @covers ::is3D
      */
-    public function testIs3D($result, $x = null, $y = null, $z = null, $m = null)
+    public function testIs3D(bool $result, $x = null, $y = null, $z = null, $m = null)
     {
         $this->assertSame($result, (new Point($x, $y, $z, $m))->is3D());
     }
@@ -250,12 +256,16 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerIsMeasured
+     * @covers ::isMeasured
      */
-    public function testIsMeasured($result, $x = null, $y = null, $z = null, $m = null)
+    public function testIsMeasured(bool $result, $x = null, $y = null, $z = null, $m = null)
     {
         $this->assertSame($result, (new Point($x, $y, $z, $m))->isMeasured());
     }
 
+    /**
+     * @covers ::getComponents
+     */
     public function testGetComponents()
     {
         $point = new Point(1, 2);
@@ -268,11 +278,7 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerValidCoordinatesXYZM
-     *
-     * @param int|float $x
-     * @param int|float $y
-     * @param int|float $z
-     * @param int|float $m
+     * @covers ::invertXY
      */
     public function testInvertXY($x, $y, $z, $m)
     {
@@ -289,12 +295,18 @@ class PointTest extends TestCase
         $this->assertEquals($point, $originalPoint);
     }
 
+    /**
+     * @covers ::centroid
+     */
     public function testCentroidIsThePointItself()
     {
         $point = new Point(1, 2, 3, 4);
         $this->assertSame($point, $point->centroid());
     }
 
+    /**
+     * @covers ::getBBox
+     */
     public function testBBox()
     {
         $point = new Point(1, 2);
@@ -309,36 +321,66 @@ class PointTest extends TestCase
         );
     }
 
-    public function testAsArray()
+    /**
+     * @covers ::getBBox
+     */
+    public function testBBoxOfEmpty()
+    {
+        $point = new Point();
+        $this->assertSame(
+            $point->getBBox(),
+            [
+                'maxy' => null,
+                'miny' => null,
+                'maxx' => null,
+                'minx' => null,
+            ]
+        );
+    }
+
+    /**
+     * @covers ::asArray
+     * @testWith [[1.0, 2.0]]
+     *           [[1.0, 2.0, 3.0]]
+     *           [[1.0, 2.0, null, 3.0]]
+     *           [[1.0, 2.0, 3.0, 4.0]]
+     */
+    public function testAsArray(array $points)
+    {
+        $point = Point::fromArray($points);
+        $pointAsArray = $point->asArray();
+        $this->assertSame($points, $pointAsArray);
+    }
+
+    /**
+     * @covers ::asArray
+     */
+    public function testAsArrayOfEmpty()
     {
         $pointAsArray = (new Point())->asArray();
+
         $this->assertCount(2, $pointAsArray);
         $this->assertNan($pointAsArray[0]);
         $this->assertNan($pointAsArray[1]);
-
-        $pointAsArray = (new Point(1, 2))->asArray();
-        $this->assertSame([1.0, 2.0], $pointAsArray);
-
-        $pointAsArray = (new Point(1, 2, 3))->asArray();
-        $this->assertSame([1.0, 2.0, 3.0], $pointAsArray);
-
-        $pointAsArray = (new Point(1, 2, null, 3))->asArray();
-        $this->assertSame([1.0, 2.0, null, 3.0], $pointAsArray);
-
-        $pointAsArray = (new Point(1, 2, 3, 4))->asArray();
-        $this->assertSame([1.0, 2.0, 3.0, 4.0], $pointAsArray);
     }
 
+    /**
+     * @covers ::boundary
+     */
     public function testBoundary()
     {
         $this->assertEquals((new Point(1, 2))->boundary(), new GeometryCollection());
     }
 
+    /**
+     * @covers ::equals
+     */
     public function testEquals()
     {
         $this->assertTrue((new Point())->equals(new Point()));
 
         $point = new Point(1, 2, 3, 4);
+
         $this->assertTrue($point->equals(new Point(1, 2, 3, 4)));
 
         $this->assertTrue($point->equals(new Point(1.0000000001, 2.0000000001, 3, 4)));
@@ -350,6 +392,9 @@ class PointTest extends TestCase
         $this->assertFalse($point->equals(new GeometryCollection()));
     }
 
+    /**
+     * @covers ::flatten
+     */
     public function testFlatten()
     {
         $point = new Point(1, 2, 3, 4);
@@ -397,11 +442,9 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerDistance
-     *
-     * @param Geometry $otherGeometry
-     * @param float $expectedDistance
+     * @covers ::distance
      */
-    public function testDistance($otherGeometry, $expectedDistance)
+    public function testDistance(Geometry $otherGeometry, ?float $expectedDistance)
     {
         $point = new Point(0, 0);
 
@@ -410,16 +453,21 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerDistance
-     *
-     * @param Geometry $otherGeometry
+     * @covers ::distance
      */
-    public function testDistanceEmpty($otherGeometry)
+    public function testDistanceEmpty(Geometry $otherGeometry)
     {
         $point = new Point();
 
         $this->assertNull($point->distance($otherGeometry));
     }
 
+    /**
+     * @covers ::dimension
+     * @covers ::numPoints
+     * @covers ::getPoints
+     * @covers ::isSimple
+     */
     public function testTrivialMethods()
     {
         $point = new Point(1, 2, 3, 4);
@@ -433,6 +481,12 @@ class PointTest extends TestCase
         $this->assertTrue($point->isSimple());
     }
 
+    /**
+     * @covers ::minimumZ
+     * @covers ::maximumZ
+     * @covers ::minimumM
+     * @covers ::maximumM
+     */
     public function testMinMaxMethods()
     {
         $point = new Point(1, 2, 3, 4);
@@ -465,10 +519,22 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerMethodsNotValidForPointReturnsNull
-     *
-     * @param string $methodName
+     * @covers ::zDifference
+     * @covers ::elevationGain
+     * @covers ::elevationLoss
+     * @covers ::numGeometries
+     * @covers ::geometryN
+     * @covers ::startPoint
+     * @covers ::endPoint
+     * @covers ::isRing
+     * @covers ::isClosed
+     * @covers ::pointN
+     * @covers ::exteriorRing
+     * @covers ::numInteriorRings
+     * @covers ::interiorRingN
+     * @covers ::explode
      */
-    public function testPlaceholderMethodsReturnsNull($methodName)
+    public function testPlaceholderMethodsReturnsNull(string $methodName)
     {
         $this->assertNull((new Point(1, 2, 3, 4))->$methodName(null));
     }
@@ -486,10 +552,13 @@ class PointTest extends TestCase
 
     /**
      * @dataProvider providerMethodsNotValidForPointReturns0
-     *
-     * @param string $methodName
+     * @covers ::area
+     * @covers ::length
+     * @covers ::length3D
+     * @covers ::greatCircleLength
+     * @covers ::haversineLength
      */
-    public function testPlaceholderMethods($methodName)
+    public function testPlaceholderMethods(string $methodName)
     {
         $this->assertSame(0.0, (new Point(1, 2, 3, 4))->$methodName(null));
     }
