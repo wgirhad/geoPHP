@@ -91,7 +91,7 @@ class GeometryCollection extends MultiGeometry
 
         $reducedGeometry = geoPHP::geometryReduce($highestDimensionGeometries);
         if ($reducedGeometry->geometryType() === Geometry::GEOMETRY_COLLECTION) {
-            throw new Exception('Internal error: GeometryCollection->centroid() calculation failed.');
+            throw new \Exception('Internal error: GeometryCollection->centroid() calculation failed.');
         }
         return $reducedGeometry->centroid();
     }
