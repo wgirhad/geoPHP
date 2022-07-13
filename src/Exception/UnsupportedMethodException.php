@@ -14,7 +14,7 @@ class UnsupportedMethodException extends LogicException implements Exception
      * @param string|null $message Additional message
      * @param int $code
      */
-    public function __construct(string $method, ?string $message = null, int $code = 0, \Exception $previous = null)
+    public function __construct(string $method, ?string $message = null, int $code = 0, Exception $previous = null)
     {
         $message = 'Method ' . $method . '() is not supported yet.' . ($message ? ' ' . $message : '');
         parent::__construct($message, $code, $previous);

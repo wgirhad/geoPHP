@@ -9,6 +9,7 @@
   <testsuites>
     <testsuite name="funiQ/geoPHP tests">
       <directory>tests/unit/Geometry</directory>
+      <directory>tests/unit/Exception</directory>
       <directory>tests/unit/Adapter</directory>
     </testsuite>
   </testsuites>

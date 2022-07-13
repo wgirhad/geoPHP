@@ -15,7 +15,7 @@ class IOException extends RuntimeException implements Exception
      * @param int            $code
      * @param Throwable|null $previous
      */
-    public function __construct(?string $message = null, int $code = 0, ?Throwable $previous = null): void
+    public function __construct(?string $message = null, int $code = 0, ?Throwable $previous = null)
     {
         $message = 'IO error: ' . $message;
         parent::__construct($message, $code, $previous);
