@@ -390,9 +390,19 @@ class Polygon extends Surface
         return $this->exteriorRing()->getBBox();
     }
 
-    public function boundary()
+    /**
+     * @return LineString|MultiLineString
+     */
+    public function boundary(): Geometry
     {
-        // TODO: Implement boundary() method.
-        throw new UnsupportedMethodException('Polygon::bountry() method not implemented yet.');
+        if ($this->isEmpty()) {
+            return new LineString();
+        }
+
+        $rings = $this->getComponents();
+
+        return $this->numInteriorRings() === 0
+            ? new LineString($rings[0]->getPoints())
+            : new MultiLineString($rings);
     }
 }

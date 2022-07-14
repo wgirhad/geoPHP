@@ -129,7 +129,8 @@ class PolygonTest extends TestCase
                 new Polygon(),
                 [
                     'exteriorRing'  => new LineString(),
-                    'interiorRings' => []
+                    'interiorRings' => [],
+                    'boundaryType'  => Geometry::LINE_STRING,
                 ]
             ],
             'one ring' => [
@@ -138,6 +139,7 @@ class PolygonTest extends TestCase
                 [
                     'exteriorRing'  => $ring1,
                     'interiorRings' => [],
+                    'boundaryType'  => Geometry::LINE_STRING,
                 ]
             ],
             'two ring' => [
@@ -145,7 +147,8 @@ class PolygonTest extends TestCase
                 new Polygon([$ring1, $ring2]),
                 [
                 'exteriorRing'  => $ring1,
-                'interiorRings' => [1 => $ring2]
+                'interiorRings' => [1 => $ring2],
+                'boundaryType' => Geometry::MULTI_LINE_STRING,
                 ]
             ],
             'three ring' => [
@@ -154,6 +157,7 @@ class PolygonTest extends TestCase
                 [
                     'exteriorRing'  => $ring1,
                     'interiorRings' => [1 => $ring2, 2 => $ring3],
+                    'boundaryType' => Geometry::MULTI_LINE_STRING,
                 ]
             ],
         ];
@@ -225,5 +229,17 @@ class PolygonTest extends TestCase
         foreach ($results['interiorRings'] as $num => $ring) {
             $this->assertEquals($ring, $geometry->interiorRingN($num));
         }
+    }
+
+    /**
+     * @dataProvider providerValidComponents
+     * @covers ::boundary
+     */
+    public function testBoundary(array $points, Polygon $geometry, array $results): void
+    {
+        $boundary = $geometry->boundary();
+
+        $this->assertInstanceOf(Geometry::class, $boundary);
+        $this->assertEquals($results['boundaryType'], $boundary->getGeomType());
     }
 }
