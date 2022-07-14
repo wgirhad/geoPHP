@@ -24,6 +24,7 @@
     <!-- Include the whole PSR12 standard -->
     <rule ref="PSR12">
         <exclude name="PSR12.Properties.ConstantVisibility.NotFound"></exclude>
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"></exclude>
     </rule>
 
     <!-- Include some sniffs from other standards -->
