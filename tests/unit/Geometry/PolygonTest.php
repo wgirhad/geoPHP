@@ -66,21 +66,10 @@ class PolygonTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorEmptyComponentThrowsException()
+    public function testConstructorNonArrayComponentTypeError()
     {
-        $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageMatches('/Cannot create a collection of empty LineStrings.+/');
-
-        new Polygon([new LineString()]);
-    }
-
-    /**
-     * @covers ::__construct
-     */
-    public function testConstructorNonArrayComponentThrowsException()
-    {
-        $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageMatches('/Component geometries must be passed as array/');
+        $this->expectException(\TypeError::class);
+        $this->expectErrorMessage('Argument #1 ($components) must be of type array, string given');
 
         new Polygon('foo');
     }
@@ -88,14 +77,34 @@ class PolygonTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorSinglePointThrowsException()
+    public function testConstructorEmptyComponent()
+    {
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectErrorMessageMatches('/Cannot create a collection of empty LineStrings/');
+
+        new Polygon([new LineString()]);
+    }
+
+    public function providerConstructorFewPoints()
+    {
+        return [
+            'two points'       => [LineString::fromArray([[1, 2], [2, 3]])],
+            'three points'     => [LineString::fromArray([[1, 2], [2, 3], [4, 5]])],
+        ];
+    }
+
+    /**
+     * @dataProvider providerConstructorFewPoints
+     * @covers ::__construct
+     */
+    public function testConstructorFewPointThrowsException($component)
     {
         $this->expectException(InvalidGeometryException::class);
         $this->expectExceptionMessageMatches(
             '/Cannot create Polygon: Invalid number of points in LinearRing. Found \d+, expected more than 3/'
         );
 
-        new Polygon([LineString::fromArray([[1, 2], [3, 4]])]);
+        new Polygon([$component]);
     }
 
     /**

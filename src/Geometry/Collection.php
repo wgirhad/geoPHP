@@ -15,26 +15,25 @@ use geoPHP\geoPHP;
  */
 abstract class Collection extends Geometry
 {
-    /** @var Geometry[]|Collection[] */
+    /**
+     * @var Geometry[]|Collection[]
+     */
     protected $components = [];
 
     /**
-     * Constructor: Checks and sets component geometries
+     * Checks and stores geometry components.
      *
-     * @param Geometry[] $components Array of geometries
-     * @param bool|true  $allowEmptyComponents Allow creating geometries with empty components
-     * @param string     $allowedComponentType A class the components must be instance of
+     * @param Geometry[] $components           Array of geometries.
+     * @param bool       $allowEmptyComponents Allow creating geometries with empty components. Default: false.
+     * @param string     $allowedComponentType A class the components must be instance of. Default: any Geometry.
      *
      * @throws InvalidGeometryException
      */
     public function __construct(
-        $components = [],
-        $allowEmptyComponents = true,
-        $allowedComponentType = Geometry::class
+        array $components = [],
+        bool $allowEmptyComponents = false,
+        string $allowedComponentType = Geometry::class
     ) {
-        if (!is_array($components)) {
-            throw new InvalidGeometryException("Component geometries must be passed as array");
-        }
         $componentCount = count($components);
         for ($i = 0; $i < $componentCount; ++$i) { // foreach is too memory-intensive here in PHP 5.*
             if ($components[$i] instanceof $allowedComponentType) {

@@ -2,6 +2,8 @@
 
 namespace geoPHP\Geometry;
 
+use geoPHP\Exception\InvalidGeometryException;
+
 /**
  * Class MultiCurve
  * TODO write this
@@ -12,8 +14,20 @@ namespace geoPHP\Geometry;
  */
 abstract class MultiCurve extends MultiGeometry
 {
-    public function __construct($components = [], $allowEmptyComponents = true, $allowedComponentType = Curve::class)
-    {
+    /**
+     * Checks and stores geometry components.
+     *
+     * @param Point[] $components           Array of Point components.
+     * @param bool    $allowEmptyComponents Allow creating geometries with empty components. Default: false.
+     * @param string  $allowedComponentType A class the components must be instance of. Default: Curve.
+     *
+     * @throws InvalidGeometryException
+     */
+    public function __construct(
+        array $components = [],
+        bool $allowEmptyComponents = false,
+        string $allowedComponentType = Curve::class
+    ) {
         parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
     }
 

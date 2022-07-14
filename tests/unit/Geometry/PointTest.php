@@ -431,9 +431,7 @@ class PointTest extends TestCase
             'MultiPoint, closest distance is 0' =>
                 [MultiPoint::fromArray([[0, 0], [10, 20]]), 0.0],
             'MultiPoint, closest distance is 10' =>
-
                 [MultiPoint::fromArray([[10, 20], [0, 10]]), 10.0],
-            'MultiPoint, one of two is empty' => [MultiPoint::fromArray([[], [0, 10]]), 10.0],
 
             'GeometryCollection, closest component is 10' =>
                 [new GeometryCollection([new Point(0, 10), new Point()]), 10.0]

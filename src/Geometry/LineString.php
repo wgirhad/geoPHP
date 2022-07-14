@@ -23,12 +23,13 @@ class LineString extends Curve
     }
 
     /**
-     * Constructor
+     * Checks and stores geometry components.
      *
-     * @param Point[] $points An array of at least two points with which to build the LineString
+     * @param Point[] $points Array of at least two Points with which to build the LineString.
+     *
      * @throws InvalidGeometryException
      */
-    public function __construct($points = [])
+    public function __construct(array $points = [])
     {
         parent::__construct($points);
     }

@@ -11,16 +11,28 @@ use geoPHP\Exception\InvalidGeometryException;
  */
 class Point extends Geometry
 {
+    /**
+     * @var float|null
+     */
     protected $x = null;
 
+    /**
+     * @var float|null
+     */
     protected $y = null;
 
+    /**
+     * @var float|null
+     */
     protected $z = null;
 
+    /**
+     * @var float|null
+     */
     protected $m = null;
 
     /**
-     * Constructor
+     * Checks and stores coordinates.
      *
      * @param int|float|null $x The x coordinate (or longitude)
      * @param int|float|null $y The y coordinate (or latitude)
@@ -36,7 +48,7 @@ class Point extends Geometry
             // Basic validation on x and y
             if (!is_numeric($x) || !is_numeric($y)) {
                 throw new InvalidGeometryException(
-                    'Cannot construct Point. x and y should be numeric, ' . gettype($x) . ' given.'
+                    "Cannot construct Point. x and y must be numeric, {gettype($x)} given."
                 );
             }
 
@@ -48,7 +60,7 @@ class Point extends Geometry
             if ($z !== null) {
                 if (!is_numeric($z)) {
                     throw new InvalidGeometryException(
-                        'Cannot construct Point. z should be numeric, ' . gettype($x) . ' given.'
+                        "Cannot construct Point. z must be numeric, {gettype($x)} given."
                     );
                 }
                 $this->hasZ = true;
@@ -59,7 +71,7 @@ class Point extends Geometry
             if ($m !== null) {
                 if (!is_numeric($m)) {
                     throw new InvalidGeometryException(
-                        'Cannot construct Point. m should be numeric, ' . gettype($x) . ' given.'
+                        "Cannot construct Point. m must be numeric, {gettype($x)} given."
                     );
                 }
                 $this->isMeasured = true;

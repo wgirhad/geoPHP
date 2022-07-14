@@ -2,6 +2,8 @@
 
 namespace geoPHP\Geometry;
 
+use geoPHP\Exception\InvalidGeometryException;
+
 /**
  * A Surface is a 2-dimensional abstract geometric object.
  *
@@ -15,8 +17,20 @@ namespace geoPHP\Geometry;
  */
 abstract class Surface extends Collection
 {
-    public function __construct($components = [], $allowEmptyComponents = true, $allowedComponentType = Curve::class)
-    {
+    /**
+     * Checks and stores geometry components.
+     *
+     * @param Surface[] $components           Array of Surface components.
+     * @param bool      $allowEmptyComponents Allow creating geometries with empty components. Default: false.
+     * @param string    $allowedComponentType A class the components must be instance of. Default: Curve.
+     *
+     * @throws InvalidGeometryException
+     */
+    public function __construct(
+        array $components = [],
+        bool $allowEmptyComponents = false,
+        string $allowedComponentType = Curve::class
+    ) {
         parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
     }
 

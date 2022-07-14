@@ -75,10 +75,10 @@ class LineStringTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorNonArrayComponentThrowsException()
+    public function testConstructorNonArrayComponentTypeError()
     {
-        $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageMatches('/Component geometries must be passed as array/');
+        $this->expectException(\TypeError::class);
+        $this->expectErrorMessage('Argument #1 ($points) must be of type array, string given');
 
         new LineString('foo');
     }

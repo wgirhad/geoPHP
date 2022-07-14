@@ -15,9 +15,16 @@ use geoPHP\Exception\InvalidGeometryException;
  */
 class MultiLineString extends MultiCurve
 {
-    public function __construct($components = [])
+    /**
+     * Checks and stores geometry components.
+     *
+     * @param LineString[] $components Array of LineString components.
+     *
+     * @throws InvalidGeometryException
+     */
+    public function __construct(array $components = [])
     {
-        parent::__construct($components, true, LineString::class);
+        parent::__construct($components, false, LineString::class);
     }
 
     /**

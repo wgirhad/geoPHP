@@ -15,9 +15,16 @@ use geoPHP\Exception\InvalidGeometryException;
  */
 class MultiPolygon extends MultiSurface
 {
-    public function __construct($components = [])
+    /**
+     * Checks and stores geometry components.
+     *
+     * @param Polygon[] $components Array of Polygon components.
+     *
+     * @throws InvalidGeometryException
+     */
+    public function __construct(array $components = [])
     {
-        parent::__construct($components, true, Polygon::class);
+        parent::__construct($components, false, Polygon::class);
     }
 
     /**

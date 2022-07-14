@@ -12,12 +12,14 @@ use geoPHP\geoPHP;
 class GeometryCollection extends MultiGeometry
 {
     /**
+     * Checks and stores geometry components.
+     *
      * @param Geometry[] $components Array of geometries. Components of GeometryCollection can be
-     *     any of valid Geometry types, including empty geometry
+     *                               any of valid Geometry types, including empty geometry.
      *
      * @throws InvalidGeometryException
      */
-    public function __construct($components = [])
+    public function __construct(array $components = [])
     {
         parent::__construct($components, true);
     }

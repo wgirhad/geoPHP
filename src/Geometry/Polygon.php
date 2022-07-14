@@ -3,14 +3,13 @@
 namespace geoPHP\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
-use geoPHP\Exception\UnsupportedMethodException;
 use geoPHP\geoPHP;
 
 /**
  * Polygon: A polygon is a plane figure that is bounded by a closed path,
  * composed of a finite sequence of straight line segments
  *
- * @method LineString[] getComponents()
+ * @method   LineString[] getComponents()
  * @property LineString[] $components
  *
  * @phpstan-consistent-constructor
@@ -18,14 +17,16 @@ use geoPHP\geoPHP;
 class Polygon extends Surface
 {
     /**
-     * @param LineString[] $components  The LineString components
+     * Checks and stores geometry components.
+     *
+     * @param LineString[] $components  Array of LineString components.
      * @param bool         $forceCreate Force create polygon even if it's invalid because a ring is not closed.
      *                                  Default is false.
      * @throws InvalidGeometryException
      */
-    public function __construct($components = [], $forceCreate = false)
+    public function __construct(array $components = [], bool $forceCreate = false)
     {
-        parent::__construct($components, null, LineString::class);
+        parent::__construct($components, false, LineString::class);
 
         foreach ($this->getComponents() as $i => $component) {
             if ($component->numPoints() < 4) {
