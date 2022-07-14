@@ -69,7 +69,7 @@ class PolygonTest extends TestCase
     public function testConstructorNonArrayComponentTypeError()
     {
         $this->expectException(\TypeError::class);
-        $this->expectErrorMessage('Argument #1 ($components) must be of type array, string given');
+        $this->expectErrorMessageMatches('/Argument #?1 .+ type array, string given/');
 
         new Polygon('foo');
     }
