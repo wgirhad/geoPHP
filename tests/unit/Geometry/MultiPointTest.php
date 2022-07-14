@@ -94,7 +94,6 @@ class MultiPointTest extends TestCase
     {
         $this->assertTrue((new Point(1, 2, 3))->is3D());
         $this->assertTrue((new Point(1, 2, 3, 4))->is3D());
-        $this->assertTrue((new Point(null, null, 3, 4))->is3D());
     }
 
     /**
@@ -103,7 +102,6 @@ class MultiPointTest extends TestCase
     public function testIsMeasured()
     {
         $this->assertTrue((new Point(1, 2, null, 4))->isMeasured());
-        $this->assertTrue((new Point(null, null, null, 4))->isMeasured());
     }
 
     public function providerCentroid()

@@ -224,12 +224,12 @@ class PointTest extends TestCase
     public function providerIs3D()
     {
         return [
-            '2 coordinates is not 3D'   => [false, 1, 2],
-            '3 coordinates'             => [true, 1, 2, 3],
-            '4 coordinates'             => [true, 1, 2, 3, 4],
-            'x, y is null but z is not' => [true, null, null, 3, 4],
-            'z is null'                 => [false, 1, 2, null, 4],
-            'empty point'               => [false],
+            'empty point'        => [false],
+            '2 coordinates'      => [false, 1, 2],
+            '3 coordinates'      => [true, 1, 2, 3],
+            '4 coordinates'      => [true, 1, 2, 3, 4],
+            'empty point with z' => [false, null, null, 3, 4],
+            'z is null'          => [false, 1, 2, null, 4],
         ];
     }
 
@@ -245,12 +245,14 @@ class PointTest extends TestCase
     public function providerIsMeasured()
     {
         return [
+            'empty point'               => [false],
             '2 coordinates is false'    => [false, 1, 2],
             '3 coordinates is false'    => [false, 1, 2, 3],
             '4 coordinates'             => [true, 1, 2, 3, 4],
-            'x, y is null but m is not' => [true, null, null, 3, 4],
+            'empty point with z and m' => [false, null, null, 3, 4],
+            'empty point with m'       => [false, null, null, null, 4],
             'm is null'                 => [false, 1, 2, 3, null],
-            'empty point'               => [false],
+            'z is null'                 => [true, 1, 2, null, 4],
         ];
     }
 

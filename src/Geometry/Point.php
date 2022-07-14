@@ -43,28 +43,28 @@ class Point extends Geometry
             // Convert to float in case they are passed in as a string or integer etc.
             $this->x = floatval($x);
             $this->y = floatval($y);
-        }
 
-        // Check to see if this point has Z (height) value
-        if ($z !== null) {
-            if (!is_numeric($z)) {
-                throw new InvalidGeometryException(
-                    'Cannot construct Point. z should be numeric, ' . gettype($x) . ' given.'
-                );
+            // Check to see if this point has Z (height) value
+            if ($z !== null) {
+                if (!is_numeric($z)) {
+                    throw new InvalidGeometryException(
+                        'Cannot construct Point. z should be numeric, ' . gettype($x) . ' given.'
+                    );
+                }
+                $this->hasZ = true;
+                $this->z = floatval($z);
             }
-            $this->hasZ = true;
-            $this->z = $this->x !== null ? floatval($z) : null;
-        }
 
-        // Check to see if this is a measure
-        if ($m !== null) {
-            if (!is_numeric($m)) {
-                throw new InvalidGeometryException(
-                    'Cannot construct Point. m should be numeric, ' . gettype($x) . ' given.'
-                );
+            // Check to see if this is a measure
+            if ($m !== null) {
+                if (!is_numeric($m)) {
+                    throw new InvalidGeometryException(
+                        'Cannot construct Point. m should be numeric, ' . gettype($x) . ' given.'
+                    );
+                }
+                $this->isMeasured = true;
+                $this->m = floatval($m);
             }
-            $this->isMeasured = true;
-            $this->m = $this->x !== null ? floatval($m) : null;
         }
     }
 
