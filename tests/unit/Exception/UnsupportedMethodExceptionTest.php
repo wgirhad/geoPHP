@@ -8,7 +8,7 @@ use LogicException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass geoPHP\Exception\UnsupportedMethodExceptionTest
+ * @coversDefaultClass geoPHP\Exception\UnsupportedMethodException
  */
 class UnsupportedMethodExceptionTest extends TestCase
 {

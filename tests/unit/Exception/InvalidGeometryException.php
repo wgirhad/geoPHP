@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * @coversDefaultClass geoPHP\Exception\InvalidGeometryExceptionTest
+ * @coversDefaultClass geoPHP\Exception\InvalidGeometryException
  */
 class InvalidGeometryExceptionTest extends TestCase
 {

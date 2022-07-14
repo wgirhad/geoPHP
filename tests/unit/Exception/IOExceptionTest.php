@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * @coversDefaultClass geoPHP\Exception\IOExceptionTest
+ * @coversDefaultClass geoPHP\Exception\IOException
  */
 class IOExceptionTest extends TestCase
 {

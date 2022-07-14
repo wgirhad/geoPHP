@@ -8,7 +8,7 @@ use geoPHP\Exception\IOException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass geoPHP\Exception\InvalidXmlExceptionTest
+ * @coversDefaultClass geoPHP\Exception\InvalidXmlException
  */
 class InvalidXmlExceptionTest extends TestCase
 {

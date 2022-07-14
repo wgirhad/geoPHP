@@ -8,7 +8,7 @@ use geoPHP\Exception\IOException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass geoPHP\Exception\FileFormatExceptionTest
+ * @coversDefaultClass geoPHP\Exception\FileFormatException
  */
 class FileFormatExceptionTest extends TestCase
 {
