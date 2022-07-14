@@ -42,16 +42,17 @@
   },
   "scripts": {
     "tests": [
-      "@cs",
-      "@cs-warning",
-      "@stan",
       "@unit",
       "@test-input",
       "@performance"
     ],
     "analyze": [
-      "@cs",
+      "@cs-warning",
       "@stan"
+    ],
+    "all": [
+      "@analyze",
+      "@tests"
     ],
     "cs":          "phpcs",
     "cs-warning":  "phpcs -w",

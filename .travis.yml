@@ -41,10 +41,6 @@ jobs:
     - stage: Smoke
       php: 8.1
       env: PHPCS=1
-      script: composer cs
-    - stage: Smoke
-      php: 8.1
-      env: PHPCS_WARNING=1
       script: composer cs-warning
     - stage: Smoke
       php: 8.1
@@ -74,7 +70,6 @@ jobs:
 # FIXME: allow_failures doesn't appear to work with stages defined. How to solve that?
   allow_failures:
     - php: nightly
-    - env: PHPCS_WARNING=1
 
   fast_finish: true
 
