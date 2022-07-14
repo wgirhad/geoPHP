@@ -276,9 +276,7 @@ class geoPHP
         if ($geometries instanceof Geometry) {
             return $geometries;
         } elseif (!is_array($geometries)) {
-            return null;    //@phpstan-ignore-line
-            //FIXME should be:
-            //throw new \Exception('Input of buildGeometry() must be Geometry or array of Geometries');
+            throw new \InvalidArgumentException('Input of buildGeometry() must be Geometry or array of Geometries');
         } elseif (count($geometries) == 1) {
             // If it's an array of one, then just parse the one
             return geoPHP::buildGeometry(array_shift($geometries));
