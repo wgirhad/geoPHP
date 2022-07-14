@@ -17,7 +17,7 @@ abstract class Curve extends Collection
     /**
      * Constructor: Checks and sets component geometries
      *
-     * @param Geometry[] $components Array of geometries
+     * @param Point[] $components Array of geometries
      * @param bool|false $allowEmptyComponents Allow creating geometries with empty components
      * @param string     $allowedComponentType A class the components must be instance of
      *
@@ -86,16 +86,13 @@ abstract class Curve extends Collection
     /**
      * The boundary of a non-closed Curve consists of its end Points
      *
-     * @return LineString|MultiPoint
+     * @return MultiPoint
      */
     public function boundary()
     {
-        return $this->isEmpty()
-            ? new LineString()
-            : ($this->isClosed()
-                ? new MultiPoint()
-                : new MultiPoint([$this->startPoint(), $this->endPoint()])
-            );
+        return $this->isEmpty() || $this->isClosed()
+            ? new MultiPoint()
+            : new MultiPoint([$this->startPoint(), $this->endPoint()]);
     }
 
     // Not valid for this geometry type
