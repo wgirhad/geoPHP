@@ -18,8 +18,9 @@ use geoPHP\geoPHP;
 class Polygon extends Surface
 {
     /**
-     * @param LineString[] $components
-     * @param bool|false $forceCreate
+     * @param LineString[] $components  The LineString components
+     * @param bool         $forceCreate Force create polygon even if it's invalid because a ring is not closed.
+     *                                  Default is false.
      * @throws InvalidGeometryException
      */
     public function __construct($components = [], $forceCreate = false)
@@ -53,10 +54,20 @@ class Polygon extends Surface
         }
     }
 
-    public static function fromArray($array)
+    /**
+     *
+     * Creates a Polygon from array of coordinates.
+     *
+     * @param array $coordinateArray Multi-dimensional array of coordinates
+     *
+     * @throws InvalidGeometryException
+     *
+     * @return Polygon
+     */
+    public static function fromArray(array $coordinateArray): Polygon
     {
         $rings = [];
-        foreach ($array as $ring) {
+        foreach ($coordinateArray as $ring) {
             $rings[] = LineString::fromArray($ring);
         }
         return new static($rings);

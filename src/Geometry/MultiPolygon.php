@@ -3,6 +3,7 @@
 namespace geoPHP\Geometry;
 
 use geoPHP\geoPHP;
+use geoPHP\Exception\InvalidGeometryException;
 
 /**
  * MultiPolygon: A collection of Polygons
@@ -19,10 +20,20 @@ class MultiPolygon extends MultiSurface
         parent::__construct($components, true, Polygon::class);
     }
 
-    public static function fromArray($array)
+    /**
+     *
+     * Creates a MultiPolygon from array of coordinates
+     *
+     * @param array $coordinateArray Multi-dimensional array of coordinates
+     *
+     * @throws InvalidGeometryException
+     *
+     * @return MultiPolygon
+     */
+    public static function fromArray(array $coordinateArray): MultiPolygon
     {
         $points = [];
-        foreach ($array as $point) {
+        foreach ($coordinateArray as $point) {
             $points[] = Polygon::fromArray($point);
         }
         return new static($points);

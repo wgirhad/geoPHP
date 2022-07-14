@@ -35,7 +35,9 @@ class Point extends Geometry
         if ($x !== null && $y !== null) {
             // Basic validation on x and y
             if (!is_numeric($x) || !is_numeric($y)) {
-                throw new InvalidGeometryException("Cannot construct Point. x and y should be numeric");
+                throw new InvalidGeometryException(
+                    'Cannot construct Point. x and y should be numeric, ' . gettype($x) . ' given.'
+                );
             }
 
             // Convert to float in case they are passed in as a string or integer etc.
@@ -46,7 +48,9 @@ class Point extends Geometry
         // Check to see if this point has Z (height) value
         if ($z !== null) {
             if (!is_numeric($z)) {
-                throw new InvalidGeometryException("Cannot construct Point. z should be numeric");
+                throw new InvalidGeometryException(
+                    'Cannot construct Point. z should be numeric, ' . gettype($x) . ' given.'
+                );
             }
             $this->hasZ = true;
             $this->z = $this->x !== null ? floatval($z) : null;
@@ -55,7 +59,9 @@ class Point extends Geometry
         // Check to see if this is a measure
         if ($m !== null) {
             if (!is_numeric($m)) {
-                throw new InvalidGeometryException("Cannot construct Point. m should be numeric");
+                throw new InvalidGeometryException(
+                    'Cannot construct Point. m should be numeric, ' . gettype($x) . ' given.'
+                );
             }
             $this->isMeasured = true;
             $this->m = $this->x !== null ? floatval($m) : null;
@@ -63,15 +69,19 @@ class Point extends Geometry
     }
 
     /**
-     * @param array $coordinates
-     * @return Point
+     *
+     * Creates a Point from array of coordinates
+     *
+     * @param array $coordinateArray Multi-dimensional array of coordinates
      *
      * @throws InvalidGeometryException
+     *
+     * @return Point
      */
-    public static function fromArray($coordinates)
+    public static function fromArray(array $coordinateArray): Point
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return (new \ReflectionClass(get_called_class()))->newInstanceArgs($coordinates);
+        return (new \ReflectionClass(get_called_class()))->newInstanceArgs($coordinateArray);
     }
 
     public function geometryType()
@@ -139,7 +149,11 @@ class Point extends Geometry
         return $this;
     }
 
-    // A point's centroid is itself
+    /**
+     * Centroid of a point is itself
+     *
+     * @return self
+     */
     public function centroid()
     {
         return $this;
@@ -172,7 +186,7 @@ class Point extends Geometry
         if ($this->hasZ) {
             return [$this->x, $this->y, $this->z];
         }
-        // if ($this->isMeasured)
+        // if isMeasured
         return [$this->x, $this->y, null, $this->m];
     }
 

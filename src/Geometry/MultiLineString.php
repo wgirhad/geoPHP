@@ -3,6 +3,7 @@
 namespace geoPHP\Geometry;
 
 use geoPHP\geoPHP;
+use geoPHP\Exception\InvalidGeometryException;
 
 /**
  * MultiLineString: A collection of LineStrings
@@ -19,10 +20,20 @@ class MultiLineString extends MultiCurve
         parent::__construct($components, true, LineString::class);
     }
 
-    public static function fromArray($array)
+    /**
+     *
+     * Creates a MultiLineString from array of coordinates
+     *
+     * @param array $coordinateArray Multi-dimensional array of coordinates
+     *
+     * @throws InvalidGeometryException
+     *
+     * @return MultiLineString
+     */
+    public static function fromArray(array $coordinateArray): MultiLineString
     {
         $points = [];
-        foreach ($array as $point) {
+        foreach ($coordinateArray as $point) {
             $points[] = LineString::fromArray($point);
         }
         return new static($points);

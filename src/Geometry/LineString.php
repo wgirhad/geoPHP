@@ -25,8 +25,7 @@ class LineString extends Curve
     /**
      * Constructor
      *
-     * @param Point[] $points An array of at least two points with
-     * which to build the LineString
+     * @param Point[] $points An array of at least two points with which to build the LineString
      * @throws InvalidGeometryException
      */
     public function __construct($points = [])
@@ -34,10 +33,20 @@ class LineString extends Curve
         parent::__construct($points);
     }
 
-    public static function fromArray($array)
+    /**
+     *
+     * Creates a LineString from array of coordinates
+     *
+     * @param array $coordinateArray Multi-dimensional array of coordinates
+     *
+     * @throws InvalidGeometryException
+     *
+     * @return LineString
+     */
+    public static function fromArray(array $coordinateArray): LineString
     {
         $points = [];
-        foreach ($array as $point) {
+        foreach ($coordinateArray as $point) {
             $points[] = Point::fromArray($point);
         }
         return new static($points);
@@ -421,7 +430,8 @@ class LineString extends Curve
     }
 
     /**
-     * Checks that LineString is a Simple Geometry
+     * Checks that LineString is a Simple Geometry.
+     * WARNING: Current implementation has known problems with self tangency.
      *
      * @return boolean
      */
@@ -434,7 +444,7 @@ class LineString extends Curve
             // @codeCoverageIgnoreEnd
         }
 
-        // As of OGR specification a ring is simple only if its start and end points equals in all coordinates
+        // As of OGC specification a ring is simple only if its start and end points equals in all coordinates
         // Neither GEOS, nor PostGIS support it
 //        if ($this->hasZ()
 //                && $this->startPoint()->equals($this->endPoint())
@@ -446,10 +456,11 @@ class LineString extends Curve
         $segments = $this->explode(true);
         foreach ($segments as $i => $segment) {
             foreach ($segments as $j => $checkSegment) {
-                if ($i != $j) {
-                    if (Geometry::segmentIntersects($segment[0], $segment[1], $checkSegment[0], $checkSegment[1])) {
-                        return false;
-                    }
+                if (
+                    $i != $j
+                    && Geometry::segmentIntersects($segment[0], $segment[1], $checkSegment[0], $checkSegment[1])
+                ) {
+                    return false;
                 }
             }
         }
@@ -483,11 +494,11 @@ class LineString extends Curve
             // @codeCoverageIgnoreEnd
         }
 
-        if ($geometry->geometryType() == Geometry::POINT) {
+        if ($geometry->geometryType() === Geometry::POINT) {
             // This is defined in the Point class nicely
             return $geometry->distance($this);
         }
-        if ($geometry->geometryType() == Geometry::LINE_STRING) {
+        if ($geometry->geometryType() === Geometry::LINE_STRING) {
             $distance = null;
             $geometrySegments = $geometry->explode();
             foreach ($this->explode() as $seg1) {
@@ -496,8 +507,8 @@ class LineString extends Curve
                     if ($seg1->lineSegmentIntersect($seg2)) {
                         return 0.0;
                     }
-                    // Because line-segments are straight, the shortest distance will occur at an endpoint.
-                    // If they are parallel an endpoint calculation is still accurate.
+                    // Because line-segments are straight, the shortest distance will be at one of the endpoints.
+                    // If they are parallel endpoint calculation is still accurate.
                     $checkDistance1 = $seg1->startPoint()->distance($seg2);
                     $checkDistance2 = $seg1->endPoint()->distance($seg2);
                     $checkDistance3 = $seg2->startPoint()->distance($seg1);

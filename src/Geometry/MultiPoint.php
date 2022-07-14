@@ -3,6 +3,7 @@
 namespace geoPHP\Geometry;
 
 use geoPHP\geoPHP;
+use geoPHP\Exception\InvalidGeometryException;
 
 /**
  * A MultiPoint is a 0-dimensional Collection.
@@ -11,7 +12,7 @@ use geoPHP\geoPHP;
  * A MultiPoint is simple if no two Points in the MultiPoint are equal (have identical coordinate values in X and Y).
  * Every MultiPoint is spatially equal under the definition in OGC 06-103r4 Clause 6.1.15.3 to a simple Multipoint.
  *
- * @method Point[] getComponents()
+ * @method   Point[] getComponents()
  * @property Point[] $components The elements of a MultiPoint are Points
  *
  * @phpstan-consistent-constructor
@@ -23,10 +24,20 @@ class MultiPoint extends MultiGeometry
         parent::__construct($components, true, Point::class);
     }
 
-    public static function fromArray($array)
+    /**
+     *
+     * Creates a MultiPoint from array of coordinates
+     *
+     * @param array $coordinateArray Multi-dimensional array of coordinates
+     *
+     * @throws InvalidGeometryException
+     *
+     * @return MultiPoint
+     */
+    public static function fromArray(array $coordinateArray): MultiPoint
     {
         $points = [];
-        foreach ($array as $point) {
+        foreach ($coordinateArray as $point) {
             $points[] = Point::fromArray($point);
         }
         return new static($points);
