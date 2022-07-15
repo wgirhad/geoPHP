@@ -115,11 +115,13 @@ class MultiPointTest extends TestCase
      * @dataProvider providerCentroid
      * @covers ::centroid
      */
-    public function testCentroid(array $components, array $centroid)
+    public function testCentroid(array $components, array $expectedCentroid)
     {
         $multiPoint = MultiPoint::fromArray($components);
+        $centroid = $multiPoint->centroid();
+        $centroid->setGeos(null);
 
-        $this->assertEquals(Point::fromArray($centroid), $multiPoint->centroid());
+        $this->assertEquals(Point::fromArray($expectedCentroid), $centroid);
     }
 
     public function providerIsSimple()

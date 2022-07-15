@@ -25,4 +25,7 @@
       <html outputDirectory="build/coverage"/>
     </report>
   </coverage>
+  <php>
+    <env name="GEOS_DISABLED" value="1"/>
+  </php>
 </phpunit>

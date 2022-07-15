@@ -215,10 +215,10 @@ class PointTest extends TestCase
     {
         $point = new Point();
 
-        $this->assertEquals(\geoPHP\Geometry\Geometry::POINT, $point->geometryType());
+        $this->assertEquals(Geometry::POINT, $point->geometryType());
 
         $this->assertInstanceOf(Point::class, $point);
-        $this->assertInstanceOf(\geoPHP\Geometry\Geometry::class, $point);
+        $this->assertInstanceOf(Geometry::class, $point);
     }
 
     public function providerIs3D()
@@ -434,8 +434,7 @@ class PointTest extends TestCase
                 [MultiPoint::fromArray([[10, 20], [0, 10]]), 10.0],
 
             'GeometryCollection, closest component is 10' =>
-                [new GeometryCollection([new Point(0, 10), new Point()]), 10.0]
-            // FIXME: this geometry collection crashes GEOS
+                [new GeometryCollection([new Point(0, 10), new Point(20, 0)]), 10.0]
             // TODO: test other types
         ];
     }

@@ -60,7 +60,6 @@
     "stan":        "phpstan analyze --no-progress",
     "unit":        [
       "@putenv XDEBUG_MODE=coverage",
-      "@putenv GEOS_DISABLED=1",
       "phpunit"
     ],
     "test-input":  "cd tests && php test.php && cd ..",

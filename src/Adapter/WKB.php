@@ -182,22 +182,27 @@ class WKB implements GeoAdapter
     protected function getPoint()
     {
         $coordinates = $this->reader->readDoubles($this->dimension * 8);
-        $point = null;
+
+        if (is_nan($coordinates[0]) || is_nan($coordinates[1])) {
+            return new Point();
+        }
+
         switch (count($coordinates)) {
             case 2:
                 $point = new Point($coordinates[0], $coordinates[1]);
                 break;
             case 3:
-                if ($this->hasZ) {
-                    $point = new Point($coordinates[0], $coordinates[1], $coordinates[2]);
-                } else {
-                    $point = new Point($coordinates[0], $coordinates[1], null, $coordinates[2]);
-                }
+                $point = $this->hasZ
+                    ? new Point($coordinates[0], $coordinates[1], $coordinates[2])
+                    : new Point($coordinates[0], $coordinates[1], null, $coordinates[2]);
                 break;
             case 4:
                 $point = new Point($coordinates[0], $coordinates[1], $coordinates[2], $coordinates[3]);
                 break;
+            default:
+                $point = new Point();
         }
+
         return $point;
     }
 

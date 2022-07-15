@@ -274,13 +274,12 @@ abstract class Geometry
     }
 
     /**
-     * @param int $srid Spatial Reference System Identifier
+     * @param int|null $srid Spatial Reference System Identifier
      */
-    public function setSRID($srid)
+    public function setSRID(?int $srid)
     {
-        if ($this->getGeos()) {
+        if ($this->getGeos() && $srid !== null) {
             // @codeCoverageIgnoreStart
-            /** @noinspection PhpUndefinedMethodInspection */
             $this->getGeos()->setSRID($srid);
             // @codeCoverageIgnoreEnd
         }
