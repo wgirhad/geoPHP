@@ -46,7 +46,7 @@ class Point extends Geometry
         // If X or Y is null than it is an empty point
         if ($x !== null && $y !== null) {
             // Basic validation on x and y
-            if (!is_numeric($x) || !is_numeric($y)) {
+            if (!is_numeric($x) || !is_numeric($y) || !is_finite($x) || !is_finite($y)) {
                 throw new InvalidGeometryException(
                     "Cannot construct Point. x and y must be numeric, {gettype($x)} given."
                 );
@@ -58,7 +58,7 @@ class Point extends Geometry
 
             // Check to see if this point has Z (height) value
             if ($z !== null) {
-                if (!is_numeric($z)) {
+                if (!is_numeric($z) || !is_finite($z)) {
                     throw new InvalidGeometryException(
                         "Cannot construct Point. z must be numeric, {gettype($x)} given."
                     );
@@ -69,7 +69,7 @@ class Point extends Geometry
 
             // Check to see if this is a measure
             if ($m !== null) {
-                if (!is_numeric($m)) {
+                if (!is_numeric($m) || !is_finite($m)) {
                     throw new InvalidGeometryException(
                         "Cannot construct Point. m must be numeric, {gettype($x)} given."
                     );

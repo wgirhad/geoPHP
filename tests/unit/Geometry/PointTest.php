@@ -194,6 +194,14 @@ class PointTest extends TestCase
             'boolean coordinates' => [true, false],
             'z is string'         => [1, 2, 'z'],
             'm is string'         => [1, 2, 3, 'm'],
+            'x is NaN'            => [NAN, 1],
+            'y is NaN'            => [1, NAN],
+            'x is infinite'       => [INF, 1],
+            'y is infinite'       => [1, INF],
+            'z is NaN'            => [1, 2, NAN],
+            'z is infinite'       => [1, 2, INF],
+            'm is NaN'            => [1, 2, 3, NAN],
+            'm is infinite'       => [1, 2, 3, INF],
         ];
     }
 
