@@ -60,7 +60,7 @@ class WKT implements GeoAdapter
         }
 
         // If geos is installed, then we take a shortcut and let it parse the WKT
-        if (geoPHP::geosInstalled()) {
+        if (geoPHP::isGeosInstalled()) {
             /** @noinspection PhpUndefinedClassInspection */
             $reader = new \GEOSWKTReader();
             try {
@@ -271,7 +271,7 @@ class WKT implements GeoAdapter
     public function write(Geometry $geometry)
     {
         // If geos is installed, then we take a shortcut and let it write the WKT
-        if (geoPHP::geosInstalled()) {
+        if (geoPHP::isGeosInstalled()) {
             /** @noinspection PhpUndefinedClassInspection */
             $writer = new \GEOSWKTWriter();
             /** @noinspection PhpUndefinedMethodInspection */

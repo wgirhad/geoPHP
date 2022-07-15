@@ -11,7 +11,7 @@ class GeosTest extends TestCase
 
   function testGeos()
   {
-    if (!geoPHP::geosInstalled()) {
+    if (!geoPHP::isGeosInstalled()) {
       $this->markTestSkipped('GEOS not installed');
     }
 

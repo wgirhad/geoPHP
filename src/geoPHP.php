@@ -77,6 +77,11 @@ class geoPHP
     ];
 
     /**
+     * @var bool|null
+     */
+    private static $geosInstalled;
+
+    /**
      * @return array<string, string> Returns the map of supported adapters and formats
      */
     public static function getAdapterMap(): array
@@ -155,22 +160,67 @@ class geoPHP
      * @param bool $force
      *
      * @return bool
+     *
+     * @deprecated 2.1 Use instead isGeosInstalled(), enableGeos() or disableGeos().
      */
     public static function geosInstalled(bool $force = null): bool
     {
-        static $geosInstalled = null;
+        geoPHP::$geosInstalled = null;
         if ($force !== null) {
-            $geosInstalled = $force;
+            geoPHP::$geosInstalled = $force;
         }
         if (getenv('GEOS_DISABLED') == 1) {
-            $geosInstalled = false;
+            geoPHP::$geosInstalled = false;
         }
-        if ($geosInstalled !== null) {
-            return $geosInstalled;
+        if (geoPHP::$geosInstalled !== null) {
+            return geoPHP::$geosInstalled;
         }
-        $geosInstalled = class_exists('GEOSGeometry', false);
+        geoPHP::$geosInstalled = class_exists('GEOSGeometry', false);
 
-        return $geosInstalled;
+        return geoPHP::$geosInstalled;
+    }
+
+    /**
+     * Returns if Geos support is installed and enabled.
+     *
+     * Checks availability of Geos library.
+     * Geos support can be forced to disable by setting the environment variable "GEOS_DISABLED = 1".
+     *
+     * @return boolean
+     */
+    public static function isGeosInstalled(): bool
+    {
+        if (getenv('GEOS_DISABLED') === '1') {
+            return geoPHP::$geosInstalled = false;
+        } elseif (geoPHP::$geosInstalled === null) {
+            geoPHP::$geosInstalled = class_exists('GEOSGeometry', false);
+        }
+
+        return geoPHP::$geosInstalled;
+    }
+
+    /**
+     * Attempts to enable Geos support, and returns its status.
+     *
+     * @return boolean Returns status of Geos support.
+     */
+    public static function enableGeos(): bool
+    {
+        geoPHP::$geosInstalled = null;
+
+        return geoPHP::isGeosInstalled();
+    }
+
+    /**
+     * Disables Geos support.
+     *
+     * Useful for development.
+     *
+     * @return void
+     */
+    public static function disableGeos(): void
+    {
+        geoPHP::$geosInstalled = false;
     }
 
     /**
@@ -184,7 +234,7 @@ class geoPHP
      */
     public static function geosToGeometry(\GEOSGeometry $geos): ?Geometry
     {
-        if (!geoPHP::geosInstalled()) {
+        if (!geoPHP::isGeosInstalled()) {
             return null;
         }
         /** @noinspection PhpUndefinedClassInspection */

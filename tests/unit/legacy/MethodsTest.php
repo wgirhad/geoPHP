@@ -298,7 +298,9 @@ class MethodsTest extends TestCase
    */
   function _methods_tester_with_geos($geometry) {
     // Cannot test methods if GEOS is not intstalled
-    if (!geoPHP::geosInstalled()) return;
+    if (!geoPHP::isGeosInstalled()) {
+      return;
+    }
 
     $methods = array(
       //'boundary', //@@TODO: Uncomment this and fix errors
@@ -315,15 +317,15 @@ class MethodsTest extends TestCase
 
     foreach ($methods as $method) {
       // Turn GEOS on
-      geoPHP::geosInstalled(TRUE);
+      geoPHP::enableGeos();
       $geos_result = $geometry->$method();
 
       // Turn GEOS off
-      geoPHP::geosInstalled(FALSE);
+      geoPHP::disableGeos();
       $norm_result = $geometry->$method();
 
       // Turn GEOS back On
-      geoPHP::geosInstalled(TRUE);
+      geoPHP::enableGeos();
 
       $geos_type = gettype($geos_result);
       $norm_type = gettype($norm_result);

@@ -503,11 +503,11 @@ abstract class Geometry
     public function getGeos()
     {
         // If it's already been set, just return it
-        if ($this->geos && geoPHP::geosInstalled()) {
+        if ($this->geos && geoPHP::isGeosInstalled()) {
             return $this->geos;
         }
         // It hasn't been set yet, generate it
-        if (geoPHP::geosInstalled()) {
+        if (geoPHP::isGeosInstalled()) {
             /** @noinspection PhpUndefinedClassInspection */
             $reader = new \GEOSWKBReader();
             /** @noinspection PhpUndefinedMethodInspection */

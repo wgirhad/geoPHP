@@ -44,7 +44,7 @@ function testEnd($result = null, $ready = false)
 function runPerformanceTests()
 {
 
-    GeoPhp::geosInstalled(false);
+    geoPHP::disableGeos();
 
     $pointCount = 10000;
 

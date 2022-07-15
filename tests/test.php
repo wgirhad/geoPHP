@@ -12,7 +12,7 @@ function runTest()
 
     header("Content-type: text");
 
-    if (geoPHP::geosInstalled()) {
+    if (geoPHP::isGeosInstalled()) {
         echo "GEOS is installed.\n";
     } else {
         echo "GEOS is not installed.\n";
@@ -171,7 +171,7 @@ function testAdapters($geometry, $format, $input)
 
   // Test to make sure adapter work the same wether GEOS is ON or OFF
   // Cannot test methods if GEOS is not intstalled
-    if (!geoPHP::geosInstalled()) {
+    if (!geoPHP::isGeosInstalled()) {
         return;
     }
     if (getenv("VERBOSE") == 1 || getopt('v')) {
@@ -187,7 +187,7 @@ function testAdapters($geometry, $format, $input)
             echo ' ' . $adapter_class . "\n";
         }
       // Turn GEOS on
-        geoPHP::geosInstalled(true);
+        geoPHP::enableGeos();
 
         try {
             $output = $geometry->out($adapter_key);
@@ -199,12 +199,12 @@ function testAdapters($geometry, $format, $input)
                 $test_geom_1 = $adapter_loader->read($output);
 
               // Turn GEOS off
-                geoPHP::geosInstalled(false);
+                geoPHP::disableGeos();
 
                 $test_geom_2 = $adapter_loader->read($output);
 
               // Turn GEOS back On
-                geoPHP::geosInstalled(true);
+                geoPHP::enableGeos();
 
               // Check to make sure a both are the same with geos and without
                 if ($test_geom_1->out('wkt') != $test_geom_2->out('wkt')) {
@@ -231,7 +231,7 @@ function testAdapters($geometry, $format, $input)
 function testGeosMethods($geometry)
 {
   // Cannot test methods if GEOS is not intstalled
-    if (!geoPHP::geosInstalled()) {
+    if (!geoPHP::isGeosInstalled()) {
         return;
     }
 
@@ -257,18 +257,18 @@ function testGeosMethods($geometry)
     foreach ($methods as $method) {
         try {
           // Turn GEOS on
-            geoPHP::geosInstalled(true);
+            geoPHP::enableGeos();
           /** @var \geoPHP\Geometry\Geometry $geos_result */
             $geos_result = $geometry->$method();
 
           // Turn GEOS off
-            geoPHP::geosInstalled(false);
+            geoPHP::disableGeos();
 
           /** @var \geoPHP\Geometry\Geometry $norm_result */
             $norm_result = $geometry->$method();
 
           // Turn GEOS back On
-            geoPHP::geosInstalled(true);
+            geoPHP::enableGeos();
 
             $geos_type = gettype($geos_result);
             $norm_type = gettype($norm_result);
