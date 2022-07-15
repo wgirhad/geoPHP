@@ -184,9 +184,9 @@ class Polygon extends Surface
         $y = 0;
         foreach ($points as $k => $point) {
             $j = ($k + 1) % $pointCount;
-            $P = ($point->x() * $points[$j]->y()) - ($point->y() * $points[$j]->x());
-            $x += ($point->x() + $points[$j]->x()) * $P;
-            $y += ($point->y() + $points[$j]->y()) * $P;
+            $p = ($point->x() * $points[$j]->y()) - ($point->y() * $points[$j]->x());
+            $x += ($point->x() + $points[$j]->x()) * $p;
+            $y += ($point->y() + $points[$j]->y()) * $p;
         }
         return ['area' => abs($area), 'x' => $x / (6 * $area), 'y' => $y / (6 * $area)];
     }

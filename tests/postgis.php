@@ -65,11 +65,11 @@ function test_postgis($table, $name, $type, $geom, $connection, $format)
 {
 
     // Let's insert into the database using GeomFromWKB
-    $insert_string = pg_escape_bytea($geom->out($format));
+    $insertString = pg_escape_bytea($geom->out($format));
 
     pg_query(
         $connection,
-        "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromWKB('$insert_string'))"
+        "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromWKB('$insertString'))"
     );
 
     // SELECT using asBinary PostGIS
@@ -91,8 +91,8 @@ function test_postgis($table, $name, $type, $geom, $connection, $format)
         $geom = geoPHP::load($item['geom'], $format, true); // We now have a geoPHP Geometry
 
         // Let's re-insert directly into postGIS
-        $insert_string = $geom->out($format, true);
-        pg_query($connection, "INSERT INTO $table (name, type, geom) values ('$name', '$type', '$insert_string')");
+        $insertString = $geom->out($format, true);
+        pg_query($connection, "INSERT INTO $table (name, type, geom) values ('$name', '$type', '$insertString')");
     }
 
     // SELECT and INSERT using as EWKT (ST_GeomFromEWKT and ST_AsEWKT)
@@ -108,10 +108,10 @@ function test_postgis($table, $name, $type, $geom, $connection, $format)
         $geom = geoPHP::load($item['geom'], 'ewkt'); // We now a full geoPHP Geometry object
 
         // Let's re-insert directly into postGIS
-        $insert_string = $geom->out('ewkt');
+        $insertString = $geom->out('ewkt');
         pg_query(
             $connection,
-            "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromEWKT('$insert_string'))"
+            "INSERT INTO $table (name, type, geom) values ('$name', '$type', ST_GeomFromEWKT('$insertString'))"
         );
     }
 }

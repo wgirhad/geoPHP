@@ -2,9 +2,10 @@
 
 require '../vendor/autoload.php';
 
+use geoPHP\Geometry\Geometry;
 use geoPHP\geoPHP;
 
-function runTest()
+function runTest(): void
 {
     set_time_limit(0);
 
@@ -30,46 +31,43 @@ function runTest()
 
             $geometry = geoPHP::load($value, $format);
 
+            echo $isVerbose ? "---- Methods\n" : '';
+            testGeometryMethods($geometry);
+
             echo $isVerbose ? "---- Adapters\n" : '';
             testAdapters($geometry, $format, $value);
-            echo $isVerbose ? "---- Methods\n" : '';
+
+            echo $isVerbose ? "---- Compare methods normal ←→ Geos\n" : '';
             testGeosMethods($geometry);
-            echo $isVerbose ? "---- Geometry\n" : '';
-            test_geometry($geometry);
+
             echo $isVerbose ? "---- Detection\n" : '';
             testDetection($value, $format);
 
             echo '   ' . sprintf('%.3f', microtime(true) - $startFile) . " s\n";
         }
     }
+
     echo "\nSuccessfully completed under " . sprintf('%.3f', microtime(true) - $start)
-          . " seconds, using maximum " . sprintf('%.3f', memory_get_peak_usage() / 1024 / 1024) . " MB\n";
+        . " seconds, using maximum " . sprintf('%.3f', memory_get_peak_usage() / 1024 / 1024) . " MB\n";
     echo "\e[32mPASS\e[39m\n";
 }
 
 /**
- * @param \geoPHP\Geometry\Geometry $geometry
+ * @param Geometry $geometry
  */
-function test_geometry($geometry)
+function testGeometryMethods(Geometry $geometry): void
 {
-  // Test common functions
+    // Test common functions
     $geometry->area();
-    try {
-        $geometry->boundary();
-    } catch (\geoPHP\Exception\UnsupportedMethodException $e) {
-      // TODO remove this once Polygon::boundary() get implemented
-        if (getenv("VERBOSE") == 1 || getopt('v')) {
-            echo "\e[33m\t" . $e->getMessage() . "\e[39m\n";
-        }
-    }
+    $geometry->boundary();
     $geometry->envelope();
     $geometry->getBBox();
     $geometry->centroid();
     $geometry->length();
     $geometry->greatCircleLength();
     $geometry->haversineLength();
-    $geometry->x();
-    $geometry->y();
+    $geometry->getX();
+    $geometry->getY();
     $geometry->numGeometries();
     $geometry->geometryN(1);
     $geometry->startPoint();
@@ -89,27 +87,26 @@ function test_geometry($geometry)
     $geometry->isMeasured();
     $geometry->isEmpty();
     $geometry->coordinateDimension();
+    $geometry->isSimple();
+    $geometry->equals($geometry);
 
-  // Aliases
+    // Aliases
     $geometry->getCentroid();
     $geometry->getArea();
-    $geometry->getX();
-    $geometry->getY();
+    $geometry->x();
+    $geometry->y();
     $geometry->geos();
     $geometry->getSRID();
     $geometry->asText();
     $geometry->asBinary();
 
-  // GEOS only functions
+    // GEOS only functions
     try {
-        $geometry->isSimple();
         $geometry->contains($geometry);
-        $geometry->distance($geometry);
         $geometry->overlaps($geometry);
         $geometry->getGeos();
         $geometry->setGeos($geometry->getGeos());
         $geometry->pointOnSurface();
-        $geometry->equals($geometry);
         $geometry->equalsExact($geometry);
         $geometry->relate($geometry);
         $geometry->checkValidity();
@@ -119,7 +116,9 @@ function test_geometry($geometry)
         $geometry->difference($geometry);
         $geometry->symDifference($geometry);
         $geometry->union($geometry);
-        $geometry->simplify(0);// @@TODO: Adjust this once we can deal with empty geometries
+        $geometry->simplify(0);
+        $geometry->simplify(10);
+        $geometry->simplify(100);
         $geometry->disjoint($geometry);
         $geometry->touches($geometry);
         $geometry->intersects($geometry);
@@ -128,6 +127,8 @@ function test_geometry($geometry)
         $geometry->covers($geometry);
         $geometry->coveredBy($geometry);
         $geometry->hausdorffDistance($geometry);
+        // distance() is supported by geoPHP but too slow to test with each input
+        $geometry->distance($geometry);
     } catch (\Exception $e) {
         if (getenv("VERBOSE") == 1 || getopt('v')) {
             echo "\e[33m\t" . $e->getMessage() . "\e[39m\n";
@@ -136,98 +137,98 @@ function test_geometry($geometry)
 }
 
 /**
- * @param \geoPHP\Geometry\Geometry $geometry
+ * @param Geometry $geometry
  * @param string $format
  * @param string $input
  */
-function testAdapters($geometry, $format, $input)
+function testAdapters(Geometry $geometry, string $format, string $input): void
 {
-  // Test adapter output and input. Do a round-trip and re-test
-    foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
-        if ($adapter_key == 'google_geocode') {
-          //Don't test google geocoder regularily. Uncomment to test
+    // Test adapter output and input. Do a round-trip and re-test
+    foreach (geoPHP::getAdapterMap() as $adapterKey => $adapterClass) {
+        if ($adapterKey == 'google_geocode') {
+            //Don't test google geocoder regularily. Uncomment to test
             continue;
         }
         if (getenv("VERBOSE") == 1 || getopt('v')) {
-            echo ' ' . $adapter_key . "\n";
+            echo "\t {$adapterKey}\n";
         }
-        $output = $geometry->out($adapter_key);
+        $output = $geometry->out($adapterKey);
         if ($output) {
-            $adapter_name = 'geoPHP\\Adapter\\' . $adapter_class;
+            $adapterName = 'geoPHP\\Adapter\\' . $adapterClass;
 
-            /** @var \geoPHP\Adapter\GeoAdapter $adapter_loader */
-            $adapter_loader = new $adapter_name();
+            /** @var \geoPHP\Adapter\GeoAdapter */
+            $adapterLoader = new $adapterName();
 
             try {
-                $test_geom_1 = $adapter_loader->read($output);
-                $test_geom_2 = $adapter_loader->read($test_geom_1->out($adapter_key));
+                $testGeom1 = $adapterLoader->read($output);
+                $testGeom2 = $adapterLoader->read($testGeom1->out($adapterKey));
             } catch (Exception $e) {
-                echo "\e[31m\tException when reading output of " . $adapter_class . " adapter:\n";
+                echo "\e[31m\tException when reading output of " . $adapterClass . " adapter:\n";
                 echo $e->getMessage() . "\n Input: \n" . $input  . "\n Output: \n" . $output . "\n";
                 echo "\e[39m\n";
                 exit(1);
             }
 
-            if ($test_geom_1->out('wkt') != $test_geom_2->out('wkt')) {
-                echo "\e[33m\tMismatched adapter output in " . $adapter_class . "\e[39m\n";
+            if ($testGeom1->out('wkt') != $testGeom2->out('wkt')) {
+                echo "\e[33m\tMismatched adapter output in " . $adapterClass . "\e[39m\n";
             }
         } else {
-            echo "\e[33m\tEmpty output on "  . $adapter_key . "\e[39m\n";
+            echo "\e[33m\tEmpty output on "  . $adapterKey . "\e[39m\n";
         }
     }
 
-  // Test to make sure adapter work the same wether GEOS is ON or OFF
-  // Cannot test methods if GEOS is not intstalled
+    // Test to make sure adapter work the same wether GEOS is ON or OFF
+    // Cannot test methods if GEOS is not intstalled
     if (!geoPHP::isGeosInstalled()) {
         return;
     }
     if (getenv("VERBOSE") == 1 || getopt('v')) {
         echo "Testing with GEOS\n";
     }
-    foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
-        if ($adapter_key == 'google_geocode') {
-          //Don't test google geocoder regularily. Uncomment to test
+    foreach (geoPHP::getAdapterMap() as $adapterKey => $adapterClass) {
+        if ($adapterKey == 'google_geocode') {
+            //Don't test google geocoder regularily. Uncomment to test
             continue;
         }
 
         if (getenv("VERBOSE") == 1 || getopt('v')) {
-            echo ' ' . $adapter_class . "\n";
+            echo ' ' . $adapterClass . "\n";
         }
-      // Turn GEOS on
+        // Turn GEOS on
         geoPHP::enableGeos();
 
         try {
-            $output = $geometry->out($adapter_key);
+            $output = $geometry->out($adapterKey);
             if ($output) {
-                $adapter_name = 'geoPHP\\Adapter\\' . $adapter_class;
-              /** @var \geoPHP\Adapter\GeoAdapter $adapter_loader */
-                $adapter_loader = new $adapter_name();
+                $adapterName = 'geoPHP\\Adapter\\' . $adapterClass;
+                /** @var \geoPHP\Adapter\GeoAdapter */
+                $adapterLoader = new $adapterName();
 
-                $testGeomGeos = $adapter_loader->read($output);
+                $testGeomGeos = $adapterLoader->read($output);
 
-              // Turn GEOS off
+                // Turn GEOS off
                 geoPHP::disableGeos();
 
-                $testGeomNorm = $adapter_loader->read($output);
+                $testGeomNorm = $adapterLoader->read($output);
 
-              // Check to make sure a both are the same with geos and without
+                // Check to make sure a both are the same with geos and without
                 if ($testGeomGeos->out('wkt') != $testGeomNorm->out('wkt')) {
-                    $f = fopen('test_geom_geos.wkt', 'w+');
+                    $f = fopen('testGeomgeos.wkt', 'w+');
                     fwrite($f, $testGeomGeos->out('wkt'));
                     fclose($f);
-                    $f = fopen('test_geom_norm.wkt', 'w+');
+                    $f = fopen('testGeomnorm.wkt', 'w+');
                     fwrite($f, $testGeomNorm->out('wkt'));
                     fclose($f);
-                    $f = fopen('test_geom_dump.geometry', 'w+');
+                    $f = fopen('testGeomdump.geometry', 'w+');
                     fwrite($f, print_r($testGeomNorm, true));
                     fclose($f);
-                    echo "\e[31m\tMismatched adapter output between GEOS and NORM in {$adapter_class}. ";
+                    echo "\e[31m\tMismatched adapter output between GEOS and NORM in {$adapterClass}. ";
                     echo "Output written to files.\e[39m\n";
                     exit(1);
                 }
 
                 // Turn GEOS back on
-                  geoPHP::enableGeos();
+                geoPHP::enableGeos();
             }
         } catch (\geoPHP\Exception\UnsupportedMethodException $e) {
             if (getenv("VERBOSE") == 1 || getopt('v')) {
@@ -238,80 +239,81 @@ function testAdapters($geometry, $format, $input)
 }
 
 
-function testGeosMethods($geometry)
+function testGeosMethods(Geometry $geometry): void
 {
-  // Cannot test methods if GEOS is not intstalled
+    // Cannot test methods if GEOS is not intstalled
     if (!geoPHP::isGeosInstalled()) {
         return;
     }
 
     $methods = [
-    'boundary',
-    'envelope',
-    'getBoundingBox',
-    'x',
-    'y',
-    'z',
-    'm',
-    'startPoint',
-    'endPoint',
-    'isRing',
-    'isClosed',
-    'numPoints',
-    'centroid',
-    'length',
-    'isEmpty',
-    'isSimple'
+        'boundary',
+        'envelope',
+        'getBoundingBox',
+        'x',
+        'y',
+        'z',
+        'm',
+        'startPoint',
+        'endPoint',
+        'isRing',
+        'isClosed',
+        'numPoints',
+        'centroid',
+        'length',
+        'isEmpty',
+        'isSimple'
     ];
 
     foreach ($methods as $method) {
         echo getenv("VERBOSE") == 1 ? ("\t" . $method . "\n") : '';
         try {
-          // Turn GEOS on
+            // Turn GEOS on
             geoPHP::enableGeos();
-          /** @var \geoPHP\Geometry\Geometry $geos_result */
-            $geos_result = $geometry->$method();
 
-          // Turn GEOS off
+            /** @var \geoPHP\Geometry\Geometry */
+            $geosResult = $geometry->$method();
+
+            // Turn GEOS off
             geoPHP::disableGeos();
 
-          /** @var \geoPHP\Geometry\Geometry $norm_result */
-            $norm_result = $geometry->$method();
+            /** @var \geoPHP\Geometry\Geometry */
+            $normResult = $geometry->$method();
 
-          // Turn GEOS back On
+            // Turn GEOS back On
             geoPHP::enableGeos();
 
-            $geos_type = gettype($geos_result);
-            $norm_type = gettype($norm_result);
+            $geosType = gettype($geosResult);
+            $normType = gettype($normResult);
 
-            if ($geos_type != $norm_type) {
+            if ($geosType != $normType) {
                 echo "\e[33mType mismatch on " . $method . "\e[39m\n";
                 continue;
             }
 
-          // Now check base on type
-            if ($geos_type == 'object' && !$norm_result->isEmpty()) {
-                $haus_dist = $geos_result->hausdorffDistance(geoPHP::load($norm_result->out('wkt'), 'wkt'));
+            // Now check base on type
+            if ($geosType == 'object' && !$normResult->isEmpty()) {
+                $hausDist = $geosResult->hausdorffDistance(geoPHP::load($normResult->out('wkt'), 'wkt'));
 
-              // Get the length of the diagonal of the bbox - this is used to scale the haustorff distance
-              // Using Pythagorean theorem
-                $bb = $geos_result->getBoundingBox();
-                $scale = sqrt(pow($bb['maxy'] - $bb['miny'], 2) + pow($bb['maxx'] - $bb['minx'], 2));
+                // Get the length of the diagonal of the bbox - this is used to scale the haustorff distance
+                // Using Pythagorean theorem
+                $bBox = $geosResult->getBoundingBox();
+                $scale = sqrt(pow($bBox['maxy'] - $bBox['miny'], 2) + pow($bBox['maxx'] - $bBox['minx'], 2));
 
-              // The difference in the output of GEOS and native-PHP methods
-              // should be less than 0.5 scaled haustorff units
-                if ($scale !== 0.0 && $haus_dist / $scale > 0.5) {
+                // The difference in the output of GEOS and native-PHP methods
+                // should be less than 0.5 scaled haustorff units
+                if ($scale !== 0.0 && $hausDist / $scale > 0.5) {
                     echo "\e[31mOutput mismatch on " . $method . "\e[39m\n";
-                    echo 'GEOS : ' . $geos_result->out('wkt') . "\n";
-                    echo 'NORM : ' . $norm_result->out('wkt') . "\n";
+                    echo 'GEOS : ' . $geosResult->out('wkt') . "\n";
+                    echo 'NORM : ' . $normResult->out('wkt') . "\n";
                     exit(1);
                 }
             }
 
-            if (($geos_type == 'boolean' || $geos_type == 'string') && $geos_result !== $norm_result) {
+            if (($geosType == 'boolean' || $geosType == 'string') && $geosResult !== $normResult) {
                 echo "\e[31mOutput mismatch on " . $method . "\e[39m\n";
-                echo 'GEOS : ' . (string) $geos_result . "\n";
-                echo 'NORM : ' . (string) $norm_result . "\n";
+                echo 'GEOS : ' . (string) $geosResult . "\n";
+                echo 'NORM : ' . (string) $normResult . "\n";
                 exit(1);
             }
         } catch (\geoPHP\Exception\UnsupportedMethodException $e) {
@@ -320,12 +322,12 @@ function testGeosMethods($geometry)
             }
         }
 
-      //@@TODO: Run tests for output of types arrays and float
-      //@@TODO: centroid function is non-compliant for collections and strings
+        //@@TODO: Run tests for output of types arrays and float
+        //@@TODO: centroid function is non-compliant for collections and strings
     }
 }
 
-function testDetection($value, $format)
+function testDetection(string $value, string $format): void
 {
     $detected = geoPHP::detectFormat($value);
     if ($detected != $format) {
@@ -335,13 +337,13 @@ function testDetection($value, $format)
             echo "format not detected\n";
         }
     }
-  // Make sure it loads using auto-detect
+    // Make sure it loads using auto-detect
     geoPHP::load($value);
 }
 
-function FailOnError($error_level, $error_message, $error_file, $error_line)
+function FailOnError($errorLevel, $errorMessage, $errorFile, $errorLine)
 {
-    echo "$error_level: $error_message in $error_file on line $error_line\n";
+    echo "$errorLevel: $errorMessage in $errorFile on line $errorLine\n";
     echo "\e[31mFAIL\e[39m\n";
     exit(1);
 }

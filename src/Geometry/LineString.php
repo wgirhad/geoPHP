@@ -250,18 +250,18 @@ class LineString extends Curve
             $lng1 = $points[$i]->x() * $rad;
             $lng2 = $points[$i + 1]->x() * $rad;
 
-            $a = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS;
-            $b = geoPHP::EARTH_WGS84_SEMI_MINOR_AXIS;
+            $semiMajor = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS;
+            $semiMinor = geoPHP::EARTH_WGS84_SEMI_MINOR_AXIS;
             $f = 1 / geoPHP::EARTH_WGS84_FLATTENING;
-            $L  = $lng2 - $lng1;
-            $U1 = atan((1 - $f) * tan($lat1));
-            $U2 = atan((1 - $f) * tan($lat2));
+            $deltaL  = $lng2 - $lng1;
+            $u1 = atan((1 - $f) * tan($lat1));
+            $u2 = atan((1 - $f) * tan($lat2));
             $iterationLimit = 100;
-            $lambda         = $L;
-            $sinU1 = sin($U1);
-            $sinU2 = sin($U2);
-            $cosU1 = cos($U1);
-            $cosU2 = cos($U2);
+            $lambda         = $deltaL;
+            $sinU1 = sin($u1);
+            $sinU2 = sin($u2);
+            $cosU1 = cos($u1);
+            $cosU2 = cos($u2);
             do {
                 $sinLambda = sin($lambda);
                 $cosLambda = cos($lambda);
@@ -282,23 +282,25 @@ class LineString extends Curve
                 if ($cosSqAlpha <> 0) {
                     $cos2SigmaM = $cosSigma - 2 * $sinU1 * $sinU2 / $cosSqAlpha;
                 }
-                $C = $f / 16 * $cosSqAlpha * (4 + $f * (4 - 3 * $cosSqAlpha));
+                $c = $f / 16 * $cosSqAlpha * (4 + $f * (4 - 3 * $cosSqAlpha));
                 $lambdaP = $lambda;
-                $lambda = $L + (1 - $C) * $f * $sinAlpha *
-                    ($sigma + $C * $sinSigma * ($cos2SigmaM + $C * $cosSigma * (- 1 + 2 * $cos2SigmaM * $cos2SigmaM)));
+                $lambda = $deltaL + (1 - $c) * $f * $sinAlpha *
+                    ($sigma + $c * $sinSigma * ($cos2SigmaM + $c * $cosSigma * (- 1 + 2 * $cos2SigmaM * $cos2SigmaM)));
             } while (abs($lambda - $lambdaP) > 1e-12 && --$iterationLimit > 0);
             if ($iterationLimit == 0) {
                 return null; // not converging
             }
-            $uSq        = $cosSqAlpha * ($a * $a - $b * $b) / ($b * $b);
-            $A          = 1 + $uSq / 16384 * (4096 + $uSq * (- 768 + $uSq * (320 - 175 * $uSq)));
-            $B          = $uSq / 1024 * (256 + $uSq * (- 128 + $uSq * (74 - 47 * $uSq)));
-            $deltaSigma = $B * $sinSigma * ($cos2SigmaM + $B / 4 *
-                    ($cosSigma * (-1 + 2 * $cos2SigmaM * $cos2SigmaM) - $B / 6
+            $uSq        = $cosSqAlpha
+                            * ($semiMajor * $semiMajor - $semiMinor * $semiMinor)
+                            / ($semiMinor * $semiMinor);
+            $a          = 1 + $uSq / 16384 * (4096 + $uSq * (- 768 + $uSq * (320 - 175 * $uSq)));
+            $b          = $uSq / 1024 * (256 + $uSq * (- 128 + $uSq * (74 - 47 * $uSq)));
+            $deltaSigma = $b * $sinSigma * ($cos2SigmaM + $b / 4 *
+                    ($cosSigma * (-1 + 2 * $cos2SigmaM * $cos2SigmaM) - $b / 6
                         * $cos2SigmaM * (-3 + 4 * $sinSigma * $sinSigma)
                         * (-3 + 4 * $cos2SigmaM * $cos2SigmaM)));
 
-            $length += $b * $A * ($sigma - $deltaSigma);
+            $length += $semiMinor * $a * ($sigma - $deltaSigma);
         }
         // Returns length in meters.
         return $length;
