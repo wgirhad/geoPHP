@@ -16,6 +16,9 @@ use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 
+/**
+ * Porides constants and static methods for loading geometries in any supported format.
+ */
 // @codingStandardsIgnoreLine
 class geoPHP
 {
@@ -41,6 +44,9 @@ class geoPHP
      * which has the same surface area as the reference ellipsoid. */
     const EARTH_AUTHALIC_RADIUS       = 6371007.2;
 
+    /**
+     * @var array<string, string>
+     */
     private static $adapterMap = [
         'wkt'            => 'WKT',
         'ewkt'           => 'EWKT',
@@ -57,11 +63,9 @@ class geoPHP
         'osm'            => 'OSM',
     ];
 
-    public static function getAdapterMap()
-    {
-        return self::$adapterMap;
-    }
-
+    /**
+     * @var array<string, string>
+     */
     private static $geometryList = [
         'point'              => 'Point',
         'linestring'         => 'LineString',
@@ -72,7 +76,19 @@ class geoPHP
         'geometrycollection' => 'GeometryCollection',
     ];
 
-    public static function getGeometryList()
+    /**
+     * @return array<string, string> Returns the map of supported adapters and formats
+     */
+    public static function getAdapterMap(): array
+    {
+        return self::$adapterMap;
+    }
+
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getGeometryList(): array
     {
         return self::$geometryList;
     }
@@ -82,24 +98,25 @@ class geoPHP
      *
      * If $data is an array, all passed in values will be combined into a single geometry
      *
-     * @param mixed $data The data in any supported format, including geoPHP Geometry
-     * @param mixed[] $args First argument is an optional type. Other arguments will be passed to the geo adapter
+     * @param string|string[]|Geometry $data The data in any supported format, including geoPHP Geometry
+     * @param array $args Further arguments will be passed to the geo adapter
+     *
+     * @throws \Exception|IOException
      *
      * @return Collection|Geometry
-     * @throws \Exception|IOException
      */
-    public static function load($data, ...$args)
+    public static function load($data, ...$args): Geometry
     {
         /** @var null|string $type Data type. Tries to detect if omitted */
-        $type = count($args) && @array_key_exists($args[0], self::$adapterMap) ? strtolower(array_shift($args)) : null;
+        $type = count($args) && @array_key_exists($args[0], self::$adapterMap)
+            ? strtolower(array_shift($args))
+            : null;
 
         // Auto-detect type if needed
         if (!$type) {
             // If the user is trying to load a Geometry from a Geometry... Just pass it back
-            if (is_object($data)) {
-                if ($data instanceof Geometry) {
-                    return $data;
-                }
+            if (is_object($data) && $data instanceof Geometry) {
+                return $data;
             }
 
             $detected = geoPHP::detectFormat($data);
@@ -132,7 +149,14 @@ class geoPHP
         return $result;
     }
 
-    public static function geosInstalled($force = null)
+    /**
+     * Sets and/or returns static geosInstalled property.
+     *
+     * @param bool $force
+     *
+     * @return bool
+     */
+    public static function geosInstalled(bool $force = null): bool
     {
         static $geosInstalled = null;
         if ($force !== null) {
@@ -151,11 +175,14 @@ class geoPHP
 
     /**
      * @param \GEOSGeometry $geos
-     * @return Geometry|null
+     *
      * @throws \Exception
+     *
+     * @return Geometry|null
+     *
      * @codeCoverageIgnore
      */
-    public static function geosToGeometry($geos)
+    public static function geosToGeometry(\GEOSGeometry $geos): ?Geometry
     {
         if (!geoPHP::geosInstalled()) {
             return null;
@@ -180,11 +207,11 @@ class geoPHP
      * An array of geometries can be passed and they will be compiled into a single geometry
      *
      * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
-     * @return Geometry|false
+     * @return Geometry|bool
      */
     public static function geometryReduce($geometries)
     {
-        if (empty($geometries)) {
+        if ($geometries === null) {
             return false;
         }
         /*
@@ -244,8 +271,12 @@ class geoPHP
 
     /**
      * @param Geometry[]|GeometryCollection[] $unreduced
+     * @param Geometry[]|GeometryCollection[] $reduced
+     * @param array<string>                   $types
+     *
+     * @return void
      */
-    private static function explodeCollections($unreduced, &$reduced, &$types)
+    private static function explodeCollections(array $unreduced, array &$reduced, array &$types): void
     {
         foreach ($unreduced as $item) {
             if ($item->geometryType() == 'GeometryCollection' || strpos($item->geometryType(), 'Multi') === 0) {
@@ -263,10 +294,12 @@ class geoPHP
      * @see geos::geom::GeometryFactory::buildGeometry
      *
      * @param Geometry|Geometry[] $geometries
-     * @return Geometry A Geometry of the "smallest", "most type-specific" class that can contain the elements.
+     *
      * @throws \Exception
+     *
+     * @return Geometry A Geometry of the "smallest", "most type-specific" class that can contain the elements.
      */
-    public static function buildGeometry($geometries)
+    public static function buildGeometry($geometries): Geometry
     {
         if (empty($geometries)) {
             return new GeometryCollection();
@@ -321,7 +354,9 @@ class geoPHP
     }
 
     /**
-     * Detects format of the given value. This function is meant to be SPEEDY.
+     * Detects format of the given input.
+     *
+     * This function is meant to be SPEEDY.
      * It could make a mistake in XML detection if you are mixing or using namespaces in weird ways
      * (ie, KML inside an RSS feed).
      *
@@ -430,8 +465,5 @@ class geoPHP
         } else {
             return 'twkb';
         }
-
-        // What do you get when you cross an elephant with a rhino?
-        // http://youtu.be/RCBn5J83Poc
     }
 }
