@@ -424,23 +424,53 @@ class LineStringTest extends TestCase
     }
 
     /**
+     * @return array[]
+     */
+    public function providerElevation()
+    {
+        return [
+            '2D' => [
+                [[0, 0], [1, 1], [2, 2], [3, 3]],
+                [
+                    'minZ'  => null,
+                    'maxZ'  => null,
+                    'minM'  => null,
+                    'maxM'  => null,
+                    'zDiff' => null,
+                ]
+            ],
+            '4D' => [
+                [[0, 0, 100.0, 0.0], [1, 1, 50.0, -0.5], [2, 2, 150.0, -1.0], [3, 3, 75.0, 0.5]],
+                [
+                    'minZ'  => 50.0,
+                    'maxZ'  => 150.0,
+                    'minM'  => -1.0,
+                    'maxM'  => 0.5,
+                    'zDiff' => 25.0,
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerElevation
      * @covers ::minimumZ
      * @covers ::maximumZ
      * @covers ::minimumM
      * @covers ::maximumM
+     * @covers ::zDifference
      */
-    public function testMinimumAndMaximumZAndMAndDifference()
+    public function testMinimumAndMaximumZAndMAndDifference($points, $results)
     {
-        $line = LineString::fromArray([[0, 0, 100.0, 0.0], [1, 1, 50.0, -0.5], [2, 2, 150.0, -1.0], [3, 3, 75.0, 0.5]]);
+        $line = LineString::fromArray($points);
 
-        $this->assertSame(50.0, $line->minimumZ());
-        $this->assertSame(150.0, $line->maximumZ());
+        $this->assertSame($results['minZ'], $line->minimumZ());
+        $this->assertSame($results['maxZ'], $line->maximumZ());
 
-        $this->assertSame(-1.0, $line->minimumM());
-        $this->assertSame(0.5, $line->maximumM());
+        $this->assertSame($results['minM'], $line->minimumM());
+        $this->assertSame($results['maxM'], $line->maximumM());
 
-        $this->assertSame(25.0, $line->zDifference());
-        $this->assertNull(LineString::fromArray([[0, 1], [2, 3]])->zDifference());
+        $this->assertSame($results['zDiff'], $line->zDifference());
     }
 
     /**
@@ -449,10 +479,9 @@ class LineStringTest extends TestCase
     public function providerElevationGainAndLossByTolerance()
     {
         return [
-                [null, 50.0, 30.0],
-                [0, 50.0, 30.0],
-                [5, 48.0, 28.0],
-                [15, 36.0, 16.0]
+                [0.0, 50.0, 30.0],
+                [5.0, 48.0, 28.0],
+                [15.0, 36.0, 16.0]
         ];
     }
 
@@ -464,12 +493,36 @@ class LineStringTest extends TestCase
     public function testElevationGainAndLoss(?float $tolerance, float $gain, float $loss)
     {
         $line = LineString::fromArray(
-            [[0, 0, 100], [0, 0, 102], [0, 0, 105], [0, 0, 103], [0, 0, 110], [0, 0, 118],
-                [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 108], [0, 0, 102], [0, 0, 120] ]
+            [
+                [0, 0, 100],
+                [0, 0, 102],
+                [0, 0, 105],
+                [0, 0, 103],
+                [0, 0, 110],
+                [0, 0, 118],
+                [0, 0, 102],
+                [0, 0, 108],
+                [0, 0, 102],
+                [0, 0, 108],
+                [0, 0, 102],
+                [0, 0, 120],
+            ]
         );
 
         $this->assertSame($gain, $line->elevationGain($tolerance));
 
         $this->assertSame($loss, $line->elevationLoss($tolerance));
+    }
+
+    /**
+     * @covers ::elevationGain
+     * @covers ::elevationLoss
+     */
+    public function testElevationGainAndLoss2D()
+    {
+        $line = LineString::fromArray([[1, 2], [3, 4], [5, 6]]);
+
+        $this->assertSame(0.0, $line->elevationGain());
+        $this->assertSame(0.0, $line->elevationLoss());
     }
 }

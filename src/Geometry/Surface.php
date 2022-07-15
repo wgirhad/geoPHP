@@ -89,37 +89,37 @@ abstract class Surface extends Collection
         return 0;
     }
 
-    public function minimumZ()
+    public function minimumZ(): ?float
     {
         return null;
     }
 
-    public function maximumZ()
+    public function maximumZ(): ?float
     {
         return null;
     }
 
-    public function minimumM()
+    public function minimumM(): ?float
     {
         return null;
     }
 
-    public function maximumM()
+    public function maximumM(): ?float
     {
         return null;
     }
 
-    public function elevationGain($verticalTolerance = 0)
+    public function elevationGain(float $verticalTolerance = 0.0): ?float
     {
         return null;
     }
 
-    public function elevationLoss($verticalTolerance = 0)
+    public function elevationLoss(float $verticalTolerance = 0.0): ?float
     {
         return null;
     }
 
-    public function zDifference()
+    public function zDifference(): ?float
     {
         return null;
     }

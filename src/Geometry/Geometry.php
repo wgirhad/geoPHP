@@ -230,19 +230,19 @@ abstract class Geometry
 
     // Elevations statistics
 
-    abstract public function minimumZ();
+    abstract public function minimumZ(): ?float;
 
-    abstract public function maximumZ();
+    abstract public function maximumZ(): ?float;
 
-    abstract public function minimumM();
+    abstract public function minimumM(): ?float;
 
-    abstract public function maximumM();
+    abstract public function maximumM(): ?float;
 
-    abstract public function zDifference();
+    abstract public function zDifference(): ?float;
 
-    abstract public function elevationGain($verticalTolerance = 0);
+    abstract public function elevationGain(float $verticalTolerance = 0.0): ?float;
 
-    abstract public function elevationLoss($verticalTolerance = 0);
+    abstract public function elevationLoss(float $verticalTolerance = 0.0): ?float;
 
 
     // Public: Standard -- Common to all geometries

@@ -116,8 +116,11 @@ abstract class MultiGeometry extends Collection
         return $length;
     }
 
-    public function minimumZ()
+    public function minimumZ(): ?float
     {
+        if (!$this->is3D()) {
+            return null;
+        }
         $min = PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMin = $component->minimumZ();
@@ -128,8 +131,11 @@ abstract class MultiGeometry extends Collection
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumZ()
+    public function maximumZ(): ?float
     {
+        if (!$this->is3D()) {
+            return null;
+        }
         $max = ~PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMax = $component->maximumZ();
@@ -140,18 +146,21 @@ abstract class MultiGeometry extends Collection
         return $max > ~PHP_INT_MAX ? $max : null;
     }
 
-    public function zDifference()
+    public function zDifference(): ?float
     {
+        if (!$this->is3D()) {
+            return null;
+        }
         $startPoint = $this->startPoint();
         $endPoint = $this->endPoint();
-        if ($startPoint && $endPoint && $startPoint->hasZ() && $endPoint->hasZ()) {
+        if ($startPoint && $endPoint) {
             return abs($startPoint->z() - $endPoint->z());
         } else {
             return null;
         }
     }
 
-    public function elevationGain($verticalTolerance = 0)
+    public function elevationGain(float $verticalTolerance = 0.0): float
     {
         $gain = null;
         foreach ($this->components as $component) {
@@ -160,7 +169,7 @@ abstract class MultiGeometry extends Collection
         return $gain;
     }
 
-    public function elevationLoss($verticalTolerance = 0)
+    public function elevationLoss(float $verticalTolerance = 0.0): float
     {
         $loss = null;
         foreach ($this->components as $component) {
@@ -169,8 +178,11 @@ abstract class MultiGeometry extends Collection
         return $loss;
     }
 
-    public function minimumM()
+    public function minimumM(): ?float
     {
+        if (!$this->isMeasured()) {
+            return null;
+        }
         $min = PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMin = $component->minimumM();
@@ -181,8 +193,11 @@ abstract class MultiGeometry extends Collection
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumM()
+    public function maximumM(): ?float
     {
+        if (!$this->isMeasured()) {
+            return null;
+        }
         $max = ~PHP_INT_MAX;
         foreach ($this->components as $component) {
             $componentMax = $component->maximumM();

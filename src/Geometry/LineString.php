@@ -306,22 +306,28 @@ class LineString extends Curve
         return $length;
     }
 
-    public function minimumZ()
+    public function minimumZ(): ?float
     {
+        if (!$this->is3D()) {
+            return null;
+        }
         $min = PHP_INT_MAX;
         foreach ($this->getPoints() as $point) {
-            if ($point->hasZ() && $point->z() < $min) {
+            if ($point->z() < $min) {
                 $min = $point->z();
             }
         }
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumZ()
+    public function maximumZ(): ?float
     {
+        if (!$this->is3D()) {
+            return null;
+        }
         $max = ~PHP_INT_MAX;
         foreach ($this->getPoints() as $point) {
-            if ($point->hasZ() && $point->z() > $max) {
+            if ($point->z() > $max) {
                 $max = $point->z();
             }
         }
@@ -329,26 +335,28 @@ class LineString extends Curve
         return $max > ~PHP_INT_MAX ? $max : null;
     }
 
-    public function zDifference()
+    public function zDifference(): ?float
     {
-        if ($this->startPoint()->hasZ() && $this->endPoint()->hasZ()) {
-            return abs($this->startPoint()->z() - $this->endPoint()->z());
-        } else {
+        if (!$this->is3D()) {
             return null;
         }
+        return abs($this->startPoint()->z() - $this->endPoint()->z());
     }
 
     /**
      * Returns the cumulative elevation gain of the LineString
      *
-     * @param int|float|null $verticalTolerance Smoothing factor filtering noisy elevation data.
+     * @param float $verticalTolerance Smoothing factor filtering noisy elevation data.
      *      Its unit equals to the z-coordinates unit (meters for geographical coordinates)
      *      If the elevation data comes from a DEM, a value around 3.5 can be acceptable.
      *
      * @return float
      */
-    public function elevationGain($verticalTolerance = 0)
+    public function elevationGain(float $verticalTolerance = 0.0): float
     {
+        if (!$this->is3D()) {
+            return 0.0;
+        }
         $gain = 0.0;
         $lastEle = $this->startPoint()->z();
         $pointCount = $this->numPoints();
@@ -366,14 +374,17 @@ class LineString extends Curve
     /**
      * Returns the cumulative elevation loss of the LineString
      *
-     * @param int|float|null $verticalTolerance Smoothing factor filtering noisy elevation data.
+     * @param float $verticalTolerance Smoothing factor filtering noisy elevation data.
      *      Its unit equals to the z-coordinates unit (meters for geographical coordinates)
      *      If the elevation data comes from a DEM, a value around 3.5 can be acceptable.
      *
      * @return float
      */
-    public function elevationLoss($verticalTolerance = 0)
+    public function elevationLoss(float $verticalTolerance = 0.0): float
     {
+        if (!$this->is3D()) {
+            return 0.0;
+        }
         $loss = 0.0;
         $lastEle = $this->startPoint()->z();
         $pointCount = $this->numPoints();
@@ -388,22 +399,28 @@ class LineString extends Curve
         return $loss;
     }
 
-    public function minimumM()
+    public function minimumM(): ?float
     {
+        if (!$this->isMeasured()) {
+            return null;
+        }
         $min = PHP_INT_MAX;
         foreach ($this->getPoints() as $point) {
-            if ($point->isMeasured() && $point->m() < $min) {
+            if ($point->m() < $min) {
                 $min = $point->m();
             }
         }
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumM()
+    public function maximumM(): ?float
     {
+        if (!$this->isMeasured()) {
+            return null;
+        }
         $max = ~PHP_INT_MAX;
         foreach ($this->getPoints() as $point) {
-            if ($point->isMeasured() && $point->m() > $max) {
+            if ($point->m() > $max) {
                 $max = $point->m();
             }
         }

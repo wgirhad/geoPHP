@@ -543,7 +543,7 @@ class PointTest extends TestCase
      */
     public function testPlaceholderMethodsReturnsNull(string $methodName)
     {
-        $this->assertNull((new Point(1, 2, 3, 4))->$methodName(null));
+        $this->assertNull((new Point(1, 2, 3, 4))->$methodName());
     }
 
     public function providerMethodsNotValidForPointReturns0()
@@ -567,6 +567,6 @@ class PointTest extends TestCase
      */
     public function testPlaceholderMethods(string $methodName)
     {
-        $this->assertSame(0.0, (new Point(1, 2, 3, 4))->$methodName(null));
+        $this->assertSame(0.0, (new Point(1, 2, 3, 4))->$methodName());
     }
 }

@@ -356,22 +356,22 @@ class Point extends Geometry
         }
     }
 
-    public function minimumZ()
+    public function minimumZ(): ?float
     {
         return $this->hasZ ? $this->z() : null;
     }
 
-    public function maximumZ()
+    public function maximumZ(): ?float
     {
         return $this->hasZ ? $this->z() : null;
     }
 
-    public function minimumM()
+    public function minimumM(): ?float
     {
         return $this->isMeasured ? $this->m() : null;
     }
 
-    public function maximumM()
+    public function maximumM(): ?float
     {
         return $this->isMeasured ? $this->m() : null;
     }
@@ -403,17 +403,17 @@ class Point extends Geometry
         return 0.0;
     }
 
-    public function zDifference()
+    public function zDifference(): ?float
     {
         return null;
     }
 
-    public function elevationGain($verticalTolerance = 0)
+    public function elevationGain(?float $verticalTolerance = 0.0): ?float
     {
         return null;
     }
 
-    public function elevationLoss($verticalTolerance = 0)
+    public function elevationLoss(?float $verticalTolerance = 0.0): ?float
     {
         return null;
     }
@@ -423,7 +423,7 @@ class Point extends Geometry
         return null;
     }
 
-    public function geometryN($n)
+    public function geometryN($n = null)
     {
         return null;
     }
@@ -448,7 +448,7 @@ class Point extends Geometry
         return null;
     }
 
-    public function pointN($n)
+    public function pointN($n = null)
     {
         return null;
     }
@@ -463,7 +463,7 @@ class Point extends Geometry
         return null;
     }
 
-    public function interiorRingN($n)
+    public function interiorRingN($n = null)
     {
         return null;
     }
