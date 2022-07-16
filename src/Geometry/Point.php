@@ -187,7 +187,7 @@ class Point extends Geometry
     public function asArray()
     {
         if ($this->isEmpty()) {
-            return [NAN, NAN];
+            return [];
         }
         if (!$this->hasZ && !$this->isMeasured) {
             return [$this->x, $this->y];

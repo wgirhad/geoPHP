@@ -103,10 +103,10 @@ class GeoRSS implements GeoAdapter
         foreach ($latitudeAndLongitude as $key => $item) {
             if (!($key % 2)) {
                 // It's a latitude
-                $lat = is_numeric($item) ? $item : NAN;
+                $lat = is_numeric($item) ? $item : null;
             } else {
                 // It's a longitude
-                $lon = is_numeric($item) ? $item : NAN;
+                $lon = is_numeric($item) ? $item : null;
                 $coordinates[] = new Point($lon, $lat);
             }
         }

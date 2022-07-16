@@ -350,7 +350,8 @@ class PointTest extends TestCase
 
     /**
      * @covers ::asArray
-     * @testWith [[1.0, 2.0]]
+     * @testWith [[]]
+     *           [[1.0, 2.0]]
      *           [[1.0, 2.0, 3.0]]
      *           [[1.0, 2.0, null, 3.0]]
      *           [[1.0, 2.0, 3.0, 4.0]]
@@ -359,19 +360,8 @@ class PointTest extends TestCase
     {
         $point = Point::fromArray($points);
         $pointAsArray = $point->asArray();
+
         $this->assertSame($points, $pointAsArray);
-    }
-
-    /**
-     * @covers ::asArray
-     */
-    public function testAsArrayOfEmpty()
-    {
-        $pointAsArray = (new Point())->asArray();
-
-        $this->assertCount(2, $pointAsArray);
-        $this->assertNan($pointAsArray[0]);
-        $this->assertNan($pointAsArray[1]);
     }
 
     /**

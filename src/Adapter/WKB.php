@@ -279,7 +279,6 @@ class WKB implements GeoAdapter
      */
     public function write(Geometry $geometry, $writeAsHex = false, $bigEndian = false)
     {
-
         $this->writer = new BinaryWriter($bigEndian ? BinaryWriter::BIG_ENDIAN : BinaryWriter::LITTLE_ENDIAN);
 
         $wkb = $this->writeGeometry($geometry);
@@ -338,13 +337,19 @@ class WKB implements GeoAdapter
     protected function writePoint($point)
     {
         if ($point->isEmpty()) {
+            /*
+             * Geos represents empty geometry as NaN
+             * @see https://trac.osgeo.org/geos/changeset/466cff135c8e504632ae38b79a1348dbadb390f1/git
+             */
             return $this->writer->writeDouble(NAN) . $this->writer->writeDouble(NAN);
         }
+
         $wkb = $this->writer->writeDouble($point->x()) . $this->writer->writeDouble($point->y());
 
         if ($this->hasZ) {
             $wkb .= $this->writer->writeDouble($point->z());
         }
+
         if ($this->hasM) {
             $wkb .= $this->writer->writeDouble($point->m());
         }
