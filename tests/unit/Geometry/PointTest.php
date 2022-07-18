@@ -163,8 +163,6 @@ class PointTest extends TestCase
     {
         return [
             'no coordinates'     => [],
-            'x is null'          => [null, 20],
-            'y is null'          => [10, null],
             'x and y is null'    => [null, null, 30],
             'x, y, z is null'    => [null, null, null, 40],
             'x, y, z, m is null' => [null, null, null, null],
@@ -190,10 +188,12 @@ class PointTest extends TestCase
     public function providerInvalidCoordinates()
     {
         return [
+            'x is null'          => [null, 20],
+            'y is null'          => [10, null],
             'string coordinates'  => ['x', 'y'],
             'boolean coordinates' => [true, false],
-            'z is string'         => [1, 2, 'z'],
-            'm is string'         => [1, 2, 3, 'm'],
+            'z is non numeric'    => [1, 2, 'z'],
+            'm is non numeric'    => [1, 2, 3, 'm'],
             'x is NaN'            => [NAN, 1],
             'y is NaN'            => [1, NAN],
             'x is infinite'       => [INF, 1],

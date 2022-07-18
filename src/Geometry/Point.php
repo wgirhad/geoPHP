@@ -43,40 +43,42 @@ class Point extends Geometry
      */
     public function __construct($x = null, $y = null, $z = null, $m = null)
     {
-        // If X or Y is null than it is an empty point
-        if ($x !== null && $y !== null) {
-            // Basic validation on x and y
-            if (!is_numeric($x) || !is_numeric($y) || !is_finite($x) || !is_finite($y)) {
+        // If both X and Y is null, than it is an empty point
+        if ($x === null && $y === null) {
+            return;
+        }
+
+        // Basic validation: x and y must be numeric and finite (non NaN).
+        if (!is_numeric($x) || !is_numeric($y) || !is_finite($x) || !is_finite($y)) {
+            throw new InvalidGeometryException(
+                'Cannot construct Point, x and y must be numeric, ' . gettype($x) . ' given.'
+            );
+        }
+
+        // Convert to float in case they are passed in as a string or integer etc.
+        $this->x = (float) $x;
+        $this->y = (float) $y;
+
+        // Check to see if this point has Z (height) value
+        if ($z !== null) {
+            if (!is_numeric($z) || !is_finite($z)) {
                 throw new InvalidGeometryException(
-                    "Cannot construct Point. x and y must be numeric, {gettype($x)} given."
+                    'Cannot construct Point, z must be numeric, ' . gettype($x) . ' given.'
                 );
             }
+            $this->hasZ = true;
+            $this->z = (float) $z;
+        }
 
-            // Convert to float in case they are passed in as a string or integer etc.
-            $this->x = floatval($x);
-            $this->y = floatval($y);
-
-            // Check to see if this point has Z (height) value
-            if ($z !== null) {
-                if (!is_numeric($z) || !is_finite($z)) {
-                    throw new InvalidGeometryException(
-                        "Cannot construct Point. z must be numeric, {gettype($x)} given."
-                    );
-                }
-                $this->hasZ = true;
-                $this->z = floatval($z);
+        // Check to see if this is a measure
+        if ($m !== null) {
+            if (!is_numeric($m) || !is_finite($m)) {
+                throw new InvalidGeometryException(
+                    'Cannot construct Point, m must be numeric, ' . gettype($x) . ' given.'
+                );
             }
-
-            // Check to see if this is a measure
-            if ($m !== null) {
-                if (!is_numeric($m) || !is_finite($m)) {
-                    throw new InvalidGeometryException(
-                        "Cannot construct Point. m must be numeric, {gettype($x)} given."
-                    );
-                }
-                $this->isMeasured = true;
-                $this->m = floatval($m);
-            }
+            $this->isMeasured = true;
+            $this->m = (float) $m;
         }
     }
 
