@@ -66,7 +66,7 @@ abstract class Geometry
     protected $data;
 
     /**
-     * @var \GEOSGeometry|null|false
+     * @var \GEOSGeometry|null
      */
     private $geos = null;
 
@@ -494,12 +494,14 @@ abstract class Geometry
     // ------------------------------------------------
 
     /**
-     * Returns the GEOS representation of Geometry if GEOS is installed
+     * Returns the GEOS representation of Geometry if GEOS is installed.
      *
-     * @return \GEOSGeometry|false
+     * GEOS supports SRID and Z-coordinate (3D), but lacks support of M-coordinate.
+     *
+     * @return \GEOSGeometry|null
      * @codeCoverageIgnore
      */
-    public function getGeos()
+    public function getGeos(): ?\GEOSGeometry
     {
         // If it's already been set, just return it
         if ($this->geos && geoPHP::isGeosInstalled()) {
@@ -510,14 +512,14 @@ abstract class Geometry
             /** @noinspection PhpUndefinedClassInspection */
             $reader = new \GEOSWKBReader();
             /** @noinspection PhpUndefinedMethodInspection */
-            $this->geos = $reader->read($this->out('wkb'));
+            $this->geos = $reader->read($this->out('ewkb'));
         } else {
-            $this->geos = false;
+            $this->geos = null;
         }
         return $this->geos;
     }
 
-    public function setGeos($geos)
+    public function setGeos(?\GEOSGeometry $geos): void
     {
         $this->geos = $geos;
     }

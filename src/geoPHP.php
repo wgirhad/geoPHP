@@ -224,11 +224,18 @@ class geoPHP
     }
 
     /**
+     * Converts a GEOS Geometry to native geoPHP geometry.
+     *
+     * Writes GEOSGeometry to WKB using GEOSWKBWriter,
+     * and reads that using the native WKB adapter.
+     * Saves the original GEOSGeometry in "geos" property of the crated Geometry.
+     * Supports SRID and Z-dimension.
+     *
      * @param \GEOSGeometry $geos
      *
      * @throws \Exception
      *
-     * @return Geometry|null
+     * @return Geometry|null Returns the converted geoPHP Geometry or null if GEOS is not installed.
      *
      * @codeCoverageIgnore
      */
@@ -237,11 +244,13 @@ class geoPHP
         if (!geoPHP::isGeosInstalled()) {
             return null;
         }
-        /** @noinspection PhpUndefinedClassInspection */
         $wkbWriter = new \GEOSWKBWriter();
-        /** @noinspection PhpUndefinedMethodInspection */
+        $wkbWriter->setOutputDimension($geos->coordinateDimension());
+        if ($geos->getSRID()) {
+            $wkbWriter->setIncludeSRID($geos->getSRID());
+        }
         $wkb = $wkbWriter->writeHEX($geos);
-        $geometry = geoPHP::load($wkb, 'wkb', true);
+        $geometry = geoPHP::load($wkb, 'ewkb', true);
         if ($geometry) {
             $geometry->setGeos($geos);
             return $geometry;
@@ -474,7 +483,7 @@ class geoPHP
         }
 
         // Detect WKT - starts with a geometry type name
-        if (Adapter\WKT::isWktType(strstr($input, ' ', true))) {
+        if (Adapter\WKT::getWktType(strstr($input, ' ', true))) {
             return 'wkt';
         }
 
