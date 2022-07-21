@@ -100,9 +100,7 @@ class LineStringTest extends TestCase
     public function testConstructorWrongComponentTypeThrowsException()
     {
         $this->expectException(InvalidGeometryException::class);
-        $this->expectExceptionMessageMatches(
-            '/Cannot create a collection of [a-zA-Z_\\\\]+ components, expected type is.+/'
-        );
+        $this->expectExceptionMessageMatches('/Cannot construct .+LineString\. Expected .+Point components, got.+/');
 
         new LineString([new LineString(), new LineString()]);
     }

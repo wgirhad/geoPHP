@@ -54,8 +54,8 @@ abstract class Collection extends Geometry
                     ? gettype($components[$i])
                     : get_class($components[$i]);
                 throw new InvalidGeometryException(
-                    'Cannot create a collection of ' . $componentType .
-                    ' components, expected type is ' . $allowedComponentType
+                    "Cannot construct " . static::class . '. ' .
+                    "Expected $allowedComponentType components, got $componentType."
                 );
             }
         }
