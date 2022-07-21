@@ -100,7 +100,7 @@ class GPX implements GeoAdapter
                 }
             }
         } catch (\Exception $e) {
-            throw new FileFormatException("Cannot Read Geometry From GPX. " . $e->getMessage(), 0, $e);
+            throw new FileFormatException("Cannot Read Geometry From GPX. " . $e->getMessage(), null, 0, $e);
         }
 
         return $geom;
