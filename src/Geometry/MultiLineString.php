@@ -24,7 +24,7 @@ class MultiLineString extends MultiCurve
      */
     public function __construct(array $components = [])
     {
-        parent::__construct($components, false, LineString::class);
+        parent::__construct($components, LineString::class);
     }
 
     /**

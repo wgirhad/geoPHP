@@ -17,18 +17,16 @@ abstract class MultiCurve extends MultiGeometry
     /**
      * Checks and stores geometry components.
      *
-     * @param Point[] $components           Array of Point components.
-     * @param bool    $allowEmptyComponents Allow creating geometries with empty components. Default: false.
+     * @param Point[] $components           Array of Curve components.
      * @param string  $allowedComponentType A class the components must be instance of. Default: Curve.
      *
      * @throws InvalidGeometryException
      */
     public function __construct(
         array $components = [],
-        bool $allowEmptyComponents = false,
         string $allowedComponentType = Curve::class
     ) {
-        parent::__construct($components, $allowEmptyComponents, $allowedComponentType);
+        parent::__construct($components, $allowedComponentType);
     }
 
     public function geometryType()

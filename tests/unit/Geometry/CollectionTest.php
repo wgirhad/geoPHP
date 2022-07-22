@@ -11,8 +11,9 @@
 namespace geoPHP\Tests\Geometry;
 
 use geoPHP\Geometry\Collection;
-use geoPHP\Geometry\Point;
+use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\Point;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -41,7 +42,7 @@ class CollectionTest extends TestCase
     public function testIs3D(array $components, bool $result)
     {
         /** @var Collection $stub */
-        $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
 
         $this->assertEquals($result, $stub->is3D());
     }
@@ -64,7 +65,7 @@ class CollectionTest extends TestCase
     public function testIsMeasured(array $components, bool $result)
     {
         /** @var Collection $stub */
-        $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
 
         $this->assertEquals($result, $stub->isMeasured());
     }
@@ -85,7 +86,7 @@ class CollectionTest extends TestCase
     public function testIsEmpty(array $components, bool $result)
     {
         /** @var Collection $stub */
-        $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
 
         $this->assertEquals($result, $stub->isEmpty());
     }
@@ -99,7 +100,7 @@ class CollectionTest extends TestCase
     public function testNonApplicableMethods()
     {
         /** @var Collection $stub */
-        $stub = $this->getMockForAbstractClass(Collection::class, [[], true]);
+        $stub = $this->getMockForAbstractClass(Collection::class, [[], Geometry::class, true]);
 
         $this->assertNull($stub->x());
         $this->assertNull($stub->y());
@@ -122,7 +123,7 @@ class CollectionTest extends TestCase
         ];
 
         /** @var Collection $stub */
-        $stub = $this->getMockForAbstractClass(Collection::class, [$components, true]);
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
 
         $this->assertEquals($expected, $stub->asArray());
     }
@@ -169,4 +170,52 @@ class CollectionTest extends TestCase
             $this->assertSame($points[$i + 1], $segment->endPoint());
         }
     }
+
+    // public function providerDistance()
+    // {
+    //     return [
+    //         "collection of points to empty point" => [
+    //             [new Point(1, 1), new Point(2,2)],
+    //             new Point(),
+    //             null
+    //         ],
+    //         "collection of points to point" => [
+    //             [new Point(1, 1), new Point(2, 1)],
+    //             new Point(1, 0),
+    //             1.0
+    //         ],
+    //         "collection of points to touching point" => [
+    //             [new Point(1, 1), new Point(2, 1)],
+    //             new Point(2, 1),
+    //             0.0
+    //         ],
+    //         "collection of points to touching point in between" => [
+    //             [new Point(1, 1), new Point(2, 1)],
+    //             new Point(1.5, 1),
+    //             0.0
+    //         ],
+    //         "collection of points to linestring" => [
+    //             [new Point(1, 1), new Point(2, 1)],
+    //             LineString::fromArray([[0, 0], [2, 0]]),
+    //             1.0
+    //         ],
+    //         "collection of points to crossing linestring" => [
+    //             [new Point(0, 1), new Point(4, 1)],
+    //             LineString::fromArray([[2, 0], [2, 2]]),
+    //             0.0
+    //         ],
+    //     ];
+    // }
+
+    // /**
+    //  * @dataProvider providerDistance
+    //  * @covers ::distance
+    //  */
+    // public function testDistance($components, $otherGeometry, $expectedDistance)
+    // {
+    //     /** @var Collection $stub */
+    //     $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
+
+    //     $this->assertSame($expectedDistance, $stub->distance($otherGeometry));
+    // }
 }

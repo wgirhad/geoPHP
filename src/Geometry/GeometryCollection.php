@@ -21,7 +21,7 @@ class GeometryCollection extends MultiGeometry
      */
     public function __construct(array $components = [])
     {
-        parent::__construct($components, true);
+        parent::__construct($components, Geometry::class);
     }
 
     public function geometryType()

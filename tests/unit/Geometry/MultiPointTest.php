@@ -22,9 +22,11 @@ class MultiPointTest extends TestCase
     {
         return [
             'no components'    => [[]],
+            'empty Point comp' => [[new Point()]],
             'xy'               => [[new Point(1, 2)]],
             '2 xy'             => [[new Point(1, 2), new Point(3, 4)]],
             '2 xyzm'           => [[new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)]],
+            'one is empty'     => [[new Point(), new Point(1, 2)]],
         ];
     }
 
@@ -44,7 +46,6 @@ class MultiPointTest extends TestCase
     public function providerInvalidComponents()
     {
         return [
-            'empty Point comp'     => [[new Point()]],
             'LineString component' => [[LineString::fromArray([[1,2],[3,4]])]],
             'string component'     => [["text"]],
         ];

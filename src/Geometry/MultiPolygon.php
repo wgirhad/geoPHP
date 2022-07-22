@@ -24,7 +24,7 @@ class MultiPolygon extends MultiSurface
      */
     public function __construct(array $components = [])
     {
-        parent::__construct($components, false, Polygon::class);
+        parent::__construct($components, Polygon::class);
     }
 
     /**

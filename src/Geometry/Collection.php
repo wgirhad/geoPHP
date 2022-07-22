@@ -31,8 +31,8 @@ abstract class Collection extends Geometry
      */
     public function __construct(
         array $components = [],
-        bool $allowEmptyComponents = false,
-        string $allowedComponentType = Geometry::class
+        string $allowedComponentType = Geometry::class,
+        bool $allowEmptyComponents = false
     ) {
         $componentCount = count($components);
         for ($i = 0; $i < $componentCount; ++$i) { // foreach is too memory-intensive here in PHP 5.*

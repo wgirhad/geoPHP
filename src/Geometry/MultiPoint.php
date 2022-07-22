@@ -28,7 +28,7 @@ class MultiPoint extends MultiGeometry
      */
     public function __construct(array $components = [])
     {
-        parent::__construct($components, false, Point::class);
+        parent::__construct($components, Point::class);
     }
 
     /**

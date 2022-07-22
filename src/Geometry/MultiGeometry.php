@@ -2,6 +2,7 @@
 
 namespace geoPHP\Geometry;
 
+use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
 /**
@@ -11,6 +12,23 @@ use geoPHP\geoPHP;
  */
 abstract class MultiGeometry extends Collection
 {
+    /**
+     * Checks and stores geometry components.
+     *
+     * @param Point[] $components           Array of Geometry components.
+     * @param string  $allowedComponentType A class the components must be instance of. Default: Geometry.
+     * @param bool    $allowEmptyComponents Allow creating geometries with empty components. Default: true.
+     *
+     * @throws InvalidGeometryException
+     */
+    public function __construct(
+        array $components = [],
+        string $allowedComponentType = Geometry::class,
+        bool $allowEmptyComponents = true
+    ) {
+        parent::__construct($components, $allowedComponentType, $allowEmptyComponents);
+    }
+
     /**
      * @return bool|null
      */

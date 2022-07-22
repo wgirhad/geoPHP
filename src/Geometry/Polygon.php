@@ -26,7 +26,7 @@ class Polygon extends Surface
      */
     public function __construct(array $components = [], bool $forceCreate = false)
     {
-        parent::__construct($components, false, LineString::class);
+        parent::__construct($components, LineString::class);
 
         foreach ($this->getComponents() as $i => $component) {
             if ($component->numPoints() < 4) {
