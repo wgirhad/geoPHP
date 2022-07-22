@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
  * @uses geoPHP\Geometry\GeometryCollection
  * @uses geoPHP\Exception\FileFormatException
  */
-class WKTTest extends TestCase
+class WKTReaderTest extends TestCase
 {
     /**
      * @var WKT
@@ -263,7 +263,7 @@ class WKTTest extends TestCase
                 LineString::fromArray([[1, 2, null, 3], [5, 6, null, 7]]),
             ],
             [
-                'LINESTRINGM(1 2 3, 5 6 7)',
+                'LINESTRINGM(1 2 3,5 6 7)',
                 LineString::fromArray([[1, 2, null, 3], [5, 6, null, 7]]),
             ],
             [
@@ -271,7 +271,7 @@ class WKTTest extends TestCase
                 LineString::fromArray([[1, 2, 3, 4], [5, 6, 7, 8]]),
             ],
             [
-                'LINESTRING ZM (1 2 3 4, 5 6 7 8)',
+                'LINESTRINGZM(1 2 3 4,5 6 7 8)',
                 LineString::fromArray([[1, 2, 3, 4], [5, 6, 7, 8]]),
             ],
             [
