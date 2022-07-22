@@ -267,8 +267,8 @@ class WKT implements GeoAdapter
      * Parses a WKT MULTIPOINT and returns a MultiPoint geometry.
      *
      * Should understand both forms:
-     * MULTIPOINT ((1 2), (3 4))
-     * MULTIPOINT (1 2, 3 4)
+     * OGC style:  MULTIPOINT ((1 2), (3 4))
+     * GEOS style: MULTIPOINT (1 2, 3 4)
      *
      * @param string $dataString
      *
@@ -285,20 +285,24 @@ class WKT implements GeoAdapter
         $points = [];
         $hasDoubleBraces = null;
         foreach (explode(',', $dataString) as $part) {
-            // At the first ireation determines if WKT uses "double braces" form.
-            if ($hasDoubleBraces === null) {
-                $hasDoubleBraces = preg_match('#^\(.+\)$#', trim($part));
-            }
-            // Removes dobule braces. If one of the components uses single brace form, rejects the whole MultiPoint.
-            if ($hasDoubleBraces) {
-                preg_match('#^\((.+)\)$#', trim($part), $matches);
-                $part = $matches[1] ?? null;
-            }
-            if ($part) {
-                $points[] =  $this->parseCoordinates($part);
+            if (trim($part) === 'EMPTY') {
+                $points[] = new Point();
             } else {
-                $points = [];
-                break;
+                // At the first ireation determines if WKT uses "double braces" form.
+                if ($hasDoubleBraces === null) {
+                    $hasDoubleBraces = preg_match('#^\(.+\)$#', trim($part));
+                }
+                // Removes dobule braces. If one of the components uses single brace form, rejects the whole MultiPoint.
+                if ($hasDoubleBraces) {
+                    preg_match('#^\((.+)\)$#', trim($part), $matches);
+                    $part = $matches[1] ?? null;
+                }
+                if ($part) {
+                    $points[] =  $this->parsePoint($part);
+                } else {
+                    $points = [];
+                    break;
+                }
             }
         }
 
@@ -323,9 +327,11 @@ class WKT implements GeoAdapter
         }
 
         $lines = [];
-        if (preg_match_all('#\((?<line>.*?)\)#', $dataString, $matches)) {
-            foreach ($matches['line'] as $part) {
-                $lines[] = $this->parseLineString($part);
+        if (preg_match_all('#(?<component>\([^)]*?\)|EMPTY)#', $dataString, $matches)) {
+            foreach ($matches['component'] as $component) {
+                // Removes outer braces if any
+                preg_match('#^\((.+)\)$#', $component, $matches2);
+                $lines[] = $this->parseLineString($matches2[1] ?? $component);
             }
         }
 
@@ -350,9 +356,11 @@ class WKT implements GeoAdapter
         }
 
         $polygons = [];
-        if (preg_match_all('#\((?<polygon>(?>[^()]+|(?R))*)\)#', $dataString, $matches)) {
-            foreach ($matches['polygon'] as $part) {
-                $polygons[] = $this->parsePolygon($part);
+        if (preg_match_all('#(?<component>\((?>[^()]+|(?R))*\)|EMPTY)#', $dataString, $matches)) {
+            foreach ($matches['component'] as $component) {
+                // Removes outer braces if any
+                preg_match('#^\((.+)\)$#', $component, $matches2);
+                $polygons[] = $this->parsePolygon($matches2[1] ?? $component);
             }
         }
 

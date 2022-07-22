@@ -453,6 +453,14 @@ class WKTReaderTest extends TestCase
                 MultiPoint::fromArray([[1, 2]]),
             ],
             [
+                'MULTIPOINT (EMPTY, 1 2)',
+                MultiPoint::fromArray([[], [1, 2]]),
+            ],
+            [
+                'MULTIPOINT ((1 2), EMPTY)',
+                MultiPoint::fromArray([[1, 2], []]),
+            ],
+            [
                 'MULTIPOINT(1 2,5 6)',
                 MultiPoint::fromArray([[1, 2], [5, 6]]),
             ],
@@ -558,6 +566,14 @@ class WKTReaderTest extends TestCase
                 MultiLineString::fromArray([[[11, 12], [21, 22]], [[31, 32], [11, 12]]]),
             ],
             [
+                'MULTILINESTRING (EMPTY, (31 32, 11 12))',
+                MultiLineString::fromArray([[], [[31, 32], [11, 12]]]),
+            ],
+            [
+                'MULTILINESTRING ((11 12, 21 22), EMPTY)',
+                MultiLineString::fromArray([[[11, 12], [21, 22]], []]),
+            ],
+            [
                 'MULTILINESTRING ( (11 12, 21 22, 31 32, 11 12), (111 112, 121 122, 131 132, 111 112) )',
                 MultiLineString::fromArray(
                     [
@@ -648,6 +664,15 @@ class WKTReaderTest extends TestCase
                 MultiPolygon::fromArray(
                     [
                         [[[11, 12], [21, 22], [31, 32], [11, 12]]],
+                        [[[111, 112], [121, 122], [131, 132], [111, 112]]]
+                    ]
+                ),
+            ],
+            'MultiPolygon two, first is empty' => [
+                'MULTIPOLYGON (EMPTY, ((111 112, 121 122, 131 132, 111 112)))',
+                MultiPolygon::fromArray(
+                    [
+                        [],
                         [[[111, 112], [121, 122], [131, 132], [111, 112]]]
                     ]
                 ),
@@ -778,12 +803,30 @@ class WKTReaderTest extends TestCase
                     ]
                 ),
             ],
-            'GeometryCollection point, geometrycollection(ls)' => [
+            'GeometryCollection (point, geometrycollection(ls))' => [
                 'GEOMETRYCOLLECTION (POINT(1 2), GEOMETRYCOLLECTION (LINESTRING(1 2, 3 4)))',
                 new GeometryCollection(
                     [
                         new Point(1, 2),
                         new GeometryCollection([LineString::fromArray([[1, 2], [3, 4]])])
+                    ]
+                ),
+            ],
+            'GeometryCollection (point, geometrycollection(empty point))' => [
+                'GEOMETRYCOLLECTION (POINT(1 2), GEOMETRYCOLLECTION (POINT EMPTY))',
+                new GeometryCollection(
+                    [
+                        new Point(1, 2),
+                        new GeometryCollection([new Point()])
+                    ]
+                ),
+            ],
+            'GeometryCollection (point, geometrycollection(multipoint(point, empty)))' => [
+                'GEOMETRYCOLLECTION (POINT(1 2), GEOMETRYCOLLECTION (MULTIPOINT ((1 2), EMPTY) ) )',
+                new GeometryCollection(
+                    [
+                        new Point(1, 2),
+                        new GeometryCollection([MultiPoint::fromArray([[1, 2], []])])
                     ]
                 ),
             ],
