@@ -4,6 +4,7 @@ namespace geoPHP\Adapter;
 
 use geoPHP\Exception\FileFormatException;
 use geoPHP\Exception\InvalidGeometryException;
+use geoPHP\Exception\IOException;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\{
     Collection,
@@ -53,10 +54,12 @@ class WKT implements GeoAdapter
      * Read WKT string into geometry objects
      *
      * @param string $wkt A WKT string
-     * @return Geometry
+     *
      * @throws FileFormatException
+     *
+     * @return Geometry
      */
-    public function read($wkt)
+    public function read($wkt): Geometry
     {
         $this->hasZ = null;
         $this->hasM = null;
@@ -96,9 +99,8 @@ class WKT implements GeoAdapter
      *
      * @return Geometry
      */
-    private function parseTypeAndGetData($wkt): Geometry
+    protected function parseTypeAndGetData($wkt): Geometry
     {
-        // geometry type is the first word
         if (
             preg_match(
                 '#^(?<type>[A-Z]+?)\s*(?<z>Z*)(?<m>M*)\s*(?:\((?<data>.+)\)|(?<data_empty>EMPTY))$#',
@@ -139,7 +141,7 @@ class WKT implements GeoAdapter
      *
      * @return Point
      */
-    public function parseCoordinates(string $dataString): Point
+    protected function parseCoordinates(string $dataString): Point
     {
         list($x, $y, $coord3, $coord4) = array_merge(
             explode(' ', preg_replace('#\s+#', ' ', trim($dataString))),
@@ -199,11 +201,11 @@ class WKT implements GeoAdapter
      *
      * @param string $dataString
      *
-     * @throws FileFormatException Throwed if cannot parse the Point data.
+     * @throws FileFormatException Throwed if cannot parse the POINT text.
      *
      * @return Point
      */
-    private function parsePoint(string $dataString): Point
+    protected function parsePoint(string $dataString): Point
     {
         $dataString = trim($dataString);
         if ($dataString === 'EMPTY') {
@@ -218,9 +220,11 @@ class WKT implements GeoAdapter
      *
      * @param string $dataString
      *
+     * @throws FileFormatException Throwed if cannot parse the LINESTRING text.
+     *
      * @return LineString
      */
-    private function parseLineString(string $dataString): LineString
+    protected function parseLineString(string $dataString): LineString
     {
         if ($dataString === 'EMPTY') {
             return new LineString();
@@ -244,9 +248,11 @@ class WKT implements GeoAdapter
      *
      * @param string $dataString
      *
+     * @throws FileFormatException Throwed if cannot parse the POLYGON text.
+     *
      * @return Polygon
      */
-    private function parsePolygon(string $dataString): Polygon
+    protected function parsePolygon(string $dataString): Polygon
     {
         if ($dataString === 'EMPTY') {
             return new Polygon();
@@ -272,11 +278,13 @@ class WKT implements GeoAdapter
      *
      * @param string $dataString
      *
+     * @throws FileFormatException Throwed if cannot parse the MULTIPOINT text.
+     *
      * @return MultiPoint
      *
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function parseMultiPoint(string $dataString): MultiPoint
+    protected function parseMultiPoint(string $dataString): MultiPoint
     {
         if ($dataString === 'EMPTY') {
             return new MultiPoint();
@@ -316,11 +324,13 @@ class WKT implements GeoAdapter
     /**
      * @param string $dataString
      *
+     * @throws FileFormatException Throwed if cannot parse the MULTILINESTRING text.
+     *
      * @return MultiLineString
      *
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function parseMultiLineString(string $dataString): MultiLineString
+    protected function parseMultiLineString(string $dataString): MultiLineString
     {
         if ($dataString === 'EMPTY') {
             return new MultiLineString();
@@ -345,11 +355,13 @@ class WKT implements GeoAdapter
     /**
      * @param string $dataString
      *
+     * @throws FileFormatException Throwed if cannot parse the MULTIPOLYGON text.
+     *
      * @return MultiPolygon
      *
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function parseMultiPolygon(string $dataString): MultiPolygon
+    protected function parseMultiPolygon(string $dataString): MultiPolygon
     {
         if ($dataString === 'EMPTY') {
             return new MultiPolygon();
@@ -377,11 +389,13 @@ class WKT implements GeoAdapter
      *
      * @param string $dataString
      *
+     * @throws FileFormatException Throwed if cannot parse the GEOMETRYCOLLECTION text.
+     *
      * @return GeometryCollection
      *
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function parseGeometryCollection(string $dataString): GeometryCollection
+    protected function parseGeometryCollection(string $dataString): GeometryCollection
     {
         if ($dataString === 'EMPTY') {
             return new GeometryCollection();
@@ -422,20 +436,21 @@ class WKT implements GeoAdapter
      *
      * @param Geometry $geometry
      *
-     * @return string The WKT string representation of the input geometries
+     * @throws IOException Throwed if the given Geometry is not supported by the WKT writer.
+     *
+     * @return string The WKT string representation of the input geometries.
      */
-    public function write(Geometry $geometry)
+    public function write(Geometry $geometry): string
     {
         // If geos is installed, then we take a shortcut and let it write the WKT
         if (geoPHP::isGeosInstalled()) {
-            /** @noinspection PhpUndefinedClassInspection */
+            // @codeCoverageIgnoreStart
             $writer = new \GEOSWKTWriter();
-            /** @noinspection PhpUndefinedMethodInspection */
             $writer->setRoundingPrecision(14);
-            /** @noinspection PhpUndefinedMethodInspection */
             $writer->setTrim(true);
-            /** @noinspection PhpUndefinedMethodInspection */
+
             return $writer->write($geometry->getGeos());
+            // @codeCoverageIgnoreEnd
         }
         $this->hasM = $geometry->isMeasured();
         $this->hasZ = $geometry->hasZ();
@@ -444,7 +459,109 @@ class WKT implements GeoAdapter
             return strtoupper($geometry->geometryType()) . ' EMPTY';
         }
 
-        if ($data = $this->extractData($geometry)) {
+        $data = $this->extractData($geometry);
+        $extension = '';
+        if ($this->hasZ) {
+            $extension .= 'Z';
+        }
+        if ($this->hasM) {
+            $extension .= 'M';
+        }
+        return strtoupper($geometry->geometryType()) . ($extension ? ' ' . $extension : '') . ' (' . $data . ')';
+    }
+
+    /**
+     * Extract geometry to a WKT string
+     *
+     * @param Geometry|Collection $geometry A Geometry object.
+     *
+     * @throws IOException Throwed if the given Geometry is not supported by the WKT writer.
+     *
+     * @return string The WKT text.
+     */
+    protected function extractData(Geometry $geometry): string
+    {
+        switch ($geometry->geometryType()) {
+            case Geometry::POINT:
+                return $this->writePoint($geometry);
+            case Geometry::LINE_STRING:
+                return $this->writeLineString($geometry);
+            case Geometry::POLYGON:
+            case Geometry::MULTI_POINT:
+            case Geometry::MULTI_LINE_STRING:
+            case Geometry::MULTI_POLYGON:
+                return $this->writeMulti($geometry);
+            case Geometry::GEOMETRY_COLLECTION:
+                return $this->writeGeometryCollection($geometry);
+            default:
+                // @codeCoverageIgnoreStart
+                throw new IOException('WKT writer does not support ' . $geometry->geometryType() . ' geometry type.');
+                // @codeCoverageIgnoreEnd
+        }
+    }
+
+    /**
+     * @param Geometry $geometry
+     *
+     * @return string
+     */
+    protected function writePoint(Geometry $geometry): string
+    {
+        $pointText = $geometry->x() . ' ' . $geometry->y();
+
+        if ($this->hasZ) {
+            $pointText .= ' ' . ($geometry->getZ() ?: 0);
+        }
+        if ($this->hasM) {
+            $pointText .= ' ' . ($geometry->getM() ?: 0);
+        }
+
+        return trim($pointText);
+    }
+
+    /**
+     * @param Geometry $geometry
+     *
+     * @return string
+     */
+    protected function writeLineString(Geometry $geometry): string
+    {
+        $parts = [];
+        foreach ($geometry->getComponents() as $component) {
+            $parts[] = $this->extractData($component);
+        }
+
+        return implode(', ', $parts);
+    }
+
+    /**
+     * @param Geometry $geometry
+     *
+     * @return string
+     */
+    protected function writeMulti(Geometry $geometry): string
+    {
+        $parts = [];
+        foreach ($geometry->getComponents() as $component) {
+            if ($component->isEmpty()) {
+                $parts[] = 'EMPTY';
+            } else {
+                $parts[] = '(' . $this->extractData($component) . ')';
+            }
+        }
+
+        return implode(', ', $parts);
+    }
+
+    /**
+     * @param Geometry $geometry
+     *
+     * @return string
+     */
+    protected function writeGeometryCollection(Geometry $geometry): string
+    {
+        $parts = [];
+        foreach ($geometry->getComponents() as $component) {
             $extension = '';
             if ($this->hasZ) {
                 $extension .= 'Z';
@@ -452,64 +569,12 @@ class WKT implements GeoAdapter
             if ($this->hasM) {
                 $extension .= 'M';
             }
-            return strtoupper($geometry->geometryType()) . ($extension ? ' ' . $extension : '') . ' (' . $data . ')';
+            $data = $this->extractData($component);
+            $parts[] = strtoupper($component->geometryType())
+                    . ($extension ? ' ' . $extension : '')
+                    . ($data ? ' (' . $data . ')' : ' EMPTY');
         }
-        return '';
-    }
 
-    /**
-     * Extract geometry to a WKT string
-     *
-     * @param Geometry|Collection $geometry A Geometry object
-     *
-     * @return string
-     */
-    public function extractData($geometry)
-    {
-        $parts = [];
-        switch ($geometry->geometryType()) {
-            case Geometry::POINT:
-                $p = $geometry->x() . ' ' . $geometry->y();
-                if ($this->hasZ) {
-                    $p .= ' ' . ($geometry->getZ() ?: 0);
-                }
-                if ($this->hasM) {
-                    $p .= ' ' . ($geometry->getM() ?: 0);
-                }
-                return $p;
-            case Geometry::LINE_STRING:
-                foreach ($geometry->getComponents() as $component) {
-                    $parts[] = $this->extractData($component);
-                }
-                return implode(', ', $parts);
-            case Geometry::POLYGON:
-            case Geometry::MULTI_POINT:
-            case Geometry::MULTI_LINE_STRING:
-            case Geometry::MULTI_POLYGON:
-                foreach ($geometry->getComponents() as $component) {
-                    if ($component->isEmpty()) {
-                        $parts[] = 'EMPTY';
-                    } else {
-                        $parts[] = '(' . $this->extractData($component) . ')';
-                    }
-                }
-                return implode(', ', $parts);
-            case Geometry::GEOMETRY_COLLECTION:
-                foreach ($geometry->getComponents() as $component) {
-                    $extension = '';
-                    if ($this->hasZ) {
-                        $extension .= 'Z';
-                    }
-                    if ($this->hasM) {
-                        $extension .= 'M';
-                    }
-                    $data = $this->extractData($component);
-                    $parts[] = strtoupper($component->geometryType())
-                            . ($extension ? ' ' . $extension : '')
-                            . ($data ? ' (' . $data . ')' : ' EMPTY');
-                }
-                return implode(', ', $parts);
-        }
-        return '';
+        return implode(', ', $parts);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\IOException;
 use geoPHP\Geometry\Geometry;
 
 /**
@@ -14,15 +15,15 @@ class EWKT extends WKT
      *
      * @param Geometry $geometry
      *
-     * @return string The Extended-WKT string representation of the input geometries
+     * @throws IOException Throwed if the given Geometry is not supported by the EWKT writer.
+     *
+     * @return string The Extended-WKT string representation of the input geometries.
      */
-    public function write(Geometry $geometry)
+    public function write(Geometry $geometry): string
     {
         $srid = $geometry->getSRID();
         if ($srid) {
-            $wkt = 'SRID=' . $srid . ';';
-            $wkt .= $geometry->out('wkt');
-            return $wkt;
+            return 'SRID=' . $srid . ';' . $geometry->out('wkt');
         } else {
             return $geometry->out('wkt');
         }

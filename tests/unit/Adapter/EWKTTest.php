@@ -2,12 +2,9 @@
 
 namespace geoPHP\Tests\Adapter;
 
-use geoPHP\Adapter\WKT;
-use geoPHP\Exception\FileFormatException;
+use geoPHP\Adapter\EWKT;
 use geoPHP\Geometry\Geometry;
-use geoPHP\Geometry\LineString;
 use geoPHP\Geometry\Point;
-use geoPHP\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +26,7 @@ class EWKTTest extends TestCase
      */
     public function testReadingValidEwkt(string $wkt, int $srid): void
     {
-        $geometry = (new WKT())->read($wkt);
+        $geometry = (new EWKT())->read($wkt);
         $geometry->setGeos(null);
 
         $this->assertInstanceOf(Geometry::class, $geometry);
@@ -46,6 +43,44 @@ class EWKTTest extends TestCase
             [
                 'SRID=4326;POINT(19.0 47.0 100)',
                 4326,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerWriteValidEwkt
+     */
+    public function testWritingValidEwkt(string $expectedWkt, Geometry $geometry, ?int $srid): void
+    {
+        $geometry->setSRID($srid);
+
+        $wkt = (new EWKT())->write($geometry);
+
+        $this->assertEquals($expectedWkt, $wkt);
+    }
+
+    public function providerWriteValidEwkt()
+    {
+        return [
+            [
+                'SRID=3857;POINT (1 2)',
+                new Point(1, 2),
+                3857,
+            ],
+            [
+                'SRID=4326;POINT Z (19.1 47.1 100)',
+                new Point(19.1, 47.1, 100),
+                4326,
+            ],
+            [
+                'POINT (1 2)',
+                new Point(1, 2),
+                null,
+            ],
+            [
+                'SRID=23700;POINT EMPTY',
+                new Point(),
+                23700,
             ],
         ];
     }
