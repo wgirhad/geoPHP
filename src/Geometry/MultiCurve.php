@@ -29,12 +29,12 @@ abstract class MultiCurve extends MultiGeometry
         parent::__construct($components, $allowedComponentType);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::MULTI_CURVE;
     }
 
-    public function dimension()
+    public function dimension(): int
     {
         return 1;
     }
@@ -44,7 +44,7 @@ abstract class MultiCurve extends MultiGeometry
      *
      * @return bool
      */
-    public function isClosed()
+    public function isClosed(): bool
     {
         foreach ($this->getComponents() as $line) {
             if (!$line->isClosed()) {

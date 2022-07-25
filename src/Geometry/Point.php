@@ -98,12 +98,12 @@ class Point extends Geometry
         return (new \ReflectionClass(get_called_class()))->newInstanceArgs($coordinateArray);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::POINT;
     }
 
-    public function dimension()
+    public function dimension(): int
     {
         return 0;
     }
@@ -113,7 +113,7 @@ class Point extends Geometry
      *
      * @return float The X coordinate
      */
-    public function x()
+    public function x(): ?float
     {
         return $this->x;
     }
@@ -123,7 +123,7 @@ class Point extends Geometry
      *
      * @return float The Y coordinate
      */
-    public function y()
+    public function y(): ?float
     {
         return $this->y;
     }
@@ -133,7 +133,7 @@ class Point extends Geometry
      *
      * @return float The Z coordinate or NULL is not a 3D point
      */
-    public function z()
+    public function z(): ?float
     {
         return $this->z;
     }
@@ -143,7 +143,7 @@ class Point extends Geometry
      *
      * @return float The measured value
      */
-    public function m()
+    public function m(): ?float
     {
         return $this->m;
     }
@@ -154,12 +154,14 @@ class Point extends Geometry
      *
      * @return self
      * */
-    public function invertXY()
+    public function invertXY(): self
     {
-        $x = $this->x;
+        $tempX = $this->x;
         $this->x = $this->y;
-        $this->y = $x;
+        $this->y = $tempX;
+
         $this->setGeos(null);
+
         return $this;
     }
 
@@ -168,12 +170,12 @@ class Point extends Geometry
      *
      * @return self
      */
-    public function centroid()
+    public function centroid(): self
     {
         return $this;
     }
 
-    public function getBBox()
+    public function getBBox(): array
     {
         return [
                 'maxy' => $this->y(),
@@ -186,7 +188,7 @@ class Point extends Geometry
     /**
      * @return array
      */
-    public function asArray()
+    public function asArray(): array
     {
         if ($this->isEmpty()) {
             return [];
@@ -206,9 +208,10 @@ class Point extends Geometry
 
     /**
      * The boundary of a Point is the empty set.
+     *
      * @return GeometryCollection
      */
-    public function boundary()
+    public function boundary(): ?Geometry
     {
         return new GeometryCollection();
     }
@@ -216,7 +219,7 @@ class Point extends Geometry
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->x === null;
     }
@@ -224,7 +227,7 @@ class Point extends Geometry
     /**
      * @return int Returns always 1
      */
-    public function numPoints()
+    public function numPoints(): int
     {
         return 1;
     }
@@ -232,7 +235,7 @@ class Point extends Geometry
     /**
      * @return Point[]
      */
-    public function getPoints()
+    public function getPoints(): array
     {
         return [$this];
     }
@@ -240,7 +243,7 @@ class Point extends Geometry
     /**
      * @return Point[]
      */
-    public function getComponents()
+    public function getComponents(): array
     {
         return [$this];
     }
@@ -254,26 +257,27 @@ class Point extends Geometry
      *
      * @param Point|Geometry $geometry
      *
-     * @return boolean
+     * @return bool
      */
-    public function equals($geometry)
+    public function equals($geometry): bool
     {
         return $geometry->geometryType() === Geometry::POINT
             ? (abs($this->x() - $geometry->x()) <= 1.0E-9 && abs($this->y() - $geometry->y()) <= 1.0E-9)
             : false;
     }
 
-    public function isSimple()
+    public function isSimple(): bool
     {
         return true;
     }
 
-    public function flatten()
+    public function flatten(): void
     {
         $this->z = null;
         $this->m = null;
         $this->hasZ = false;
         $this->isMeasured = false;
+
         $this->setGeos(null);
     }
 
@@ -281,7 +285,7 @@ class Point extends Geometry
      * @param Geometry|Collection $geometry
      * @return float|null
      */
-    public function distance($geometry)
+    public function distance($geometry): ?float
     {
         if ($this->isEmpty() || $geometry->isEmpty()) {
             return null;
@@ -380,27 +384,27 @@ class Point extends Geometry
 
     /* The following methods are not valid for this geometry type */
 
-    public function area()
+    public function area(): float
     {
         return 0.0;
     }
 
-    public function length()
+    public function length(): float
     {
         return 0.0;
     }
 
-    public function length3D()
+    public function length3D(): float
     {
         return 0.0;
     }
 
-    public function greatCircleLength($radius = null)
+    public function greatCircleLength(float $radius = null): float
     {
         return 0.0;
     }
 
-    public function haversineLength()
+    public function haversineLength(): float
     {
         return 0.0;
     }
@@ -420,52 +424,52 @@ class Point extends Geometry
         return null;
     }
 
-    public function numGeometries()
+    public function numGeometries(): ?int
     {
         return null;
     }
 
-    public function geometryN($n = null)
+    public function geometryN(int $n = null): ?Geometry
     {
         return null;
     }
 
-    public function startPoint()
+    public function startPoint(): ?Point
     {
         return null;
     }
 
-    public function endPoint()
+    public function endPoint(): ?Point
     {
         return null;
     }
 
-    public function isRing()
+    public function isRing(): ?bool
     {
         return null;
     }
 
-    public function isClosed()
+    public function isClosed(): ?bool
     {
         return null;
     }
 
-    public function pointN($n = null)
+    public function pointN(int $n = null): ?Point
     {
         return null;
     }
 
-    public function exteriorRing()
+    public function exteriorRing(): ?LineString
     {
         return null;
     }
 
-    public function numInteriorRings()
+    public function numInteriorRings(): ?int
     {
         return null;
     }
 
-    public function interiorRingN($n = null)
+    public function interiorRingN(int $n = null): ?LineString
     {
         return null;
     }
@@ -474,7 +478,7 @@ class Point extends Geometry
      * @param bool|false $toArray
      * @return null
      */
-    public function explode($toArray = false)
+    public function explode($toArray = false): ?array
     {
         return null;
     }

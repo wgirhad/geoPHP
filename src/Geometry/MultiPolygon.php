@@ -46,12 +46,12 @@ class MultiPolygon extends MultiSurface
         return new static($points);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::MULTI_POLYGON;
     }
 
-    public function centroid()
+    public function centroid(): Point
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -79,7 +79,7 @@ class MultiPolygon extends MultiSurface
         return new Point($x / $totalArea, $y / $totalArea);
     }
 
-    public function area()
+    public function area(): float
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -95,7 +95,7 @@ class MultiPolygon extends MultiSurface
         return $area;
     }
 
-    public function boundary()
+    public function boundary(): ?Geometry
     {
         $rings = [];
         foreach ($this->getComponents() as $component) {

@@ -53,7 +53,7 @@ class MultiPoint extends MultiGeometry
     /**
      * @return string
      */
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::MULTI_POINT;
     }
@@ -62,7 +62,7 @@ class MultiPoint extends MultiGeometry
      * MultiPoint is 0-dimensional
      * @return int 0
      */
-    public function dimension()
+    public function dimension(): int
     {
         return 0;
     }
@@ -73,7 +73,7 @@ class MultiPoint extends MultiGeometry
      *
      * @return bool
      */
-    public function isSimple()
+    public function isSimple(): ?bool
     {
         $componentCount = count($this->components);
         for ($i = 0; $i < $componentCount; $i++) {
@@ -90,17 +90,17 @@ class MultiPoint extends MultiGeometry
      * The boundary of a MultiPoint is the empty set.
      * @return GeometryCollection
      */
-    public function boundary()
+    public function boundary(): ?Geometry
     {
         return new GeometryCollection();
     }
 
-    public function numPoints()
+    public function numPoints(): int
     {
         return $this->numGeometries();
     }
 
-    public function centroid()
+    public function centroid(): Point
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -123,7 +123,7 @@ class MultiPoint extends MultiGeometry
 
     // Not valid for this geometry type
     // --------------------------------
-    public function explode($toArray = false)
+    public function explode($toArray = false): ?array
     {
         return null;
     }

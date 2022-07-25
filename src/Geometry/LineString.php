@@ -11,17 +11,12 @@ use geoPHP\geoPHP;
  *
  * @method Point[] getComponents()
  * @property Point[] $components
- * @method Point geometryN($n)
+ * @method Point|null geometryN(int $n)
  *
  * @phpstan-consistent-constructor
  */
 class LineString extends Curve
 {
-    public function geometryType()
-    {
-        return Geometry::LINE_STRING;
-    }
-
     /**
      * Checks and stores geometry components.
      *
@@ -53,12 +48,17 @@ class LineString extends Curve
         return new static($points);
     }
 
+    public function geometryType(): string
+    {
+        return Geometry::LINE_STRING;
+    }
+
     /**
      * Returns the number of points of the LineString
      *
      * @return int
      */
-    public function numPoints()
+    public function numPoints(): int
     {
         return count($this->components);
     }
@@ -70,19 +70,19 @@ class LineString extends Curve
      * @param int $n Nth point of the LineString
      * @return Point|null
      */
-    public function pointN($n)
+    public function pointN(int $n): ?Point
     {
         return $n >= 0
                 ? $this->geometryN($n)
                 : $this->geometryN(count($this->components) - abs($n + 1));
     }
 
-    public function centroid()
+    public function centroid(): Point
     {
         return $this->getCentroidAndLength();
     }
 
-    public function getCentroidAndLength(&$length = 0.0)
+    public function getCentroidAndLength(float &$length = 0.0): Point
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -90,7 +90,7 @@ class LineString extends Curve
 
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            return geoPHP::geosToGeometry($this->getGeos()->centroid());
+            //return geoPHP::geosToGeometry($this->getGeos()->centroid());
             // @codeCoverageIgnoreEnd
         }
 
@@ -121,9 +121,9 @@ class LineString extends Curve
     /**
      *  Returns the length of this Curve in its associated spatial reference.
      * Eg. if Geometry is in geographical coordinate system it returns the length in degrees
-     * @return float|int
+     * @return float
      */
-    public function length()
+    public function length(): float
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -146,7 +146,7 @@ class LineString extends Curve
         return $length;
     }
 
-    public function length3D()
+    public function length3D(): float
     {
         $length = 0.0;
         /** @var Point $previousPoint */
@@ -165,10 +165,10 @@ class LineString extends Curve
     }
 
     /**
-     * @param float|null $radius Earth radius
+     * @param float $radius Earth radius
      * @return float Length in meters
      */
-    public function greatCircleLength($radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS)
+    public function greatCircleLength(float $radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS): float
     {
         $length = 0.0;
         $rad = M_PI / 180;
@@ -207,7 +207,7 @@ class LineString extends Curve
     /**
      * @return float Haversine length of geometry in degrees
      */
-    public function haversineLength()
+    public function haversineLength(): float
     {
         $distance = 0.0;
         $points = $this->getPoints();
@@ -235,9 +235,9 @@ class LineString extends Curve
      * @license https://opensource.org/licenses/GPL-3.0 GPL
      * (note: geoPHP uses "GPL version 2 (or later)" license which is compatible with GPLv3)
      *
-     * @return float|null Length in meters
+     * @return float Length in meters
      */
-    public function vincentyLength()
+    public function vincentyLength(): float
     {
         $length = 0.0;
         $rad = M_PI / 180;
@@ -288,7 +288,7 @@ class LineString extends Curve
                     ($sigma + $c * $sinSigma * ($cos2SigmaM + $c * $cosSigma * (- 1 + 2 * $cos2SigmaM * $cos2SigmaM)));
             } while (abs($lambda - $lambdaP) > 1e-12 && --$iterationLimit > 0);
             if ($iterationLimit == 0) {
-                return null; // not converging
+                throw new \RuntimeException('Vincenty distance calculation not converging.');
             }
             $uSq        = $cosSqAlpha
                             * ($semiMajor * $semiMajor - $semiMinor * $semiMinor)
@@ -432,9 +432,9 @@ class LineString extends Curve
      * Get all line segments
      * @param bool $toArray return segments as LineString or array of start and end points
      *
-     * @return LineString[]|array[Point]
+     * @return LineString[]|array<Point>
      */
-    public function explode($toArray = false)
+    public function explode($toArray = false): ?array
     {
         $points = $this->getPoints();
         $numPoints = count($points);
@@ -455,7 +455,7 @@ class LineString extends Curve
      *
      * @return boolean
      */
-    public function isSimple()
+    public function isSimple(): ?bool
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -491,7 +491,7 @@ class LineString extends Curve
      * @param LineString $segment
      * @return bool
      */
-    public function lineSegmentIntersect($segment)
+    public function lineSegmentIntersect($segment): bool
     {
         return Geometry::segmentIntersects(
             $this->startPoint(),
@@ -505,7 +505,7 @@ class LineString extends Curve
      * @param Geometry|Collection $geometry
      * @return float|null
      */
-    public function distance($geometry)
+    public function distance($geometry): ?float
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart

@@ -24,7 +24,7 @@ class GeometryCollection extends MultiGeometry
         parent::__construct($components, Geometry::class);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::GEOMETRY_COLLECTION;
     }
@@ -32,7 +32,7 @@ class GeometryCollection extends MultiGeometry
     /**
      * @return int Returns the highest spatial dimension of components
      */
-    public function dimension()
+    public function dimension(): int
     {
         $dimension = 0;
         foreach ($this->getComponents() as $component) {
@@ -47,7 +47,7 @@ class GeometryCollection extends MultiGeometry
      * Not valid for this geometry type
      * @return null
      */
-    public function isSimple()
+    public function isSimple(): ?bool
     {
         return null;
     }
@@ -60,7 +60,7 @@ class GeometryCollection extends MultiGeometry
      * @return Point
      * @throws Exception
      */
-    public function centroid()
+    public function centroid(): Point
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -108,7 +108,7 @@ class GeometryCollection extends MultiGeometry
      *
      * @return array
      */
-    public function asArray()
+    public function asArray(): array
     {
         $array = [];
         foreach ($this->getComponents() as $component) {
@@ -123,7 +123,7 @@ class GeometryCollection extends MultiGeometry
     /**
      * @return Geometry[]|Collection[]
      */
-    public function explodeGeometries()
+    public function explodeGeometries(): array
     {
         $geometries = [];
         foreach ($this->components as $component) {
@@ -138,7 +138,7 @@ class GeometryCollection extends MultiGeometry
     }
 
     // Not valid for this geometry
-    public function boundary()
+    public function boundary(): ?Geometry
     {
         return null;
     }

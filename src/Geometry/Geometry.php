@@ -25,9 +25,9 @@ use geoPHP\geoPHP;
  */
 abstract class Geometry
 {
-    /**
-     * Type constants
-     */
+    // ----------------------------------------------- //
+    //                 Type constants                  //
+    // ----------------------------------------------- //
     const POINT = 'Point';
     const LINE_STRING = 'LineString';
     const POLYGON = 'Polygon';
@@ -70,12 +70,16 @@ abstract class Geometry
      */
     private $geos = null;
 
+    // ----------------------------------------------- //
+    //       Basic methods on geometric objects        //
+    // ----------------------------------------------- //
 
-
-
-    /****************************************
-     *  Basic methods on geometric objects  *
-     ****************************************/
+    /**
+     * Returns the name of the instantiable subtype of Geometry of which the geometric object is an instantiable member.
+     *
+     * @return string
+     */
+    abstract public function geometryType(): string;
 
     /**
      * The inherent dimension of the geometric object, which must be less than or equal to the coordinate dimension.
@@ -83,14 +87,7 @@ abstract class Geometry
      *
      * @return int
      */
-    abstract public function dimension();
-
-    /**
-     * Returns the name of the instantiable subtype of Geometry of which the geometric object is an instantiable member.
-     *
-     * @return string
-     */
-    abstract public function geometryType();
+    abstract public function dimension(): int;
 
     /**
      * Returns true if the geometric object is the empty Geometry.
@@ -98,135 +95,144 @@ abstract class Geometry
      *
      * @return bool
      */
-    abstract public function isEmpty();
+    abstract public function isEmpty(): bool;
 
     /**
      * Returns true if the geometric object has no anomalous geometric points,
      * such as self intersection or self tangency.
+     *
      * The description of each instantiable geometric class will include the specific conditions
      * that cause an instance of that class to be classified as not simple
      *
-     * @return bool
+     * @return bool|null
      */
-    abstract public function isSimple();
+    abstract public function isSimple(): ?bool;
 
     /**
      * Returns the closure of the combinatorial boundary of the geometric object
      *
      * @return Geometry|null
      */
-    abstract public function boundary();
+    abstract public function boundary(): ?Geometry;
 
     /**
      * @return Geometry[]
      */
-    abstract public function getComponents();
+    abstract public function getComponents(): array;
 
 
-    /*************************************************
-     *  Methods applicable on certain geometry types *
-     *************************************************/
+    // ----------------------------------------------- //
+    //  Methods applicable on certain geometry types   //
+    // ----------------------------------------------- //
 
-    abstract public function area();
+    /**
+     * @return float
+     */
+    abstract public function area(): float;
 
     /**
      * @return Point
      */
-    abstract public function centroid();
+    abstract public function centroid(): Point;
 
-    abstract public function length();
+    /**
+     * @return float
+     */
+    abstract public function length(): float;
 
-    abstract public function length3D();
+    abstract public function length3D(): float;
 
     /**
      * @return float|null
      */
-    abstract public function x();
+    abstract public function x(): ?float;
 
     /**
      * @return float|null
      */
-    abstract public function y();
+    abstract public function y(): ?float;
 
     /**
      * @return float|null
      */
-    abstract public function z();
+    abstract public function z(): ?float;
 
     /**
      * @return float|null
      */
-    abstract public function m();
+    abstract public function m(): ?float;
 
     /**
      * @return int|null
      */
-    abstract public function numGeometries();
+    abstract public function numGeometries(): ?int;
 
     /**
      * @param int $n One-based index.
      * @return Geometry|null The geometry, or null if not found.
      */
-    abstract public function geometryN($n);
+    abstract public function geometryN(int $n): ?Geometry;
 
     /**
      * @return Point|null
      */
-    abstract public function startPoint();
+    abstract public function startPoint(): ?Point;
 
     /**
      * @return Point|null
      */
-    abstract public function endPoint();
+    abstract public function endPoint(): ?Point;
 
-    abstract public function isRing(); // Missing dependency
+    abstract public function isRing(): ?bool;
 
-    abstract public function isClosed(); // Missing dependency
+    abstract public function isClosed(): ?bool;
 
-    abstract public function numPoints();
+    abstract public function numPoints(): int;
 
     /**
      * @param int $n Nth point
      * @return Point|null
      */
-    abstract public function pointN($n);
+    abstract public function pointN(int $n): ?Point;
 
-    abstract public function exteriorRing();
+    abstract public function exteriorRing(): ?LineString;
 
-    abstract public function numInteriorRings();
+    abstract public function numInteriorRings(): ?int;
 
-    abstract public function interiorRingN($n);
+    abstract public function interiorRingN(int $n): ?LineString;
 
-    abstract public function distance($geom);
+    abstract public function distance(Geometry $geom): ?float;
 
-    abstract public function equals($geom);
+    abstract public function equals(Geometry $geom): bool;
 
 
-    // Abstract: Non-Standard
-    // ----------------------------------------------------------
+    // ----------------------------------------------- //
+    //          Abstract Non-Standard Methods          //
+    // ----------------------------------------------- //
 
-    abstract public function getBBox();
+    abstract public function getBBox(): ?array;
 
-    abstract public function asArray();
+    abstract public function asArray(): array;
 
     /**
      * @return Point[]
      */
-    abstract public function getPoints();
+    abstract public function getPoints(): array;
 
     abstract public function invertXY();
 
     /**
-     * Get all line segments
-     * @param bool $toArray return segments as LineString or array of start and end points. Explode(true) is faster
+     * Get all line segments.
+     * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
+     * @return array|null Returns line segments or null for 0-deminsional geometries.
      */
-    abstract public function explode($toArray = false);
+    abstract public function explode(bool $toArray = false): ?array;
 
-    abstract public function greatCircleLength($radius = null); //meters
+    abstract public function greatCircleLength(float $radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS): float; //meters
 
-    abstract public function haversineLength(); //degrees
+    abstract public function haversineLength(): float; //degrees
 
-    abstract public function flatten(); // 3D to 2D
+    abstract public function flatten(): void; // 3D to 2D
 
     // Elevations statistics
 
@@ -245,8 +251,9 @@ abstract class Geometry
     abstract public function elevationLoss(float $verticalTolerance = 0.0): ?float;
 
 
-    // Public: Standard -- Common to all geometries
-    // ----------------------------------------------------------
+    // ----------------------------------------------- //
+    //        Standard – Common to all geometries      //
+    // ----------------------------------------------- //
 
     /**
      * Check if Geometry has Z (altitude) coordinate
@@ -289,8 +296,8 @@ abstract class Geometry
     /**
      * Adds custom data to the geometry
      *
-     * @param string|array $property The name of the data or an associative array
-     * @param mixed|null $value The data. Can be any type (string, integer, array, etc.)
+     * @param string|array $property The name of the data or an associative array.
+     * @param mixed|null $value The data. Can be of any type (string, integer, array, etc.).
      */
     public function setData($property, $value = null)
     {
@@ -302,10 +309,11 @@ abstract class Geometry
     }
 
     /**
-     * Returns the requested data by property name, or all data of the geometry
+     * Returns the requested data by property name, or all data of the geometry.
      *
-     * @param string|null $property The name of the data. If omitted, all data will be returned
-     * @return mixed|null The data or null if not exists
+     * @param string|null $property The name of the data. If omitted, all data will be returned.
+     *
+     * @return mixed|null The data or null if not exists.
      */
     public function getData($property = null)
     {
@@ -317,16 +325,18 @@ abstract class Geometry
     }
 
     /**
-     * Tells whether the geometry has data with the specified name
-     * @param string $property The name of the property
-     * @return bool True if the geometry has data with the specified name
+     * Tells whether the geometry has data with the specified name.
+     *
+     * @param string $property The name of the property.
+     *
+     * @return bool True if the geometry has data with the specified name.
      */
-    public function hasDataProperty($property)
+    public function hasDataProperty(string $property): bool
     {
         return array_key_exists($property, $this->data ?: []);
     }
 
-    public function envelope()
+    public function envelope(): Geometry
     {
         if ($this->isEmpty()) {
             $type = 'geoPHP\\Geometry\\' . $this->geometryType();
@@ -351,18 +361,26 @@ abstract class Geometry
             new Point($boundingBox['minx'], $boundingBox['miny']),
             new Point($boundingBox['maxx'], $boundingBox['miny']),
         ];
-        return new Polygon([new LineString($points)]);
+        return $points
+            ? new Polygon([new LineString($points)])
+            : new Polygon();
     }
 
-    // Public: Non-Standard -- Common to all geometries
-    // ------------------------------------------------
+    // ----------------------------------------------- //
+    // Non-Standard methods – Common to all geometries //
+    // ----------------------------------------------- //
 
-    // $this->out($format, $other_args);
-    public function out()
+    /**
+     * Converts the geometry to file using an adapter.
+     *
+     * @param string $format A file format or adapter name. E.g.: "GPX", or "GeoJSON".
+     * @param mixed ...$args Additional adapter specific parameters.
+     *
+     * @return string
+     */
+    public function out(string $format, ...$args): string
     {
-        $args = func_get_args();
-
-        $format = strtolower(array_shift($args));
+        $format = strtolower($format);
         if (strstr($format, 'xdr')) {   //Big Endian WKB
             $args[] = true;
             $format = str_replace('xdr', '', $format);
@@ -372,18 +390,15 @@ abstract class Geometry
         $processor = new $processorType();
         array_unshift($args, $this);
 
-
-        $result = call_user_func_array([$processor, 'write'], $args);
-
-        return $result;
+        return call_user_func_array([$processor, 'write'], $args);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->out($this->getSRID() ? 'ewkt' : 'wkt');
     }
 
-    public function coordinateDimension()
+    public function coordinateDimension(): int
     {
         return 2 + ($this->hasZ() ? 1 : 0) + ($this->isMeasured() ? 1 : 0);
     }
@@ -399,8 +414,12 @@ abstract class Geometry
      * @param Point $segment2End
      * @return bool
      */
-    public static function segmentIntersects($segment1Start, $segment1End, $segment2Start, $segment2End)
-    {
+    public static function segmentIntersects(
+        Point $segment1Start,
+        Point $segment1End,
+        Point $segment2Start,
+        Point $segment2End
+    ): bool {
         $p0x = $segment1Start->x();
         $p0y = $segment1Start->y();
         $p1x = $segment1End->x();
@@ -429,9 +448,9 @@ abstract class Geometry
         return ($s > 0 && $s < 1 && $t > 0 && $t < 1);
     }
 
-
-    // Public: Aliases
-    // ------------------------------------------------
+    // ----------------------------------------------- //
+    //                     Aliases                     //
+    // ----------------------------------------------- //
 
     public function hasZ()
     {
@@ -490,8 +509,9 @@ abstract class Geometry
         return $this->out('wkb');
     }
 
-    // Public: GEOS Only Functions
-    // ------------------------------------------------
+    // ----------------------------------------------- //
+    //               GEOS Only Functions               //
+    // ----------------------------------------------- //
 
     /**
      * Returns the GEOS representation of Geometry if GEOS is installed.
@@ -525,11 +545,12 @@ abstract class Geometry
     }
 
     /**
-     * @return Geometry|Point|null
+     * @return Geometry|Point
+     *
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function pointOnSurface()
+    public function pointOnSurface(): Geometry
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -548,7 +569,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function equalsExact(Geometry $geometry)
+    public function equalsExact(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -559,12 +580,12 @@ abstract class Geometry
 
     /**
      * @param Geometry $geometry
-     * @param string|null $pattern
-     * @return string|null
+     * @param string $pattern
+     * @return string|bool
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function relate(Geometry $geometry, $pattern = null)
+    public function relate(Geometry $geometry, string $pattern = null)
     {
         if ($this->getGeos()) {
             if ($pattern) {
@@ -583,7 +604,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function checkValidity()
+    public function checkValidity(): array
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -593,12 +614,12 @@ abstract class Geometry
     }
 
     /**
-     * @param float|int $distance
-     * @return Geometry|null
+     * @param float $distance
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function buffer($distance)
+    public function buffer(float $distance): Geometry
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -609,11 +630,11 @@ abstract class Geometry
 
     /**
      * @param Geometry $geometry
-     * @return Geometry|null
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function intersection(Geometry $geometry)
+    public function intersection(Geometry $geometry): Geometry
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -623,11 +644,11 @@ abstract class Geometry
     }
 
     /**
-     * @return Geometry|null
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function convexHull()
+    public function convexHull(): Geometry
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -638,11 +659,11 @@ abstract class Geometry
 
     /**
      * @param Geometry $geometry
-     * @return Geometry|null
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function difference(Geometry $geometry)
+    public function difference(Geometry $geometry): Geometry
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -653,11 +674,11 @@ abstract class Geometry
 
     /**
      * @param Geometry $geometry
-     * @return Geometry|null
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function symDifference(Geometry $geometry)
+    public function symDifference(Geometry $geometry): Geometry
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -667,21 +688,19 @@ abstract class Geometry
     }
 
     /**
-     * Can pass in a geometry or an array of geometries
-     *
-     * @param Geometry $geometry
-     * @return bool|mixed|null|GeometryCollection
+     * @param Geometry|Geometry[] $geometry
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function union(Geometry $geometry)
+    public function union($geometry): Geometry
     {
         if ($this->getGeos()) {
             if (is_array($geometry)) {
                 $geom = $this->getGeos();
                 foreach ($geometry as $item) {
                     /** @noinspection PhpUndefinedMethodInspection */
-                    $geom = $geom->union($item->geos());
+                    $geom = $geom->union($item->getGeos());
                 }
                 return geoPHP::geosToGeometry($geom);
             } else {
@@ -695,11 +714,11 @@ abstract class Geometry
     /**
      * @param float      $tolerance
      * @param bool|false $preserveTopology
-     * @return Geometry|null
+     * @return Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function simplify($tolerance, $preserveTopology = false)
+    public function simplify(float $tolerance, bool $preserveTopology = false): Geometry
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -742,7 +761,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function disjoint(Geometry $geometry)
+    public function disjoint(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -757,7 +776,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function touches(Geometry $geometry)
+    public function touches(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -772,7 +791,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function intersects(Geometry $geometry)
+    public function intersects(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -787,7 +806,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function crosses(Geometry $geometry)
+    public function crosses(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -802,7 +821,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function within(Geometry $geometry)
+    public function within(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -817,7 +836,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function contains(Geometry $geometry)
+    public function contains(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -832,7 +851,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function overlaps(Geometry $geometry)
+    public function overlaps(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -847,7 +866,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function covers(Geometry $geometry)
+    public function covers(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -862,7 +881,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function coveredBy(Geometry $geometry)
+    public function coveredBy(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -877,7 +896,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function hausdorffDistance(Geometry $geometry)
+    public function hausdorffDistance(Geometry $geometry): float
     {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -887,13 +906,17 @@ abstract class Geometry
     }
 
     /**
+     * Returns the distance from the origin of the geometry (LineString or MultiLineString)
+     * to the point projected on the geometry (that is to a point of the line the closest to the given point).
+     *
      * @param Geometry $point
-     * @param null     $normalized
-     * @return \GEOSGeometry
+     * @param bool     $normalized Return the distance as a percentage between 0 (origin) and 1 (endpoint).
+     *
+     * @return float
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function project(Geometry $point, $normalized = null)
+    public function project(Geometry $point, bool $normalized = false): float
     {
         if ($this->getGeos()) {
             /** @phpstan-ignore-next-line */

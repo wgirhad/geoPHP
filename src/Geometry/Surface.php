@@ -32,59 +32,59 @@ abstract class Surface extends Collection
         parent::__construct($components, $allowedComponentType);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::SURFACE;
     }
 
-    public function dimension()
+    public function dimension(): int
     {
         return 2;
     }
 
-    public function startPoint()
+    public function startPoint(): ?Point
     {
         return null;
     }
 
-    public function endPoint()
+    public function endPoint(): ?Point
     {
         return null;
     }
 
-    public function pointN($n)
+    public function pointN($n): ?Point
     {
         return null;
     }
 
-    public function isClosed()
+    public function isClosed(): ?bool
     {
         return null;
     }
 
-    public function isRing()
+    public function isRing(): ?bool
     {
         return null;
     }
 
-    public function length()
+    public function length(): float
     {
-        return 0;
+        return 0.0;
     }
 
-    public function length3D()
+    public function length3D(): float
     {
-        return 0;
+        return 0.0;
     }
 
-    public function haversineLength()
+    public function haversineLength(): float
     {
-        return 0;
+        return 0.0;
     }
 
-    public function greatCircleLength($radius = null)
+    public function greatCircleLength($radius = null): float
     {
-        return 0;
+        return 0.0;
     }
 
     public function minimumZ(): ?float

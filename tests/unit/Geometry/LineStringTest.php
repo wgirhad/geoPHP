@@ -363,7 +363,9 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray([[-89.7, 0], [89.7, 0]]);
 
-        $this->assertNull($line->vincentyLength());
+        $this->expectException(\Exception::class);
+
+        $line->vincentyLength();
     }
 
     /**

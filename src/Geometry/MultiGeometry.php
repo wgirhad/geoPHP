@@ -30,9 +30,9 @@ abstract class MultiGeometry extends Collection
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function isSimple()
+    public function isSimple(): ?bool
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -51,8 +51,12 @@ abstract class MultiGeometry extends Collection
         return true;
     }
 
-    // By default, the boundary of a collection is the boundary of it's components
-    public function boundary()
+    /**
+     * By default, the boundary of a collection is the boundary of it's components.
+     *
+     * @return Geometry
+     */
+    public function boundary(): ?Geometry
     {
         if ($this->isEmpty()) {
             return new LineString();
@@ -72,7 +76,7 @@ abstract class MultiGeometry extends Collection
         return geoPHP::buildGeometry($componentsBoundaries);
     }
 
-    public function area()
+    public function area(): float
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -81,7 +85,7 @@ abstract class MultiGeometry extends Collection
             // @codeCoverageIgnoreEnd
         }
 
-        $area = 0;
+        $area = 0.0;
         foreach ($this->components as $component) {
             $area += $component->area();
         }
@@ -91,20 +95,20 @@ abstract class MultiGeometry extends Collection
     /**
      *  Returns the length of this Collection in its associated spatial reference.
      * Eg. if Geometry is in geographical coordinate system it returns the length in degrees
-     * @return float|int
+     * @return float
      */
-    public function length()
+    public function length(): float
     {
-        $length = 0;
+        $length = 0.0;
         foreach ($this->components as $component) {
             $length += $component->length();
         }
         return $length;
     }
 
-    public function length3D()
+    public function length3D(): float
     {
-        $length = 0;
+        $length = 0.0;
         foreach ($this->components as $component) {
             $length += $component->length3D();
         }
@@ -112,22 +116,23 @@ abstract class MultiGeometry extends Collection
     }
 
     /**
-     * Returns the degree based Geometry' length in meters
-     * @param float|null $radius Default is the semi-major axis of WGS84
-     * @return int the length in meters
+     * Returns the degree based Geometry' length in meters.
+     *
+     * @param float $radius Default is the semi-major axis of WGS84.
+     * @return float Length in meters.
      */
-    public function greatCircleLength($radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS)
+    public function greatCircleLength(float $radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS): float
     {
-        $length = 0;
+        $length = 0.0;
         foreach ($this->components as $component) {
             $length += $component->greatCircleLength($radius);
         }
         return $length;
     }
 
-    public function haversineLength()
+    public function haversineLength(): float
     {
-        $length = 0;
+        $length = 0.0;
         foreach ($this->components as $component) {
             $length += $component->haversineLength();
         }
@@ -228,42 +233,42 @@ abstract class MultiGeometry extends Collection
 
 
 
-    public function startPoint()
+    public function startPoint(): ?Point
     {
         return null;
     }
 
-    public function endPoint()
+    public function endPoint(): ?Point
     {
         return null;
     }
 
-    public function isRing()
+    public function isRing(): ?bool
     {
         return null;
     }
 
-    public function isClosed()
+    public function isClosed(): ?bool
     {
         return null;
     }
 
-    public function pointN($n)
+    public function pointN(int $n): ?Point
     {
         return null;
     }
 
-    public function exteriorRing()
+    public function exteriorRing(): ?LineString
     {
         return null;
     }
 
-    public function numInteriorRings()
+    public function numInteriorRings(): ?int
     {
         return null;
     }
 
-    public function interiorRingN($n)
+    public function interiorRingN(int $n): ?LineString
     {
         return null;
     }

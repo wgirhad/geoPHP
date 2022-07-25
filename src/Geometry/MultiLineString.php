@@ -46,12 +46,12 @@ class MultiLineString extends MultiCurve
         return new static($points);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::MULTI_LINE_STRING;
     }
 
-    public function centroid()
+    public function centroid(): Point
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -89,7 +89,7 @@ class MultiLineString extends MultiCurve
      *
      * @return MultiPoint
      */
-    public function boundary()
+    public function boundary(): ?Geometry
     {
         $points = [];
         foreach ($this->components as $line) {

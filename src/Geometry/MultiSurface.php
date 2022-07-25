@@ -27,12 +27,12 @@ abstract class MultiSurface extends MultiGeometry
         parent::__construct($components, $allowedComponentType);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::MULTI_SURFACE;
     }
 
-    public function dimension()
+    public function dimension(): int
     {
         return 2;
     }

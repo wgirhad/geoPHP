@@ -34,17 +34,40 @@ abstract class Curve extends Collection
 
     protected $endPoint = null;
 
-    public function geometryType()
+    /**
+     * Returns the name of the instantiable subtype of Geometry of which the geometric object is an instantiable member.
+     *
+     * @return string
+     */
+    public function geometryType(): string
     {
         return Geometry::CURVE;
     }
 
-    public function dimension()
+    /**
+     * The inherent dimension of the geometric object, which must be less than or equal to the coordinate dimension.
+     * In non-homogeneous collections, this will return the largest topological dimension of the contained objects.
+     *
+     * @return int
+     */
+    public function dimension(): int
     {
         return 1;
     }
 
-    public function startPoint()
+    /**
+     * The boundary of a non-closed Curve consists of its end Points.
+     *
+     * @return MultiPoint
+     */
+    public function boundary(): ?Geometry
+    {
+        return $this->isEmpty() || $this->isClosed()
+            ? new MultiPoint()
+            : new MultiPoint([$this->startPoint(), $this->endPoint()]);
+    }
+
+    public function startPoint(): ?Point
     {
         if (!isset($this->startPoint)) {
             $this->startPoint = $this->pointN(1);
@@ -52,7 +75,7 @@ abstract class Curve extends Collection
         return $this->startPoint;
     }
 
-    public function endPoint()
+    public function endPoint(): ?Point
     {
         if (!isset($this->endPoint)) {
             $this->endPoint = $this->pointN($this->numPoints());
@@ -60,7 +83,7 @@ abstract class Curve extends Collection
         return $this->endPoint;
     }
 
-    public function isClosed()
+    public function isClosed(): bool
     {
         if ($this->isEmpty() || !$this->startPoint() || !$this->endPoint()) {
             return false;
@@ -69,7 +92,7 @@ abstract class Curve extends Collection
         }
     }
 
-    public function isRing()
+    public function isRing(): bool
     {
         return ($this->isClosed() && $this->isSimple());
     }
@@ -77,41 +100,29 @@ abstract class Curve extends Collection
     /**
      * @return Point[]
      */
-    public function getPoints()
+    public function getPoints(): array
     {
         return $this->getComponents();
     }
 
-    /**
-     * The boundary of a non-closed Curve consists of its end Points
-     *
-     * @return MultiPoint
-     */
-    public function boundary()
-    {
-        return $this->isEmpty() || $this->isClosed()
-            ? new MultiPoint()
-            : new MultiPoint([$this->startPoint(), $this->endPoint()]);
-    }
-
     // Not valid for this geometry type
     // --------------------------------
-    public function area()
+    public function area(): float
     {
-        return 0;
+        return 0.0;
     }
 
-    public function exteriorRing()
-    {
-        return null;
-    }
-
-    public function numInteriorRings()
+    public function exteriorRing(): ?LineString
     {
         return null;
     }
 
-    public function interiorRingN($n)
+    public function numInteriorRings(): ?int
+    {
+        return null;
+    }
+
+    public function interiorRingN(int $n): ?LineString
     {
         return null;
     }

@@ -67,7 +67,7 @@ abstract class Collection extends Geometry
      *
      * @return bool True if collection has Z value
      */
-    public function is3D()
+    public function is3D(): bool
     {
         return $this->hasZ;
     }
@@ -77,7 +77,7 @@ abstract class Collection extends Geometry
      *
      * @return bool True if collection has measure values
      */
-    public function isMeasured()
+    public function isMeasured(): bool
     {
         return $this->isMeasured;
     }
@@ -87,7 +87,7 @@ abstract class Collection extends Geometry
      *
      * @return Geometry[]
      */
-    public function getComponents()
+    public function getComponents(): array
     {
         return $this->components;
     }
@@ -99,7 +99,7 @@ abstract class Collection extends Geometry
      * @return self
      *
      * */
-    public function invertXY()
+    public function invertXY(): self
     {
         foreach ($this->components as $component) {
             $component->invertXY();
@@ -108,7 +108,7 @@ abstract class Collection extends Geometry
         return $this;
     }
 
-    public function getBBox()
+    public function getBBox(): ?array
     {
         if ($this->isEmpty()) {
             return null;
@@ -171,7 +171,7 @@ abstract class Collection extends Geometry
      *
      * @return array
      */
-    public function asArray()
+    public function asArray(): array
     {
         $array = [];
         foreach ($this->components as $component) {
@@ -183,7 +183,7 @@ abstract class Collection extends Geometry
     /**
      * @return int
      */
-    public function numGeometries()
+    public function numGeometries(): int
     {
         return count($this->components);
     }
@@ -194,7 +194,7 @@ abstract class Collection extends Geometry
      * @param int $n 1-based geometry number
      * @return Geometry|null
      */
-    public function geometryN($n)
+    public function geometryN(int $n): ?Geometry
     {
         return isset($this->components[$n - 1]) ? $this->components[$n - 1] : null;
     }
@@ -204,7 +204,7 @@ abstract class Collection extends Geometry
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         foreach ($this->components as $component) {
             if (!$component->isEmpty()) {
@@ -217,7 +217,7 @@ abstract class Collection extends Geometry
     /**
      * @return int
      */
-    public function numPoints()
+    public function numPoints(): int
     {
         $num = 0;
         foreach ($this->components as $component) {
@@ -229,7 +229,7 @@ abstract class Collection extends Geometry
     /**
      * @return Point[]
      */
-    public function getPoints()
+    public function getPoints(): array
     {
         $points = [];
         // Same as array_merge($points, $component->getPoints()), but 500× faster
@@ -241,7 +241,7 @@ abstract class Collection extends Geometry
      * @param Collection $geometry The geometry from which points will be extracted
      * @param Point[] $points Result array as reference
      */
-    private static function getPointsRecursive($geometry, &$points)
+    private static function getPointsRecursive(Collection $geometry, array &$points)
     {
         foreach ($geometry->components as $component) {
             if ($component instanceof Point) {
@@ -256,7 +256,7 @@ abstract class Collection extends Geometry
      * @param Geometry $geometry
      * @return bool
      */
-    public function equals($geometry)
+    public function equals(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -299,10 +299,11 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Get all line segments
-     * @param bool $toArray return segments as LineString or array of start and end points. Explode(true) is faster
+     * Get all line segments.
+     *
+     * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
      */
-    public function explode($toArray = false)
+    public function explode(bool $toArray = false): ?array
     {
         $parts = [];
         foreach ($this->components as $component) {
@@ -313,7 +314,7 @@ abstract class Collection extends Geometry
         return $parts;
     }
 
-    public function flatten()
+    public function flatten(): void
     {
         if ($this->hasZ() || $this->isMeasured()) {
             foreach ($this->components as $component) {
@@ -325,7 +326,7 @@ abstract class Collection extends Geometry
         }
     }
 
-    public function distance($geometry)
+    public function distance(Geometry $geometry): ?float
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -336,8 +337,8 @@ abstract class Collection extends Geometry
         $distance = null;
         foreach ($this->components as $component) {
             $checkDistance = $component->distance($geometry);
-            if ($checkDistance === 0) {
-                return 0;
+            if ($checkDistance === 0.0) {
+                return 0.0;
             }
             if ($checkDistance === null) {
                 return null;
@@ -354,22 +355,22 @@ abstract class Collection extends Geometry
 
     // Not valid for this geometry type
     // --------------------------------
-    public function x()
+    public function x(): ?float
     {
         return null;
     }
 
-    public function y()
+    public function y(): ?float
     {
         return null;
     }
 
-    public function z()
+    public function z(): ?float
     {
         return null;
     }
 
-    public function m()
+    public function m(): ?float
     {
         return null;
     }

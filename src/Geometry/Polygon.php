@@ -10,6 +10,7 @@ use geoPHP\geoPHP;
  * composed of a finite sequence of straight line segments
  *
  * @method   LineString[] getComponents()
+ * @method   LineString|null geometryN(int $n)
  * @property LineString[] $components
  *
  * @phpstan-consistent-constructor
@@ -74,12 +75,12 @@ class Polygon extends Surface
         return new static($rings);
     }
 
-    public function geometryType()
+    public function geometryType(): string
     {
         return Geometry::POLYGON;
     }
 
-    public function dimension()
+    public function dimension(): int
     {
         return 2;
     }
@@ -89,15 +90,15 @@ class Polygon extends Surface
      * @param bool|false $signed       Usually we want to get positive area,
      *                                 but vertices order (CW or CCW) can be determined from signed area.
      *
-     * @return float|null
+     * @return float
      */
-    public function area($exteriorOnly = false, $signed = false)
+    public function area(bool $exteriorOnly = false, bool $signed = false): float
     {
         if ($this->isEmpty()) {
             return 0.0;
         }
 
-        if ($this->getGeos() && $exteriorOnly == false) {
+        if ($this->getGeos() && !$exteriorOnly) {
             // @codeCoverageIgnoreStart
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
@@ -106,11 +107,8 @@ class Polygon extends Surface
 
         $exteriorRing = $this->components[0];
         $points = $exteriorRing->getComponents();
-
         $pointCount = count($points);
-        if ($pointCount === 0) {
-            return null;
-        }
+
         $a = 0.0;
         foreach ($points as $k => $p) {
             $j = ($k + 1) % $pointCount;
@@ -119,7 +117,7 @@ class Polygon extends Surface
 
         $area = $signed ? ($a / 2) : abs(($a / 2));
 
-        if ($exteriorOnly == true) {
+        if ($exteriorOnly) {
             return $area;
         }
         foreach ($this->components as $delta => $component) {
@@ -134,7 +132,7 @@ class Polygon extends Surface
     /**
      * @return Point
      */
-    public function centroid()
+    public function centroid(): Point
     {
         if ($this->isEmpty()) {
             return new Point();
@@ -171,7 +169,7 @@ class Polygon extends Surface
      * @param LineString $ring
      * @return array
      */
-    protected function getRingCentroidAndArea($ring)
+    protected function getRingCentroidAndArea(LineString $ring): array
     {
         $area = (new Polygon([$ring]))->area(true, true);
 
@@ -192,18 +190,18 @@ class Polygon extends Surface
     }
 
     /**
-     * Find the outermost point from the centroid
+     * Find the outermost point from the centroid.
      *
      * @returns Point The outermost point
      */
-    public function outermostPoint()
+    public function outermostPoint(): Point
     {
         $centroid = $this->centroid();
         if ($centroid->isEmpty()) {
             return $centroid;
         }
 
-        $maxDistance = 0;
+        $maxDistance = 0.0;
         $maxPoint = null;
 
         foreach ($this->exteriorRing()->getPoints() as $point) {
@@ -221,7 +219,7 @@ class Polygon extends Surface
     /**
      * @return LineString
      */
-    public function exteriorRing()
+    public function exteriorRing(): LineString
     {
         if ($this->isEmpty()) {
             return new LineString();
@@ -229,7 +227,7 @@ class Polygon extends Surface
         return $this->components[0];
     }
 
-    public function numInteriorRings()
+    public function numInteriorRings(): int
     {
         if ($this->isEmpty()) {
             return 0;
@@ -237,12 +235,12 @@ class Polygon extends Surface
         return $this->numGeometries() - 1;
     }
 
-    public function interiorRingN($n)
+    public function interiorRingN(int $n): ?LineString
     {
         return $this->geometryN($n + 1);
     }
 
-    public function isSimple()
+    public function isSimple(): ?bool
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -277,7 +275,7 @@ class Polygon extends Surface
      * @param boolean $pointOnVertex - whether a vertex should be considered "in" or not
      * @return boolean
      */
-    public function pointInPolygon($point, $pointOnBoundary = true, $pointOnVertex = true)
+    public function pointInPolygon(Point $point, bool $pointOnBoundary = true, bool $pointOnVertex = true): bool
     {
         $vertices = $this->getPoints();
 
@@ -332,7 +330,7 @@ class Polygon extends Surface
      * @param Point $point
      * @return bool
      */
-    public function pointOnVertex($point)
+    public function pointOnVertex(Point $point): bool
     {
         foreach ($this->getPoints() as $vertex) {
             if ($point->equals($vertex)) {
@@ -348,7 +346,7 @@ class Polygon extends Surface
      * @param Geometry $geometry
      * @return bool
      */
-    public function contains(Geometry $geometry)
+    public function contains(Geometry $geometry): bool
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -386,7 +384,7 @@ class Polygon extends Surface
         return true;
     }
 
-    public function getBBox()
+    public function getBBox(): ?array
     {
         return $this->exteriorRing()->getBBox();
     }
@@ -394,7 +392,7 @@ class Polygon extends Surface
     /**
      * @return LineString|MultiLineString
      */
-    public function boundary(): Geometry
+    public function boundary(): ?Geometry
     {
         if ($this->isEmpty()) {
             return new LineString();
