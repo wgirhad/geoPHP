@@ -491,7 +491,7 @@ class LineString extends Curve
      * @param LineString $segment
      * @return bool
      */
-    public function lineSegmentIntersect($segment): bool
+    public function lineSegmentIntersect(LineString $segment): bool
     {
         return Geometry::segmentIntersects(
             $this->startPoint(),
@@ -505,7 +505,7 @@ class LineString extends Curve
      * @param Geometry|Collection $geometry
      * @return float|null
      */
-    public function distance($geometry): ?float
+    public function distance(Geometry $geometry): ?float
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart

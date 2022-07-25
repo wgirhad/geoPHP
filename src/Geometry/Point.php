@@ -255,11 +255,11 @@ class Point extends Geometry
      * @see: http://php.net/manual/en/function.bccomp.php
      * @see: http://php.net/manual/en/language.types.float.php
      *
-     * @param Point|Geometry $geometry
+     * @param Geometry $geometry
      *
      * @return bool
      */
-    public function equals($geometry): bool
+    public function equals(Geometry $geometry): bool
     {
         return $geometry->geometryType() === Geometry::POINT
             ? (abs($this->x() - $geometry->x()) <= 1.0E-9 && abs($this->y() - $geometry->y()) <= 1.0E-9)
@@ -282,10 +282,10 @@ class Point extends Geometry
     }
 
     /**
-     * @param Geometry|Collection $geometry
+     * @param Geometry $geometry
      * @return float|null
      */
-    public function distance($geometry): ?float
+    public function distance(Geometry $geometry): ?float
     {
         if ($this->isEmpty() || $geometry->isEmpty()) {
             return null;
@@ -475,10 +475,10 @@ class Point extends Geometry
     }
 
     /**
-     * @param bool|false $toArray
+     * @param bool $toArray
      * @return null
      */
-    public function explode($toArray = false): ?array
+    public function explode(bool $toArray = false): ?array
     {
         return null;
     }
