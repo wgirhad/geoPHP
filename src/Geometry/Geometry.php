@@ -315,7 +315,7 @@ abstract class Geometry
      *
      * @return mixed|null The data or null if not exists.
      */
-    public function getData($property = null)
+    public function getData(string $property = null)
     {
         if ($property) {
             return $this->hasDataProperty($property) ? $this->data[$property] : null;

@@ -82,7 +82,7 @@ abstract class Surface extends Collection
         return 0.0;
     }
 
-    public function greatCircleLength($radius = null): float
+    public function greatCircleLength(float $radius = null): float
     {
         return 0.0;
     }

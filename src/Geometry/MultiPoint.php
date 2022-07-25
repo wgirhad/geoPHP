@@ -123,7 +123,7 @@ class MultiPoint extends MultiGeometry
 
     // Not valid for this geometry type
     // --------------------------------
-    public function explode($toArray = false): ?array
+    public function explode(bool $toArray = false): ?array
     {
         return null;
     }

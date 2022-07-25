@@ -434,7 +434,7 @@ class LineString extends Curve
      *
      * @return LineString[]|array<Point>
      */
-    public function explode($toArray = false): ?array
+    public function explode(bool $toArray = false): ?array
     {
         $points = $this->getPoints();
         $numPoints = count($points);

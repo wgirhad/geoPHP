@@ -183,7 +183,7 @@ abstract class Collection extends Geometry
     /**
      * @return int
      */
-    public function numGeometries(): int
+    public function numGeometries(): ?int
     {
         return count($this->components);
     }
