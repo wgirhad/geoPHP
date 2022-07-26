@@ -374,20 +374,20 @@ class GPX implements GeoAdapter
         }
         $indent = $tag === 'trkpt' ? "\t\t" : ($tag === 'rtept' ? "\t" : '');
 
-        if ($geom->hasZ() || $geom->getData() !== null) {
+        if ($geom->is3D() || $geom->getData() !== null) {
             $node = $indent . "<" . $this->nss . $tag
-                    . " lat=\"" . $geom->getY() . "\" lon=\"" . $geom->getX() . "\">\n";
-            if ($geom->hasZ()) {
+                    . " lat=\"" . $geom->y() . "\" lon=\"" . $geom->x() . "\">\n";
+            if ($geom->is3D()) {
                 $geom->setData('ele', $geom->z());
             }
             $node .= self::processGeometryData($geom, $this->gpxTypes->get($tag . 'Type'), $indent . "\t") .
                     $indent . "</" . $this->nss . $tag . ">\n";
-            if ($geom->hasZ()) {
+            if ($geom->is3D()) {
                 $geom->setData('ele', null);
             }
             return $node;
         }
-        return $indent . "<" . $this->nss . $tag . " lat=\"" . $geom->getY() . "\" lon=\"" . $geom->getX() . "\" />\n";
+        return $indent . "<" . $this->nss . $tag . " lat=\"" . $geom->y() . "\" lon=\"" . $geom->x() . "\" />\n";
     }
 
     /**

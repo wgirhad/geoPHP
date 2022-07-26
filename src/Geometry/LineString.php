@@ -466,7 +466,7 @@ class LineString extends Curve
 
         // As of OGC specification a ring is simple only if its start and end points equals in all coordinates
         // Neither GEOS, nor PostGIS support it
-//        if ($this->hasZ()
+//        if ($this->is3D()
 //                && $this->startPoint()->equals($this->endPoint())
 //                && $this->startPoint()->z() !== $this->endPoint()->z()
 //        ) {

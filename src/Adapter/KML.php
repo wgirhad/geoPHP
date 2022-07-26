@@ -278,7 +278,7 @@ class KML implements GeoAdapter
         if ($geometry->isEmpty()) {
             $str .= "0,0";
         } else {
-            $str .= $geometry->x() . ',' . $geometry->y() . ($geometry->hasZ() ? ',' . $geometry->z() : '');
+            $str .= $geometry->x() . ',' . $geometry->y() . ($geometry->is3D() ? ',' . $geometry->z() : '');
         }
         return $str . '</' . $this->nss . 'coordinates></' . $this->nss . "Point>\n";
     }

@@ -453,7 +453,7 @@ class WKT implements GeoAdapter
             // @codeCoverageIgnoreEnd
         }
         $this->hasM = $geometry->isMeasured();
-        $this->hasZ = $geometry->hasZ();
+        $this->hasZ = $geometry->is3D();
 
         if ($geometry->isEmpty()) {
             return strtoupper($geometry->geometryType()) . ' EMPTY';
@@ -510,10 +510,10 @@ class WKT implements GeoAdapter
         $pointText = $geometry->x() . ' ' . $geometry->y();
 
         if ($this->hasZ) {
-            $pointText .= ' ' . ($geometry->getZ() ?: 0);
+            $pointText .= ' ' . ($geometry->z() ?: 0);
         }
         if ($this->hasM) {
-            $pointText .= ' ' . ($geometry->getM() ?: 0);
+            $pointText .= ' ' . ($geometry->m() ?: 0);
         }
 
         return trim($pointText);

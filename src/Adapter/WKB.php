@@ -292,7 +292,7 @@ class WKB implements GeoAdapter
      */
     protected function writeGeometry($geometry)
     {
-        $this->hasZ = $geometry->hasZ();
+        $this->hasZ = $geometry->is3D();
         $this->hasM = $geometry->isMeasured();
 
         $wkb = $this->writer->writeSInt8($this->writer->isBigEndian() ? self::WKB_NDR : self::WKB_XDR);
@@ -422,10 +422,10 @@ class WKB implements GeoAdapter
         if ($this->hasM) {
             $type = $type | $this::M_MASK;
         }
-        if ($geometry->SRID() && $writeSRID) {
+        if ($geometry->getSRID() && $writeSRID) {
             $type = $type | $this::SRID_MASK;
         }
         return $this->writer->writeUInt32($type) .
-            ($geometry->SRID() && $writeSRID ? $this->writer->writeUInt32($this->SRID) : '');
+            ($geometry->getSRID() && $writeSRID ? $this->writer->writeUInt32($this->SRID) : '');
     }
 }

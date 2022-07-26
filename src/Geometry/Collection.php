@@ -43,7 +43,7 @@ abstract class Collection extends Geometry
                         $components[$i]->geometryType() . 's (' . ($i + 1) . '. component)'
                     );
                 }
-                if ($components[$i]->hasZ() && !$this->hasZ) {
+                if ($components[$i]->is3D() && !$this->hasZ) {
                     $this->hasZ = true;
                 }
                 if ($components[$i]->isMeasured() && !$this->isMeasured) {
@@ -316,7 +316,7 @@ abstract class Collection extends Geometry
 
     public function flatten(): void
     {
-        if ($this->hasZ() || $this->isMeasured()) {
+        if ($this->is3D() || $this->isMeasured()) {
             foreach ($this->components as $component) {
                 $component->flatten();
             }

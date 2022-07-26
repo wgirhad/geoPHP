@@ -247,6 +247,6 @@ class PolygonTest extends TestCase
         $boundary = $geometry->boundary();
 
         $this->assertInstanceOf(Geometry::class, $boundary);
-        $this->assertEquals($results['boundaryType'], $boundary->getGeomType());
+        $this->assertEquals($results['boundaryType'], $boundary->geometryType());
     }
 }

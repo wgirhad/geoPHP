@@ -28,10 +28,10 @@ use \geoPHP\geoPHP;
 
 // Polygon WKT example
 $polygon = geoPHP::load('POLYGON((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2))','wkt');
-$area = $polygon->getArea();
-$centroid = $polygon->getCentroid();
-$centX = $centroid->getX();
-$centY = $centroid->getY();
+$area = $polygon->area();
+$centroid = $polygon->centroid();
+$centX = $centroid->x();
+$centY = $centroid->y();
 
 print "This polygon has an area of ".$area." and a centroid with X=".$centX." and Y=".$centY;
 

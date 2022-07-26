@@ -66,8 +66,8 @@ function testGeometryMethods(Geometry $geometry): void
     $geometry->length();
     $geometry->greatCircleLength();
     $geometry->haversineLength();
-    $geometry->getX();
-    $geometry->getY();
+    $geometry->x();
+    $geometry->y();
     $geometry->numGeometries();
     $geometry->geometryN(1);
     $geometry->startPoint();
@@ -83,22 +83,22 @@ function testGeometryMethods(Geometry $geometry): void
     $geometry->geometryType();
     $geometry->SRID();
     $geometry->setSRID(4326);
-    $geometry->hasZ();
+    $geometry->is3D();
     $geometry->isMeasured();
     $geometry->isEmpty();
     $geometry->coordinateDimension();
     $geometry->isSimple();
     $geometry->equals($geometry);
+    $geometry->asText();
+    $geometry->asBinary();
 
     // Aliases
     $geometry->getCentroid();
     $geometry->getArea();
-    $geometry->x();
-    $geometry->y();
+    $geometry->getX();
+    $geometry->getY();
     $geometry->geos();
     $geometry->getSRID();
-    $geometry->asText();
-    $geometry->asBinary();
 
     // GEOS only functions
     try {
@@ -297,7 +297,7 @@ function testGeosMethods(Geometry $geometry): void
 
                 // Get the length of the diagonal of the bbox - this is used to scale the haustorff distance
                 // Using Pythagorean theorem
-                $bBox = $geosResult->getBoundingBox();
+                $bBox = $geosResult->getBBox();
                 $scale = sqrt(pow($bBox['maxy'] - $bBox['miny'], 2) + pow($bBox['maxx'] - $bBox['minx'], 2));
 
                 // The difference in the output of GEOS and native-PHP methods

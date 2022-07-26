@@ -4,6 +4,7 @@ namespace geoPHP\Geometry;
 
 use geoPHP\Exception\UnsupportedMethodException;
 use geoPHP\geoPHP;
+use GEOSGeometry;
 
 /**
  * Geometry is the root class of the hierarchy. Geometry is an abstract (non-instantiable) class.
@@ -260,7 +261,7 @@ abstract class Geometry
      *
      * @return bool True if collection has Z value
      */
-    public function is3D()
+    public function is3D(): bool
     {
         return $this->hasZ;
     }
@@ -270,12 +271,12 @@ abstract class Geometry
      *
      * @return bool True if collection has measure value
      */
-    public function isMeasured()
+    public function isMeasured(): bool
     {
         return $this->isMeasured;
     }
 
-    public function SRID()
+    public function getSRID(): ?int
     {
         return $this->srid;
     }
@@ -283,7 +284,7 @@ abstract class Geometry
     /**
      * @param int|null $srid Spatial Reference System Identifier
      */
-    public function setSRID(?int $srid)
+    public function setSRID(?int $srid): void
     {
         if ($this->getGeos() && $srid !== null) {
             // @codeCoverageIgnoreStart
@@ -299,7 +300,7 @@ abstract class Geometry
      * @param string|array $property The name of the data or an associative array.
      * @param mixed|null $value The data. Can be of any type (string, integer, array, etc.).
      */
-    public function setData($property, $value = null)
+    public function setData($property, $value = null): void
     {
         if (is_array($property)) {
             $this->data = $property;
@@ -395,12 +396,22 @@ abstract class Geometry
 
     public function __toString(): string
     {
-        return $this->out($this->getSRID() ? 'ewkt' : 'wkt');
+        return $this->out('ewkt');
+    }
+
+    public function asText(): string
+    {
+        return (string) $this;
+    }
+
+    public function asBinary(): string
+    {
+        return $this->out('wkb');
     }
 
     public function coordinateDimension(): int
     {
-        return 2 + ($this->hasZ() ? 1 : 0) + ($this->isMeasured() ? 1 : 0);
+        return 2 + ($this->z() ? 1 : 0) + ($this->isMeasured() ? 1 : 0);
     }
 
     /**
@@ -452,61 +463,89 @@ abstract class Geometry
     //                     Aliases                     //
     // ----------------------------------------------- //
 
-    public function hasZ()
+    /**
+     * @deprecated 2.1
+     */
+    public function hasZ(): bool
     {
         return $this->is3D();
     }
-    public function getX()
+    /**
+     * @deprecated 2.1
+     */
+    public function getX(): ?float
     {
         return $this->x();
     }
-    public function getY()
+    /**
+     * @deprecated 2.1
+     */
+    public function getY(): ?float
     {
         return $this->y();
     }
-    public function getZ()
+    /**
+     * @deprecated 2.1
+     */
+    public function getZ(): ?float
     {
         return $this->z();
     }
-    public function getM()
+    /**
+     * @deprecated 2.1
+     */
+    public function getM(): ?float
     {
         return $this->m();
     }
-    public function getBoundingBox()
+    /**
+     * @deprecated 2.1
+     */
+    public function getBoundingBox(): ?array
     {
         return $this->getBBox();
     }
-    public function dump()
+    /**
+     * @deprecated 2.1
+     */
+    public function dump(): array
     {
         return $this->getComponents();
     }
-    public function getCentroid()
+    /**
+     * @deprecated 2.1
+     */
+    public function getCentroid(): ?Point
     {
         return $this->centroid();
     }
-    public function getArea()
+    /**
+     * @deprecated 2.1
+     */
+    public function getArea(): ?float
     {
         return $this->area();
     }
-    public function geos()
+    /**
+     * @deprecated 2.1
+     */
+    public function geos(): ?GEOSGeometry
     {
         return $this->getGeos();
     }
-    public function getGeomType()
+    /**
+     * @deprecated 2.1
+     */
+    public function getGeomType(): string
     {
         return $this->geometryType();
     }
-    public function getSRID()
+    /**
+     * @deprecated 2.1
+     */
+    public function SRID(): ?int
     {
-        return $this->SRID();
-    }
-    public function asText()
-    {
-        return $this->out('wkt');
-    }
-    public function asBinary()
-    {
-        return $this->out('wkb');
+        return $this->getSRID();
     }
 
     // ----------------------------------------------- //

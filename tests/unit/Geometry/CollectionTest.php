@@ -143,9 +143,9 @@ class CollectionTest extends TestCase
         $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
         $stub->flatten();
 
-        $this->assertFalse($stub->hasZ());
+        $this->assertFalse($stub->is3D());
         $this->assertFalse($stub->isMeasured());
-        $this->assertFalse($stub->getPoints()[0]->hasZ());
+        $this->assertFalse($stub->getPoints()[0]->is3D());
     }
 
     /**

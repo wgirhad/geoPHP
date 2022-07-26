@@ -381,7 +381,7 @@ class TWKB implements GeoAdapter
      */
     protected function writeGeometry($geometry)
     {
-        $this->writeOptions['hasZ'] = $geometry->hasZ();
+        $this->writeOptions['hasZ'] = $geometry->is3D();
         $this->writeOptions['hasM'] = $geometry->isMeasured();
 
         // Type and precision
@@ -397,7 +397,7 @@ class TWKB implements GeoAdapter
         // TODO: implement this (needs metadata support in geoPHP)
         //$metadataHeader += $this->writeOptions['hasIdList'] << 2;
         // Is there extended precision information?
-        $metadataHeader += ($geometry->hasZ() || $geometry->isMeasured()) << 3;
+        $metadataHeader += ($geometry->is3D() || $geometry->isMeasured()) << 3;
         // Is this an empty geometry?
         $metadataHeader += $geometry->isEmpty() << 4;
 
@@ -431,14 +431,14 @@ class TWKB implements GeoAdapter
         }
 
         if ($this->writeOptions['includeBoundingBoxes']) {
-            $bBox = $geometry->getBoundingBox();
+            $bBox = $geometry->getBBox();
             // X
             $twkbBox = $this->writer->writeSVarInt($bBox['minx'] * $this->writeOptions['xyFactor']);
             $twkbBox .= $this->writer->writeSVarInt(($bBox['maxx'] - $bBox['minx']) * $this->writeOptions['xyFactor']);
             // Y
             $twkbBox .= $this->writer->writeSVarInt($bBox['miny'] * $this->writeOptions['xyFactor']);
             $twkbBox .= $this->writer->writeSVarInt(($bBox['maxy'] - $bBox['miny']) * $this->writeOptions['xyFactor']);
-            if ($geometry->hasZ()) {
+            if ($geometry->is3D()) {
                 $bBox['minz'] = $geometry->minimumZ();
                 $bBox['maxz'] = $geometry->maximumZ();
                 $twkbBox .= $this->writer->writeSVarInt(
@@ -459,9 +459,9 @@ class TWKB implements GeoAdapter
             $twkbGeom = $twkbBox . $twkbGeom;
         }
 
-        if ($geometry->hasZ() || $geometry->isMeasured()) {
+        if ($geometry->is3D() || $geometry->isMeasured()) {
             $extendedPrecision = 0;
-            if ($geometry->hasZ()) {
+            if ($geometry->is3D()) {
                 $extendedPrecision |= 0x1 | ($this->writeOptions['decimalDigitsZ'] << 2);
             }
             if ($geometry->isMeasured()) {
