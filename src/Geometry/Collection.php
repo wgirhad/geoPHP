@@ -21,6 +21,16 @@ abstract class Collection extends Geometry
     protected $components = [];
 
     /**
+     * @var bool True if Geometry has Z (altitude) value
+     */
+    protected $hasZ = false;
+
+    /**
+     * @var bool True if Geometry has M (measure) value
+     */
+    protected $isMeasured = false;
+
+    /**
      * Checks and stores geometry components.
      *
      * @param Geometry[] $components           Array of geometries.
@@ -75,7 +85,7 @@ abstract class Collection extends Geometry
     /**
      * Check if Geometry has a measure value
      *
-     * @return bool True if collection has measure values
+     * @return bool True if collection has measure value
      */
     public function isMeasured(): bool
     {

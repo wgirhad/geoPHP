@@ -66,7 +66,6 @@ class Point extends Geometry
                     'Cannot construct Point, z must be numeric, ' . gettype($x) . ' given.'
                 );
             }
-            $this->hasZ = true;
             $this->z = (float) $z;
         }
 
@@ -77,7 +76,6 @@ class Point extends Geometry
                     'Cannot construct Point, m must be numeric, ' . gettype($x) . ' given.'
                 );
             }
-            $this->isMeasured = true;
             $this->m = (float) $m;
         }
     }
@@ -148,6 +146,16 @@ class Point extends Geometry
         return $this->m;
     }
 
+    public function is3D(): bool
+    {
+        return $this->z !== null;
+    }
+
+    public function isMeasured(): bool
+    {
+        return $this->m !== null;
+    }
+
     /**
      * Inverts x and y coordinates
      * Useful with old applications still using lng lat
@@ -193,13 +201,13 @@ class Point extends Geometry
         if ($this->isEmpty()) {
             return [];
         }
-        if (!$this->hasZ && !$this->isMeasured) {
+        if (!$this->is3D() && !$this->isMeasured()) {
             return [$this->x, $this->y];
         }
-        if ($this->hasZ && $this->isMeasured) {
+        if ($this->is3D() && $this->isMeasured()) {
             return [$this->x, $this->y, $this->z, $this->m];
         }
-        if ($this->hasZ) {
+        if ($this->is3D()) {
             return [$this->x, $this->y, $this->z];
         }
         // if isMeasured
@@ -275,8 +283,6 @@ class Point extends Geometry
     {
         $this->z = null;
         $this->m = null;
-        $this->hasZ = false;
-        $this->isMeasured = false;
 
         $this->setGeos(null);
     }
@@ -364,22 +370,30 @@ class Point extends Geometry
 
     public function minimumZ(): ?float
     {
-        return $this->hasZ ? $this->z() : null;
+        return $this->is3D()
+            ? $this->z()
+            : null;
     }
 
     public function maximumZ(): ?float
     {
-        return $this->hasZ ? $this->z() : null;
+        return $this->is3D()
+            ? $this->z()
+            : null;
     }
 
     public function minimumM(): ?float
     {
-        return $this->isMeasured ? $this->m() : null;
+        return $this->isMeasured()
+            ? $this->m()
+            : null;
     }
 
     public function maximumM(): ?float
     {
-        return $this->isMeasured ? $this->m() : null;
+        return $this->isMeasured()
+            ? $this->m()
+            : null;
     }
 
     /* The following methods are not valid for this geometry type */

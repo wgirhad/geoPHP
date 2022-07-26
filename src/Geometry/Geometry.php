@@ -48,16 +48,6 @@ abstract class Geometry
     const TIN = 'TIN';
     const TRIANGLE = 'Triangle';
 
-    /**
-     * @var bool True if Geometry has Z (altitude) value
-     */
-    protected $hasZ = false;
-
-    /**
-     * @var bool True if Geometry has M (measure) value
-     */
-    protected $isMeasured = false;
-
     /** @var int|null $srid Spatial Reference System Identifier (http://en.wikipedia.org/wiki/SRID) */
     protected $srid = null;
 
@@ -211,6 +201,10 @@ abstract class Geometry
     //          Abstract Non-Standard Methods          //
     // ----------------------------------------------- //
 
+    abstract public function is3D(): bool;
+
+    abstract public function isMeasured(): bool;
+
     abstract public function getBBox(): ?array;
 
     abstract public function asArray(): array;
@@ -255,26 +249,6 @@ abstract class Geometry
     // ----------------------------------------------- //
     //        Standard – Common to all geometries      //
     // ----------------------------------------------- //
-
-    /**
-     * Check if Geometry has Z (altitude) coordinate
-     *
-     * @return bool True if collection has Z value
-     */
-    public function is3D(): bool
-    {
-        return $this->hasZ;
-    }
-
-    /**
-     * Check if Geometry has a measure value
-     *
-     * @return bool True if collection has measure value
-     */
-    public function isMeasured(): bool
-    {
-        return $this->isMeasured;
-    }
 
     public function getSRID(): ?int
     {
