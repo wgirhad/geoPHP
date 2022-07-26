@@ -52,7 +52,7 @@ abstract class Surface extends Collection
         return null;
     }
 
-    public function pointN($n): ?Point
+    public function pointN(int $n): ?Point
     {
         return null;
     }
