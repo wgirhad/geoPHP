@@ -12,7 +12,6 @@ namespace geoPHP;
 
 use geoPHP\Adapter\GeoHash;
 use geoPHP\Exception\IOException;
-use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 
@@ -103,59 +102,53 @@ class geoPHP
     }
 
     /**
-     * Converts data to Geometry using geo adapters
+     * Load from an adapter format (like wkt) into a Geometry.
      *
-     * If $data is an array, all passed in values will be combined into a single geometry
+     * If $data is array, all passed values will be combined into a single geometry.
      *
-     * @param string|string[]|Geometry $data The data in any supported format, including geoPHP Geometry
-     * @param array $args Further arguments will be passed to the geo adapter
+     * @param string|string[]|Geometry|Geometry[] $data The data in any supported format, including geoPHP Geometry.
+     * @param string $format Format of the data ('wkt','wkb','json', …). Tries to detect automatically if omitted.
+     * @param array $args Further arguments will be passed to the geo adapter.
      *
      * @throws \Exception|IOException
      *
-     * @return Collection|Geometry
+     * @return Geometry
      */
-    public static function load($data, ...$args): Geometry
+    public static function load($data, string $format = null, ...$args): Geometry
     {
-        /** @var null|string $type Data type. Tries to detect if omitted */
-        $type = count($args) && @array_key_exists($args[0], self::$adapterMap)
-            ? strtolower(array_shift($args))
-            : null;
+        if (is_array($data)) {
+            // Data is an array, combine all passed in items into a single geometry.
+            $geometries = [];
+            foreach ($data as $item) {
+                $geometries[] = static::load($item, $format, $args);
+            }
+            return geoPHP::buildGeometry($geometries);
+        }
 
         // Auto-detect type if needed
-        if (!$type) {
-            // If the user is trying to load a Geometry from a Geometry... Just pass it back
-            if (is_object($data) && $data instanceof Geometry) {
+        if (!$format) {
+            // If the input is already a Geometry, just pass it back.
+            if ($data instanceof Geometry) {
                 return $data;
             }
 
-            $detected = geoPHP::detectFormat($data);
-            if (!$detected) {
-                throw new \Exception("Can not detect format");
+            $detectedFormat = geoPHP::detectFormat($data);
+            if (!$detectedFormat) {
+                throw new IOException("Can not detect format");
             }
-            $format = explode(':', $detected);
-            $type = array_shift($format);
-            $args = $format ?: $args;
+            $formatParts = explode(':', $detectedFormat);
+            $format = array_shift($formatParts);
+            $args = $formatParts ?: $args;
         }
 
-        if (!array_key_exists($type, self::$adapterMap)) {
-            throw new \Exception('geoPHP could not find an adapter of type ' . htmlentities($type));
+        if (!array_key_exists($format, self::$adapterMap)) {
+            throw new IOException('geoPHP could not find an adapter of type ' . htmlentities($format));
         }
-        $adapterType = 'geoPHP\\Adapter\\' . self::$adapterMap[$type];
 
+        $adapterType = 'geoPHP\\Adapter\\' . self::$adapterMap[$format];
         $adapter = new $adapterType();
 
-        // Data is not an array, just pass it normally
-        if (!is_array($data)) {
-            $result = call_user_func_array([$adapter, "read"], array_merge([$data], $args));
-        } else { // Data is an array, combine all passed in items into a single geometry
-            $geometries = [];
-            foreach ($data as $item) {
-                $geometries[] = call_user_func_array([$adapter, "read"], array_merge($item, $args));
-            }
-            $result = geoPHP::buildGeometry($geometries);
-        }
-
-        return $result;
+        return call_user_func_array([$adapter, "read"], array_merge([$data], $args));
     }
 
     /**
