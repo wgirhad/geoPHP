@@ -31,7 +31,8 @@ class MultiPolygon extends MultiSurface
      *
      * Creates a MultiPolygon from array of coordinates
      *
-     * @param array $coordinateArray Multi-dimensional array of coordinates
+     * @param array{}|array<array{}|array<array<array<float|int|null>>>> $coordinateArray
+     *                                                                   Multi-dimensional array of coordinates.
      *
      * @throws InvalidGeometryException
      *

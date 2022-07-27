@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class GeosTest extends TestCase
 {
 
-  function testGeos()
+  function testGeos(): void
   {
     if (!geoPHP::isGeosInstalled()) {
       $this->markTestSkipped('GEOS not installed');

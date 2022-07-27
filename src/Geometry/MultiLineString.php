@@ -31,7 +31,8 @@ class MultiLineString extends MultiCurve
      *
      * Creates a MultiLineString from array of coordinates
      *
-     * @param array $coordinateArray Multi-dimensional array of coordinates
+     * @param array{}|array<array{}|array<array<float|int|null>>> $coordinateArray
+     *                                                            Multi-dimensional array of coordinates.
      *
      * @throws InvalidGeometryException
      *

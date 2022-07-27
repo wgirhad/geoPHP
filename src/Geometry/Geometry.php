@@ -296,14 +296,15 @@ abstract class Geometry
      *
      * @see envelope()
      *
-     * @return array|null Array of min and max values of x and y coordinates.
+     * @return array{maxy: float, miny: float, maxx: float, minx: float}|null
+     *         Array of min and max values of x and y coordinates.
      */
     abstract public function getBBox(): ?array;
 
     /**
      * Get the given geometry as an array of components (recursive)
      *
-     * @return array
+     * @return array<mixed>
      */
     abstract public function asArray(): array;
 
@@ -335,7 +336,7 @@ abstract class Geometry
      *
      * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
      *
-     * @return array|null Returns line segments or null for 0-deminsional geometries.
+     * @return array<mixed>|null Returns line segments or null for 0-deminsional geometries.
      */
     abstract public function explode(bool $toArray = false): ?array;
 
@@ -392,7 +393,7 @@ abstract class Geometry
     /**
      * Adds custom data to the geometry.
      *
-     * @param string|array $property The name of the data or an associative array.
+     * @param string|array<mixed> $property The name of the data or an associative array.
      * @param mixed|null $value The data. Can be of any type (string, integer, array, etc.).
      */
     public function setData($property, $value = null): void
@@ -604,6 +605,7 @@ abstract class Geometry
         return $this->m();
     }
     /**
+     * @return array<string, float>
      * @deprecated 2.1
      */
     public function getBoundingBox(): ?array
@@ -611,6 +613,7 @@ abstract class Geometry
         return $this->getBBox();
     }
     /**
+     * @return array<mixed>
      * @deprecated 2.1
      */
     public function dump(): array
@@ -744,7 +747,7 @@ abstract class Geometry
     }
 
     /**
-     * @return array
+     * @return array{valid: bool, reason: string, location: GEOSGeometry}
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */

@@ -16,7 +16,7 @@ class GeoHashTest extends TestCase
      * test cases for adjacent geohashes.
      * @covers ::adjacent
      */
-    public function testAdjacent()
+    public function testAdjacent(): void
     {
         $this->assertEquals(
             'xne',

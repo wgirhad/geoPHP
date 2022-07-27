@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class File20120702Test extends TestCase
 {
 
-  function testMethods()
+  function testMethods(): void
   {
     $format = 'gpx';
     $value = file_get_contents('tests/input/20120702.gpx');
@@ -51,7 +51,7 @@ class File20120702Test extends TestCase
       if (isset($method['argument'])) {
         $argument = $method['argument'];
       }
-      $this->_methods_tester($geometry, $method_name, $argument);
+      $this->_methodsTester($geometry, $method_name, $argument);
     }
   }
 
@@ -60,7 +60,8 @@ class File20120702Test extends TestCase
    * @param string $method_name
    * @param mixed $argument
    */
-  function _methods_tester($geometry, $method_name, $argument) {
+  function _methodsTester(Geometry $geometry, string $method_name, $argument): void
+  {
 
     if (!method_exists($geometry, $method_name)) {
       $this->fail("Method ".$method_name.'() doesn\'t exists.');

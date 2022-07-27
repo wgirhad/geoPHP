@@ -30,8 +30,14 @@ abstract class Curve extends Collection
         parent::__construct($components, Point::class, false);
     }
 
+    /**
+     * @var Point|null
+     */
     protected $startPoint = null;
 
+    /**
+     * @var Point|null
+     */
     protected $endPoint = null;
 
     /**

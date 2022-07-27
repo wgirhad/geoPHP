@@ -21,10 +21,10 @@ use PHPUnit\Framework\TestCase;
 class PolygonTest extends TestCase
 {
     /**
-     * @param array $coordinateArray
+     * @param array<mixed> $coordinateArray
      * @return LineString[]
      */
-    private function createComponents($coordinateArray): array
+    private function createComponents(array $coordinateArray): array
     {
         $lines = [];
         foreach ($coordinateArray as $point) {
@@ -33,6 +33,9 @@ class PolygonTest extends TestCase
         return $lines;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function providerConstructorValidComponents(): array
     {
         return [
@@ -54,8 +57,10 @@ class PolygonTest extends TestCase
     /**
      * @dataProvider providerConstructorValidComponents
      * @covers ::__construct
+     *
+     * @param array<mixed> $points
      */
-    public function testConstructor(array $points)
+    public function testConstructor(array $points): void
     {
         $polygon = new Polygon($this->createComponents($points));
 
@@ -66,7 +71,7 @@ class PolygonTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorNonArrayComponentTypeError()
+    public function testConstructorNonArrayComponentTypeError(): void
     {
         $this->expectException(\TypeError::class);
         $this->expectErrorMessageMatches('/Argument #?1 .+ type array, string given/');
@@ -78,7 +83,7 @@ class PolygonTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorEmptyComponent()
+    public function testConstructorEmptyComponent(): void
     {
         $this->expectException(InvalidGeometryException::class);
         $this->expectErrorMessageMatches('/Cannot create a collection of empty LineStrings/');
@@ -86,7 +91,10 @@ class PolygonTest extends TestCase
         new Polygon([new LineString()]);
     }
 
-    public function providerConstructorFewPoints()
+    /**
+     * @return array<string, array<LineString>>
+     */
+    public function providerConstructorFewPoints(): array
     {
         return [
             'two points'       => [LineString::fromArray([[1, 2], [2, 3]])],
@@ -98,7 +106,7 @@ class PolygonTest extends TestCase
      * @dataProvider providerConstructorFewPoints
      * @covers ::__construct
      */
-    public function testConstructorFewPointThrowsException($component)
+    public function testConstructorFewPointThrowsException(LineString $component): void
     {
         $this->expectException(InvalidGeometryException::class);
         $this->expectExceptionMessageMatches(
@@ -111,7 +119,7 @@ class PolygonTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorWrongComponentTypeThrowsException()
+    public function testConstructorWrongComponentTypeThrowsException(): void
     {
         $this->expectException(InvalidGeometryException::class);
         $this->expectExceptionMessageMatches('/Cannot construct .+Polygon\. Expected .+LineString components, got.+/');
@@ -120,6 +128,9 @@ class PolygonTest extends TestCase
         new Polygon([new Point()]);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function providerValidComponents(): array
     {
         $ring1Points = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
@@ -175,8 +186,11 @@ class PolygonTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::fromArray
+     *
+     * @param array<?array<array<int|float>>> $points
+     * @param Polygon $expectedGeometry
      */
-    public function testFromArray(array $points, Polygon $expectedGeometry)
+    public function testFromArray(array $points, Polygon $expectedGeometry): void
     {
         $fromArray = Polygon::fromArray($points);
 
@@ -186,7 +200,7 @@ class PolygonTest extends TestCase
     /**
      * @covers ::geometryType
      */
-    public function testGeometryType()
+    public function testGeometryType(): void
     {
         $polygon = new Polygon();
 
@@ -201,7 +215,7 @@ class PolygonTest extends TestCase
     /**
      * @covers ::dimension
      */
-    public function testDimension()
+    public function testDimension(): void
     {
         $polygon = new Polygon();
 
@@ -211,6 +225,10 @@ class PolygonTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::exteriorRing
+     *
+     * @param array<array<int>> $points
+     * @param Polygon $geometry
+     * @param array<mixed> $results
      */
     public function testExteriorRing(array $points, Polygon $geometry, array $results): void
     {
@@ -220,6 +238,10 @@ class PolygonTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::numInteriorRings
+     *
+     * @param array<array<int>> $points
+     * @param Polygon $geometry
+     * @param array<mixed> $results
      */
     public function testNumInteriorRings(array $points, Polygon $geometry, array $results): void
     {
@@ -229,6 +251,10 @@ class PolygonTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::interiorRingN
+     *
+     * @param array<array<int>> $points
+     * @param Polygon $geometry
+     * @param array<mixed> $results
      */
     public function testInteriorRingN(array $points, Polygon $geometry, array $results): void
     {
@@ -243,6 +269,10 @@ class PolygonTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::boundary
+     *
+     * @param array<array<int>> $points
+     * @param Polygon $geometry
+     * @param array<mixed> $results
      */
     public function testBoundary(array $points, Polygon $geometry, array $results): void
     {

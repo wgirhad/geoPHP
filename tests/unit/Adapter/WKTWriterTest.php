@@ -3,7 +3,6 @@
 namespace geoPHP\Tests\Adapter;
 
 use geoPHP\Adapter\WKT;
-use geoPHP\Exception\FileFormatException;
 use geoPHP\Geometry\{
     Geometry,
     GeometryCollection,
@@ -65,6 +64,9 @@ class WKTWriterTest extends TestCase
         $this->assertEquals($expectedWkt, $wkt);
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerPoint(): array
     {
         return [
@@ -95,6 +97,9 @@ class WKTWriterTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerLineString(): array
     {
         return [
@@ -125,6 +130,9 @@ class WKTWriterTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerPolygon(): array
     {
         return [
@@ -180,6 +188,9 @@ class WKTWriterTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerMultiPoint(): array
     {
         return [
@@ -218,6 +229,9 @@ class WKTWriterTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerMultiLineString(): array
     {
         return [
@@ -257,6 +271,9 @@ class WKTWriterTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerMultiPolygon(): array
     {
         return [
@@ -307,6 +324,9 @@ class WKTWriterTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerGeometryCollection(): array
     {
         return [

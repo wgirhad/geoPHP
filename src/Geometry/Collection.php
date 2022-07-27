@@ -140,7 +140,8 @@ abstract class Collection extends Geometry
      *
      * @see envelope()
      *
-     * @return array|null Array of min and max values of x and y coordinates.
+     * @return null|array{maxy: float, miny: float, maxx: float, minx: float}
+     *         Array of min and max values of x and y coordinates.
      */
     public function getBBox(): ?array
     {
@@ -203,7 +204,7 @@ abstract class Collection extends Geometry
     /**
      * Returns every sub-geometry as a multidimensional array.
      *
-     * @return array
+     * @return array<mixed>
      */
     public function asArray(): array
     {
@@ -284,7 +285,7 @@ abstract class Collection extends Geometry
      * @param Collection $geometry The geometry from which points will be extracted
      * @param Point[] $points Result array as reference
      */
-    private static function getPointsRecursive(Collection $geometry, array &$points)
+    private static function getPointsRecursive(Collection $geometry, array &$points): void
     {
         foreach ($geometry->components as $component) {
             if ($component instanceof Point) {
@@ -350,7 +351,7 @@ abstract class Collection extends Geometry
      *
      * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
      *
-     * @return array|null Returns line segments or null for 0-deminsional geometries.
+     * @return LineString[]|null Returns line segments or null for 0-deminsional geometries.
      */
     public function explode(bool $toArray = false): ?array
     {

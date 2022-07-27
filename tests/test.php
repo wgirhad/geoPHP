@@ -341,7 +341,7 @@ function testDetection(string $value, string $format): void
     geoPHP::load($value);
 }
 
-function FailOnError($errorLevel, $errorMessage, $errorFile, $errorLine)
+function FailOnError(int $errorLevel, string $errorMessage, string $errorFile, int $errorLine): ?bool
 {
     echo "$errorLevel: $errorMessage in $errorFile on line $errorLine\n";
     echo "\e[31mFAIL\e[39m\n";

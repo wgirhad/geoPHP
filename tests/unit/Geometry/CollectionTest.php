@@ -26,7 +26,10 @@ use PHPUnit\Framework\TestCase;
  */
 class CollectionTest extends TestCase
 {
-    public function providerIs3D()
+    /**
+     * @return array<array{array<Geometry>, bool}>
+     */
+    public function providerIs3D(): array
     {
         return [
                 [[new Point(1, 2)], false],
@@ -38,8 +41,11 @@ class CollectionTest extends TestCase
     /**
      * @dataProvider providerIs3D
      * @covers ::is3D
+     *
+     * @param Geometry[] $components
+     * @param bool       $result
      */
-    public function testIs3D(array $components, bool $result)
+    public function testIs3D(array $components, bool $result): void
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
@@ -47,7 +53,10 @@ class CollectionTest extends TestCase
         $this->assertEquals($result, $stub->is3D());
     }
 
-    public function providerIsMeasured()
+    /**
+     * @return array<array{array<Geometry>, bool}>
+     */
+    public function providerIsMeasured(): array
     {
         return [
                 [[new Point()], false],
@@ -61,8 +70,11 @@ class CollectionTest extends TestCase
     /**
      * @dataProvider providerIsMeasured
      * @covers ::isMeasured
+     *
+     * @param Geometry[] $components
+     * @param bool       $result
      */
-    public function testIsMeasured(array $components, bool $result)
+    public function testIsMeasured(array $components, bool $result): void
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
@@ -70,7 +82,10 @@ class CollectionTest extends TestCase
         $this->assertEquals($result, $stub->isMeasured());
     }
 
-    public function providerIsEmpty()
+    /**
+     * @return array<array{array<Geometry>, bool}>
+     */
+    public function providerIsEmpty(): array
     {
         return [
                 [[], true],
@@ -82,8 +97,11 @@ class CollectionTest extends TestCase
     /**
      * @dataProvider providerIsEmpty
      * @covers ::isEmpty
+     *
+     * @param Geometry[] $components
+     * @param bool       $result
      */
-    public function testIsEmpty(array $components, bool $result)
+    public function testIsEmpty(array $components, bool $result): void
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
@@ -97,7 +115,7 @@ class CollectionTest extends TestCase
      * @covers ::z
      * @covers ::m
      */
-    public function testNonApplicableMethods()
+    public function testNonApplicableMethods(): void
     {
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [[], Geometry::class, true]);
@@ -111,7 +129,7 @@ class CollectionTest extends TestCase
     /**
      * @covers ::asArray
      */
-    public function testAsArray()
+    public function testAsArray(): void
     {
         $components = [
                 new Point(1, 2),
@@ -131,7 +149,7 @@ class CollectionTest extends TestCase
     /**
      * @covers ::flatten
      */
-    public function testFlatten()
+    public function testFlatten(): void
     {
         $components = [
                 new Point(1, 2, 3, 4),
@@ -151,7 +169,7 @@ class CollectionTest extends TestCase
     /**
      * @covers ::explode
      */
-    public function testExplode()
+    public function testExplode(): void
     {
         $points = [new Point(1, 2), new Point(3, 4), new Point(5, 6), new Point(1, 2)];
         $components = [
@@ -171,7 +189,7 @@ class CollectionTest extends TestCase
         }
     }
 
-    // public function providerDistance()
+    // public function providerDistance(): array
     // {
     //     return [
     //         "collection of points to empty point" => [
@@ -211,7 +229,7 @@ class CollectionTest extends TestCase
     //  * @dataProvider providerDistance
     //  * @covers ::distance
     //  */
-    // public function testDistance($components, $otherGeometry, $expectedDistance)
+    // public function testDistance($components, $otherGeometry, $expectedDistance): void
     // {
     //     /** @var Collection $stub */
     //     $stub = $this->getMockForAbstractClass(Collection::class, [$components]);

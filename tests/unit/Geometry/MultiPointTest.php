@@ -18,7 +18,10 @@ use PHPUnit\Framework\TestCase;
  */
 class MultiPointTest extends TestCase
 {
-    public function providerValidComponents()
+    /**
+     * @return array<string, array<array<?Point>>>
+     */
+    public function providerValidComponents(): array
     {
         return [
             'no components'    => [[]],
@@ -33,8 +36,10 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::__construct
+     *
+     * @param array<?Point> $points
      */
-    public function testValidComponents(array $points)
+    public function testValidComponents(array $points): void
     {
         $multiPoint = new MultiPoint($points);
 
@@ -43,7 +48,10 @@ class MultiPointTest extends TestCase
         $this->assertInstanceOf(MultiPoint::class, $multiPoint);
     }
 
-    public function providerInvalidComponents()
+    /**
+     * @return array<string, array<mixed>>
+     */
+    public function providerInvalidComponents(): array
     {
         return [
             'LineString component' => [[LineString::fromArray([[1,2],[3,4]])]],
@@ -54,8 +62,10 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerInvalidComponents
      * @covery ::__construct
+     *
+     * @param array<mixed> $components
      */
-    public function testConstructorWithInvalidComponents($components)
+    public function testConstructorWithInvalidComponents($components): void
     {
         $this->expectException(InvalidGeometryException::class);
 
@@ -65,7 +75,7 @@ class MultiPointTest extends TestCase
     /**
      * @covers ::fromArray
      */
-    public function testFromArray()
+    public function testFromArray(): void
     {
         $this->assertEquals(
             MultiPoint::fromArray([[1,2,3,4], [5,6,7,8]]),
@@ -76,7 +86,7 @@ class MultiPointTest extends TestCase
     /**
      * @covery ::__construct
      */
-    public function testGeometryType()
+    public function testGeometryType(): void
     {
         $multiPoint = new MultiPoint();
 
@@ -90,21 +100,27 @@ class MultiPointTest extends TestCase
     /**
      * @covery ::is3D
      */
-    public function testIs3D()
+    public function testIs3D(): void
     {
-        $this->assertTrue((new Point(1, 2, 3))->is3D());
-        $this->assertTrue((new Point(1, 2, 3, 4))->is3D());
+        $this->assertFalse((new MultiPoint([new Point(1, 2)]))->is3D());
+        $this->assertTrue((new MultiPoint([new Point(1, 2, 3)]))->is3D());
+        $this->assertTrue((new MultiPoint([new Point(1, 2, 3, 4)]))->is3D());
     }
 
     /**
      * @covery ::isMeasured
      */
-    public function testIsMeasured()
+    public function testIsMeasured(): void
     {
-        $this->assertTrue((new Point(1, 2, null, 4))->isMeasured());
+        $this->assertFalse((new MultiPoint([new Point(1, 2)]))->isMeasured());
+        $this->assertFalse((new MultiPoint([new Point(1, 2, 3)]))->isMeasured());
+        $this->assertTrue((new MultiPoint([new Point(1, 2, 3, 4)]))->isMeasured());
     }
 
-    public function providerCentroid()
+    /**
+     * @return array<mixed>
+     */
+    public function providerCentroid(): array
     {
         return [
             [[], []],
@@ -115,8 +131,11 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerCentroid
      * @covers ::centroid
+     *
+     * @param array<mixed> $components
+     * @param array<int>   $expectedCentroid
      */
-    public function testCentroid(array $components, array $expectedCentroid)
+    public function testCentroid(array $components, array $expectedCentroid): void
     {
         $multiPoint = MultiPoint::fromArray($components);
         $centroid = $multiPoint->centroid();
@@ -125,7 +144,10 @@ class MultiPointTest extends TestCase
         $this->assertEquals(Point::fromArray($expectedCentroid), $centroid);
     }
 
-    public function providerIsSimple()
+    /**
+     * @return array{array{array<mixed>, bool}}
+     */
+    public function providerIsSimple(): array
     {
         return [
             [[], true],
@@ -138,8 +160,11 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerIsSimple
      * @covers ::isSimple
+     *
+     * @param array<mixed> $points
+     * @param bool         $result
      */
-    public function testIsSimple(array $points, bool $result)
+    public function testIsSimple(array $points, bool $result): void
     {
         $multiPoint = MultiPoint::fromArray($points);
 
@@ -149,8 +174,10 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::numPoints
+     *
+     * @param array<mixed> $points
      */
-    public function testNumPoints(array $points)
+    public function testNumPoints(array $points): void
     {
         $multiPoint = new MultiPoint($points);
 
@@ -161,8 +188,10 @@ class MultiPointTest extends TestCase
     /**
      * @dataProvider providerValidComponents
      * @covers ::numGeometries
+     *
+     * @param array<mixed> $points
      */
-    public function testNumGeometries(array $points)
+    public function testNumGeometries(array $points): void
     {
         $multiPoint = new MultiPoint($points);
 
@@ -174,10 +203,12 @@ class MultiPointTest extends TestCase
      * @covers ::dimension
      * @covers ::boundary
      * @covers ::explode
+     *
+     * @param array<mixed> $points
      */
-    public function testTrivialAndNotValidMethods(array $ponts)
+    public function testTrivialAndNotValidMethods(array $points): void
     {
-        $point = new MultiPoint($ponts);
+        $point = new MultiPoint($points);
 
         $this->assertSame(0, $point->dimension());
 

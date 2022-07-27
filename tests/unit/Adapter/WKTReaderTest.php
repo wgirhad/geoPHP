@@ -102,6 +102,9 @@ class WKTReaderTest extends TestCase
         print_r(self::$wktAdapter->read($wkt));
     }
 
+    /**
+     * @return array<string, array<string>>
+     */
     public function providerInvalidWkt()
     {
         return [
@@ -111,6 +114,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerValidPoint()
     {
         return [
@@ -179,6 +185,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array<string>>
+     */
     public function providerInvalidPoint()
     {
         return [
@@ -223,6 +232,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerValidLineString()
     {
         return [
@@ -291,6 +303,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array<string>>
+     */
     public function providerInvalidLineString()
     {
         return [
@@ -332,6 +347,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerValidPolygon()
     {
         return [
@@ -403,6 +421,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, array<string>>
+     */
     public function providerInvalidPolygon()
     {
         return [
@@ -436,6 +457,8 @@ class WKTReaderTest extends TestCase
      * There are two common interpretation and geoPHP should support both:
      * MULTIPOINT ((1 2), (3 4))
      * MULTIPOINT (1 2, 3 4)
+     *
+     * @return array<array{string, Geometry}>
      */
     public function providerValidMultiPoint(): array
     {
@@ -529,6 +552,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array<string>>
+     */
     public function providerInvalidMultiPoint()
     {
         return [
@@ -550,6 +576,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerValidMultiLineString()
     {
         return [
@@ -611,6 +640,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, array<string>>
+     */
     public function providerInvalidMultiLineString()
     {
         return [
@@ -635,6 +667,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerValidMultiPolygon()
     {
         return [
@@ -698,6 +733,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, array<string>>
+     */
     public function providerInvalidMultiPolygon()
     {
         return [
@@ -734,6 +772,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<array{string, Geometry}>
+     */
     public function providerValidGeometryCollection()
     {
         return [
@@ -833,6 +874,9 @@ class WKTReaderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, array<string>>
+     */
     public function providerInvalidGeometryCollection()
     {
         return [

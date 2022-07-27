@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class MethodsTest extends TestCase
 {
 
-  function testMethods()
+  function testMethods(): void
   {
     foreach (scandir('tests/input') as $file) {
       $parts = explode('.',$file);
@@ -65,10 +65,11 @@ class MethodsTest extends TestCase
   /**
    * @param Geometry $geometry
    * @param string $method_name
-   * @param string|array $argument
+   * @param string|array<mixed> $argument
    * @param string $file
    */
-  function _methods_tester($geometry, $method_name, $argument, $file) {
+  private function _methods_tester(Geometry $geometry, string $method_name, $argument, string $file): void
+  {
 
     if (!method_exists($geometry, $method_name)) {
       $this->fail("Method ".$method_name.'() doesn\'t exists.');
@@ -296,7 +297,8 @@ class MethodsTest extends TestCase
    * @param \geoPHP\Geometry\Geometry $geometry
    * @throws \Exception
    */
-  function _methods_tester_with_geos($geometry) {
+  private function _methods_tester_with_geos($geometry): void
+  {
     // Cannot test methods if GEOS is not intstalled
     if (!geoPHP::isGeosInstalled()) {
       return;

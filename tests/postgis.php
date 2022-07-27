@@ -2,9 +2,10 @@
 
 require_once dirname(__FILE__) . '../vendor/autoload.php';
 
+use geoPHP\Geometry\Geometry;
 use geoPHP\geoPHP;
 
-function run_test()
+function run_test(): void
 {
 
     header("Content-type: text");
@@ -56,12 +57,12 @@ function run_test()
  * @param string $table
  * @param string $name
  * @param string $type
- * @param \geoPHP\Geometry\Geometry $geom
+ * @param Geometry $geom
  * @param resource|\PgSql\Connection $connection
  * @param string $format
  * @throws Exception
  */
-function test_postgis($table, $name, $type, $geom, $connection, $format)
+function test_postgis(string $table, string $name, string $type, Geometry $geom, $connection, string $format): void
 {
 
     // Let's insert into the database using GeomFromWKB

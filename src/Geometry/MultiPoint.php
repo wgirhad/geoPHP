@@ -35,7 +35,7 @@ class MultiPoint extends MultiGeometry
      *
      * Creates a MultiPoint from array of coordinates
      *
-     * @param array $coordinateArray Multi-dimensional array of coordinates
+     * @param array{}|array<array{}|array<float|int|null>> $coordinateArray Multi-dimensional array of coordinates.
      *
      * @throws InvalidGeometryException
      *
@@ -123,7 +123,7 @@ class MultiPoint extends MultiGeometry
 
     // Not valid for this geometry type
     // --------------------------------
-    public function explode(bool $toArray = false): ?array
+    public function explode(bool $toArray = false): ?array  // @phpstan-ignore-line
     {
         return null;
     }

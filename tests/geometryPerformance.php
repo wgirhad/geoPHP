@@ -21,13 +21,19 @@ use geoPHP\geoPHP;
 /** Performance test will fail if running takes longer than MAX_RUN_TIME_SEC. (Yes, it's a bit of a dirty method.) */
 const MAX_RUN_TIME_SEC = 10;
 
-function testStart($message)
+function testStart(string $message): void
 {
     $GLOBALS['runTime'] = microtime(true);
     echo "\e[37m" . $message . "\e[39m\n";
 }
 
-function testEnd($result = null, $ready = false)
+/**
+ * Undocumented function
+ *
+ * @param mixed|null $result
+ * @param bool $ready
+ */
+function testEnd($result = null, bool $ready = false): void
 {
     if ($ready) {
         echo sprintf("\nTotal run time: %.4f sec", microtime(true) - $GLOBALS['startTime']);
@@ -41,7 +47,7 @@ function testEnd($result = null, $ready = false)
             "\n";
 }
 
-function runPerformanceTests()
+function runPerformanceTests(): void
 {
 
     geoPHP::disableGeos();

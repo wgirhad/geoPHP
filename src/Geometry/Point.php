@@ -84,7 +84,7 @@ class Point extends Geometry
      *
      * Creates a Point from array of coordinates
      *
-     * @param array $coordinateArray Multi-dimensional array of coordinates
+     * @param array<float|int|null> $coordinateArray Array of coordinates.
      *
      * @throws InvalidGeometryException
      *
@@ -183,6 +183,9 @@ class Point extends Geometry
         return $this;
     }
 
+    /**
+     * @return array{maxy: float, miny: float, maxx: float, minx: float}
+     */
     public function getBBox(): array
     {
         return [
@@ -194,7 +197,7 @@ class Point extends Geometry
     }
 
     /**
-     * @return array
+     * @return array{}|array{float, float}|array{float, float, float}|array{float, float, float|null, float}
      */
     public function asArray(): array
     {
@@ -492,7 +495,7 @@ class Point extends Geometry
      * @param bool $toArray
      * @return null
      */
-    public function explode(bool $toArray = false): ?array
+    public function explode(bool $toArray = false): ?array  // @phpstan-ignore-line
     {
         return null;
     }

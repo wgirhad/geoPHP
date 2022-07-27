@@ -33,7 +33,10 @@ class EWKTTest extends TestCase
         $this->assertEquals($srid, $geometry->getSRID());
     }
 
-    public function providerReadValidEwkt()
+    /**
+     * @return array<array{string, int}>
+     */
+    public function providerReadValidEwkt(): array
     {
         return [
             [
@@ -59,6 +62,9 @@ class EWKTTest extends TestCase
         $this->assertEquals($expectedWkt, $wkt);
     }
 
+    /**
+     * @return array{array{string, Geometry, int}}
+     */
     public function providerWriteValidEwkt()
     {
         return [

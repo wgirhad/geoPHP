@@ -106,7 +106,7 @@ class GeometryCollection extends MultiGeometry
      * MultiPoint or a LineString, since they share the same structure (collection
      * of points). So we need to call out the type explicitly.
      *
-     * @return array
+     * @return array<array{type: string, components: array<mixed>}>
      */
     public function asArray(): array
     {

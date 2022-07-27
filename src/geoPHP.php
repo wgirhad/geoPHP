@@ -108,7 +108,7 @@ class geoPHP
      *
      * @param string|string[]|Geometry|Geometry[] $data The data in any supported format, including geoPHP Geometry.
      * @param string $format Format of the data ('wkt','wkb','json', …). Tries to detect automatically if omitted.
-     * @param array $args Further arguments will be passed to the geo adapter.
+     * @param mixed $args Further arguments will be passed to the geo adapter.
      *
      * @throws \Exception|IOException
      *

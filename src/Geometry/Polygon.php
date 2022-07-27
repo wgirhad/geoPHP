@@ -60,7 +60,7 @@ class Polygon extends Surface
      *
      * Creates a Polygon from array of coordinates.
      *
-     * @param array $coordinateArray Multi-dimensional array of coordinates
+     * @param array{}|array<array<array<float|int|null>>> $coordinateArray Multi-dimensional array of coordinates.
      *
      * @throws InvalidGeometryException
      *
@@ -167,7 +167,7 @@ class Polygon extends Surface
 
     /**
      * @param LineString $ring
-     * @return array
+     * @return array{area: float, x: ?float, y: ?float}
      */
     protected function getRingCentroidAndArea(LineString $ring): array
     {
@@ -176,7 +176,7 @@ class Polygon extends Surface
         $points = $ring->getPoints();
         $pointCount = count($points);
         if ($pointCount === 0 || $area == 0.0) {
-            return ['area' => 0, 'x' => null, 'y' => null];
+            return ['area' => 0.0, 'x' => null, 'y' => null];
         }
         $x = 0;
         $y = 0;
@@ -384,6 +384,9 @@ class Polygon extends Surface
         return true;
     }
 
+    /**
+     * @return null|array{maxy: float, miny: float, maxx: float, minx: float}
+     */
     public function getBBox(): ?array
     {
         return $this->exteriorRing()->getBBox();

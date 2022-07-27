@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class AdaptersTest extends TestCase
 {
 
-  function testAdapters()
+  function testAdapters(): void
   {
     foreach (scandir('tests/input') as $file) {
       $parts = explode('.',$file);
@@ -39,7 +39,9 @@ class AdaptersTest extends TestCase
 
         // Test to make sure adapter work the same wether GEOS is ON or OFF
         // Cannot test methods if GEOS is not intstalled
-        if (!geoPHP::isGeosInstalled()) return;
+        if (!geoPHP::isGeosInstalled()) {
+            return;
+        }
 
         foreach (geoPHP::getAdapterMap() as $adapter_key => $adapter_class) {
           if ($adapter_key != 'google_geocode') {
