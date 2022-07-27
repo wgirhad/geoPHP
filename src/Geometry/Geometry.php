@@ -100,13 +100,15 @@ abstract class Geometry
     abstract public function isSimple(): ?bool;
 
     /**
-     * Returns the closure of the combinatorial boundary of the geometric object
+     * Returns the closure of the combinatorial boundary of the geometric object.
      *
      * @return Geometry|null
      */
     abstract public function boundary(): ?Geometry;
 
     /**
+     * Get all sub-geometry components of the geometry.
+     *
      * @return Geometry[]
      */
     abstract public function getComponents(): array;
@@ -117,108 +119,222 @@ abstract class Geometry
     // ----------------------------------------------- //
 
     /**
-     * @return float
-     */
-    abstract public function area(): float;
-
-    /**
-     * @return Point
-     */
-    abstract public function centroid(): Point;
-
-    /**
-     * @return float
-     */
-    abstract public function length(): float;
-
-    abstract public function length3D(): float;
-
-    /**
+     * The x-coordinate value of the Point.
+     *
      * @return float|null
      */
     abstract public function x(): ?float;
 
     /**
+     * The y-coordinate value of the Point.
+     *
      * @return float|null
      */
     abstract public function y(): ?float;
 
     /**
+     * The z-coordinate value (elevation) of the Point.
+     *
      * @return float|null
      */
     abstract public function z(): ?float;
 
     /**
+     * The m-coordinate value (measure) of the Point.
+     *
      * @return float|null
      */
     abstract public function m(): ?float;
 
     /**
+     * Returns TRUE if this geometric object has z coordinate values.
+     *
+     * @return bool
+     */
+    abstract public function is3D(): bool;
+
+    /**
+     * Returns TRUE if this geometric object has m coordinate values.
+     *
+     * @return bool
+     */
+    abstract public function isMeasured(): bool;
+
+    /**
+     * The area of the Polygon (or GeometryCollection), as measured in the spatial reference system of the geometry.
+     *
+     * @return float
+     */
+    abstract public function area(): float;
+
+    /**
+     * The mathematical centroid of the geometry as a Point.
+     * For polygons, the result is not guaranteed to be interior.
+     *
+     * @return Point
+     */
+    abstract public function centroid(): Point;
+
+    /**
+     * The length of a Curve in its associated spatial reference.
+     *
+     * @return float
+     */
+    abstract public function length(): float;
+
+    /**
+     * The 3D length of a Curve in its associated spatial reference.
+     *
+     * @return float
+     */
+    abstract public function length3D(): float;
+
+    /**
+     * The number of component geometries in the collection.
+     *
      * @return int|null
      */
     abstract public function numGeometries(): ?int;
 
     /**
-     * @param int $n One-based index.
+     * Returns the geometry N. in the collection. Note that the index starts at 1.
+     *
+     * @param int $n 1-based index.
+     *
      * @return Geometry|null The geometry, or null if not found.
      */
     abstract public function geometryN(int $n): ?Geometry;
 
     /**
+     * The first Point of the LineString.
+     *
      * @return Point|null
      */
     abstract public function startPoint(): ?Point;
 
     /**
+     * The last Point of the LineString.
+     *
      * @return Point|null
      */
     abstract public function endPoint(): ?Point;
 
+    /**
+     * Returns TRUE if the Curve isClosed() and isSimple().
+     *
+     * @return bool|null
+     */
     abstract public function isRing(): ?bool;
 
+    /**
+     * Returns TRUE if the startPoint() and endPoint() of the Curve equals.
+     *
+     * @return bool|null
+     */
     abstract public function isClosed(): ?bool;
 
+    /**
+     * The number of Points in the Geometry.
+     *
+     * @return int
+     */
     abstract public function numPoints(): int;
 
     /**
-     * @param int $n Nth point
+     * Returns the specified N-th Point in the Geometry. Note that the index starts at 1.
+     *
+     * @param int $n N-th point
      * @return Point|null
      */
     abstract public function pointN(int $n): ?Point;
 
+    /**
+     * Returns the exterior ring of the Polygon.
+     *
+     * @return LineString|null
+     */
     abstract public function exteriorRing(): ?LineString;
 
+    /**
+     * Returns the number of interior rings in the Polygon.
+     *
+     * @return int|null
+     */
     abstract public function numInteriorRings(): ?int;
 
+    /**
+     * Returns the N-th interior ring in the Polygon as a LineString. Note that the index starts at 1.
+     *
+     * @param int $n
+     * @return LineString|null
+     */
     abstract public function interiorRingN(int $n): ?LineString;
 
+    /**
+     * The distance of this geometry to another geometry in their associated spatial reference.
+     *
+     * @return float|null
+     */
     abstract public function distance(Geometry $geom): ?float;
 
-    abstract public function equals(Geometry $geom): bool;
+    /**
+     * Returns TRUE if this geometry is "spatially equal" to other geometry.
+     *
+     * @param Geometry $geometry
+     *
+     * @return bool
+     */
+    abstract public function equals(Geometry $geometry): bool;
 
 
     // ----------------------------------------------- //
     //          Abstract Non-Standard Methods          //
     // ----------------------------------------------- //
 
-    abstract public function is3D(): bool;
-
-    abstract public function isMeasured(): bool;
-
+    /**
+     * The minimum bounding box of the Geometry as array.
+     *
+     * @see envelope()
+     *
+     * @return array|null Array of min and max values of x and y coordinates.
+     */
     abstract public function getBBox(): ?array;
 
+    /**
+     * Get the given geometry as an array of components (recursive)
+     *
+     * @return array
+     */
     abstract public function asArray(): array;
 
     /**
+     * Get all the points of the geometry.
+     *
      * @return Point[]
      */
     abstract public function getPoints(): array;
 
+    /**
+     * Swaps X and Y coordinates of the geometry.
+     *
+     * Useful to fix geometries with lat-lng coordinate order.
+     *
+     * @return self
+     */
     abstract public function invertXY();
 
     /**
+     * Removes 3D information and measures from the geometry.
+     *
+     * @return void
+     */
+    abstract public function flatten(): void;
+
+    /**
      * Get all line segments.
+     *
      * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
+     *
      * @return array|null Returns line segments or null for 0-deminsional geometries.
      */
     abstract public function explode(bool $toArray = false): ?array;
@@ -226,8 +342,6 @@ abstract class Geometry
     abstract public function greatCircleLength(float $radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS): float; //meters
 
     abstract public function haversineLength(): float; //degrees
-
-    abstract public function flatten(): void; // 3D to 2D
 
     // Elevations statistics
 
@@ -250,13 +364,20 @@ abstract class Geometry
     //        Standard – Common to all geometries      //
     // ----------------------------------------------- //
 
+    /**
+     * Returns the Spatial Reference System ID for this geometric object.
+     *
+     * @return int|null
+     */
     public function getSRID(): ?int
     {
         return $this->srid;
     }
 
     /**
-     * @param int|null $srid Spatial Reference System Identifier
+     * Set (or removes) the Spatial Reference System ID for this geometric object.
+     *
+     * @param int|null $srid Spatial Reference System Identifier.
      */
     public function setSRID(?int $srid): void
     {
@@ -269,7 +390,7 @@ abstract class Geometry
     }
 
     /**
-     * Adds custom data to the geometry
+     * Adds custom data to the geometry.
      *
      * @param string|array $property The name of the data or an associative array.
      * @param mixed|null $value The data. Can be of any type (string, integer, array, etc.).
@@ -311,6 +432,13 @@ abstract class Geometry
         return array_key_exists($property, $this->data ?: []);
     }
 
+    /**
+     * The minimum bounding box of the Geometry as Geometry.
+     *
+     * @see getBBox()
+     *
+     * @return Geometry
+     */
     public function envelope(): Geometry
     {
         if ($this->isEmpty()) {
@@ -346,7 +474,7 @@ abstract class Geometry
     // ----------------------------------------------- //
 
     /**
-     * Converts the geometry to file using an adapter.
+     * Outputs the geometry into the specified adapter format.
      *
      * @param string $format A file format or adapter name. E.g.: "GPX", or "GeoJSON".
      * @param mixed ...$args Additional adapter specific parameters.

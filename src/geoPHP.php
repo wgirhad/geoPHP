@@ -82,6 +82,8 @@ class geoPHP
     private static $geosInstalled;
 
     /**
+     * Get a list of adapters as an array keyed by the value that should be passed to geoPHP::load.
+     *
      * @return array<string, string> Returns the map of supported adapters and formats
      */
     public static function getAdapterMap(): array
@@ -91,6 +93,8 @@ class geoPHP
 
 
     /**
+     * List all geometry types.
+     *
      * @return array<string, string>
      */
     public static function getGeometryList(): array
@@ -260,8 +264,9 @@ class geoPHP
     }
 
     /**
-     * Reduce a geometry, or an array of geometries, into their 'lowest' available common geometry.
-     * For example a GeometryCollection of only points will become a MultiPoint
+     * Reduces a geometry, or an array of geometries, into their 'lowest' available common geometry.
+     *
+     * For example a GeometryCollection of only points will become a MultiPoint.
      * A multi-point containing a single point will return a point.
      * An array of geometries can be passed and they will be compiled into a single geometry
      *
@@ -303,7 +308,7 @@ class geoPHP
         }
         /**
          * So now we either have an array of geometries
-         * @var Geometry[]|GeometryCollection[] $geometries
+         * @var Geometry[] $geometries
          */
 
         $reducedGeometries = [];
@@ -329,9 +334,9 @@ class geoPHP
     }
 
     /**
-     * @param Geometry[]|GeometryCollection[] $unreduced
-     * @param Geometry[]|GeometryCollection[] $reduced
-     * @param array<string>                   $types
+     * @param Geometry[]    $unreduced
+     * @param Geometry[]    $reduced
+     * @param array<string> $types
      *
      * @return void
      */

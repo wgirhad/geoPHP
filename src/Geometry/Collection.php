@@ -73,9 +73,9 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Check if Geometry has Z (altitude) coordinate
+     * Returns TRUE if this geometric object has z coordinate values.
      *
-     * @return bool True if collection has Z value
+     * @return bool
      */
     public function is3D(): bool
     {
@@ -83,9 +83,9 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Check if Geometry has a measure value
+     * Returns TRUE if this geometric object has m coordinate values.
      *
-     * @return bool True if collection has measure value
+     * @return bool
      */
     public function isMeasured(): bool
     {
@@ -93,7 +93,7 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Returns Collection component geometries
+     * Get all sub-geometry components of the geometry.
      *
      * @return Geometry[]
      */
@@ -103,12 +103,12 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Inverts x and y coordinates
-     * Useful for old data still using lng lat
+     * Swaps X and Y coordinates of the geometry.
+     *
+     * Useful to fix geometries with lat-lng coordinate order.
      *
      * @return self
-     *
-     * */
+     */
     public function invertXY(): self
     {
         foreach ($this->components as $component) {
@@ -118,6 +118,30 @@ abstract class Collection extends Geometry
         return $this;
     }
 
+    /**
+     * Removes 3D information and measures from the geometry.
+     *
+     * @return void
+     */
+    public function flatten(): void
+    {
+        if ($this->is3D() || $this->isMeasured()) {
+            foreach ($this->components as $component) {
+                $component->flatten();
+            }
+            $this->hasZ = false;
+            $this->isMeasured = false;
+            $this->setGeos(null);
+        }
+    }
+
+    /**
+     * The minimum bounding box of the Geometry as array.
+     *
+     * @see envelope()
+     *
+     * @return array|null Array of min and max values of x and y coordinates.
+     */
     public function getBBox(): ?array
     {
         if ($this->isEmpty()) {
@@ -146,7 +170,7 @@ abstract class Collection extends Geometry
         }
 
         // Go through each component and get the max and min x and y
-        $maxX = $maxY = $minX = $minY = 0;
+        $maxX = $maxY = $minX = $minY = 0.0;
         foreach ($this->components as $i => $component) {
             $componentBoundingBox = $component->getBBox();
             if ($componentBoundingBox === null) {
@@ -177,7 +201,7 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Returns every sub-geometry as a multidimensional array
+     * Returns every sub-geometry as a multidimensional array.
      *
      * @return array
      */
@@ -191,7 +215,9 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * @return int
+     * The number of component geometries in the collection.
+     *
+     * @return int|null
      */
     public function numGeometries(): ?int
     {
@@ -199,10 +225,11 @@ abstract class Collection extends Geometry
     }
 
     /**
-     * Returns the 1-based Nth geometry.
+     * Returns the geometry N. in the collection. Note that the index starts at 1.
      *
-     * @param int $n 1-based geometry number
-     * @return Geometry|null
+     * @param int $n 1-based index.
+     *
+     * @return Geometry|null The geometry, or null if not found.
      */
     public function geometryN(int $n): ?Geometry
     {
@@ -210,9 +237,11 @@ abstract class Collection extends Geometry
     }
 
     /**
+     * Returns true if the geometric object is the empty Geometry.
+     *
      * A collection is not empty if it has at least one non empty component.
      *
-     * @return bool
+     * @return bool If true, then the geometric object represents the empty point set ∅ for the coordinate space.
      */
     public function isEmpty(): bool
     {
@@ -225,6 +254,8 @@ abstract class Collection extends Geometry
     }
 
     /**
+     * The number of Points in the Geometry.
+     *
      * @return int
      */
     public function numPoints(): int
@@ -237,6 +268,8 @@ abstract class Collection extends Geometry
     }
 
     /**
+     * Get all the points of the geometry.
+     *
      * @return Point[]
      */
     public function getPoints(): array
@@ -263,7 +296,10 @@ abstract class Collection extends Geometry
     }
 
     /**
+     * Returns TRUE if this geometry is "spatially equal" to other geometry.
+     *
      * @param Geometry $geometry
+     *
      * @return bool
      */
     public function equals(Geometry $geometry): bool
@@ -312,6 +348,8 @@ abstract class Collection extends Geometry
      * Get all line segments.
      *
      * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
+     *
+     * @return array|null Returns line segments or null for 0-deminsional geometries.
      */
     public function explode(bool $toArray = false): ?array
     {
@@ -324,18 +362,11 @@ abstract class Collection extends Geometry
         return $parts;
     }
 
-    public function flatten(): void
-    {
-        if ($this->is3D() || $this->isMeasured()) {
-            foreach ($this->components as $component) {
-                $component->flatten();
-            }
-            $this->hasZ = false;
-            $this->isMeasured = false;
-            $this->setGeos(null);
-        }
-    }
-
+    /**
+     * The distance of this geometry to another geometry in their associated spatial reference.
+     *
+     * @return float|null
+     */
     public function distance(Geometry $geometry): ?float
     {
         if ($this->getGeos()) {
