@@ -162,12 +162,12 @@ class GPX implements GeoAdapter
      */
     protected function parsePoint($node)
     {
-        $lat = $node->attributes->getNamedItem("lat")->nodeValue;
-        $lon = $node->attributes->getNamedItem("lon")->nodeValue;
+        $lat = (float) $node->attributes->getNamedItem("lat")->nodeValue;
+        $lon = (float) $node->attributes->getNamedItem("lon")->nodeValue;
         $elevation = null;
         $ele = $node->getElementsByTagName('ele');
         if ($ele->length) {
-            $elevation = $ele->item(0)->nodeValue;
+            $elevation = (float) $ele->item(0)->nodeValue;
         }
         $point = new Point($lon, $lat, $elevation);
         $point->setData($this->parseNodeProperties($node, $this->gpxTypes->get($node->nodeName . 'Type')));
@@ -357,6 +357,7 @@ class GPX implements GeoAdapter
             case Geometry::MULTI_POINT:
             case Geometry::MULTI_POLYGON:
             case Geometry::GEOMETRY_COLLECTION:
+                /** @var Collection $geometry */
                 return $this->collectionToGPX($geometry);
         }
         return '';
@@ -438,7 +439,7 @@ class GPX implements GeoAdapter
      * @param Collection $geometry
      * @return string
      */
-    public function collectionToGPX($geometry)
+    public function collectionToGPX(Collection $geometry): string
     {
         $metadata = self::processGeometryData($geometry, $this->gpxTypes->get('metadataType'));
         $metadata = empty($metadata) || !in_array('metadataType', $this->gpxTypes->get('gpxType'))

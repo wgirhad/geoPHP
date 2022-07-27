@@ -2,6 +2,7 @@
 
 namespace geoPHP\Adapter;
 
+use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\Point;
 use geoPHP\Geometry\LineString;
@@ -153,7 +154,7 @@ class GeoHash implements GeoAdapter
      * @return string The GeoHash
      * @throws \Exception
      */
-    private function encodePoint($point, $precision = null)
+    private function encodePoint(Point $point, ?float $precision = null): string
     {
         $minLatitude = -90.0000000000001;
         $maxLatitude = 90.0000000000001;
@@ -166,8 +167,8 @@ class GeoHash implements GeoAdapter
         $hash = '';
 
         if (!is_numeric($precision)) {
-            $lap = strlen($point->y()) - strpos($point->y(), ".");
-            $lop = strlen($point->x()) - strpos($point->x(), ".");
+            $lap = strlen((string) $point->y()) - strpos((string) $point->y(), ".");
+            $lop = strlen((string) $point->x()) - strpos((string) $point->x(), ".");
             $precision = pow(10, -max($lap - 1, $lop - 1, 0)) / 2;
         }
 
@@ -175,7 +176,9 @@ class GeoHash implements GeoAdapter
             $point->x() < $minLongitude || $point->y() < $minLatitude ||
             $point->x() > $maxLongitude || $point->y() > $maxLatitude
         ) {
-            throw new \Exception("Point coordinates ({$point->x()}, {$point->y()}) are out of lat/lon range");
+            throw new InvalidGeometryException(
+                "Point coordinates ({$point->x()}, {$point->y()}) are out of lat/lon range."
+            );
         }
 
         while ($error >= $precision) {

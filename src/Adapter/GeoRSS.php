@@ -11,6 +11,7 @@ use geoPHP\Geometry\Point;
 use geoPHP\Geometry\LineString;
 use geoPHP\Geometry\Polygon;
 use geoPHP\Exception\IOException;
+use geoPHP\Geometry\MultiGeometry;
 
 /*
  * Copyright (c) Patrick Hayes
@@ -190,33 +191,34 @@ class GeoRSS implements GeoAdapter
      * @param Geometry $geometry
      * @return string|null
      */
-    protected function geometryToGeoRSS($geometry)
+    protected function geometryToGeoRSS(Geometry $geometry): ?string
     {
         $type = $geometry->geometryType();
         switch ($type) {
             case Geometry::POINT:
+                /** @var Point $geometry */
                 return $this->pointToGeoRSS($geometry);
             case Geometry::LINE_STRING:
-                /** @noinspection PhpParamsInspection */
+                /** @var LineString $geometry */
                 return $this->linestringToGeoRSS($geometry);
             case Geometry::POLYGON:
-                /** @noinspection PhpParamsInspection */
-                return $this->PolygonToGeoRSS($geometry);
+                /** @var Polygon $geometry */
+                return $this->polygonToGeoRSS($geometry);
             case Geometry::MULTI_POINT:
             case Geometry::MULTI_LINE_STRING:
             case Geometry::MULTI_POLYGON:
             case Geometry::GEOMETRY_COLLECTION:
-            /** @noinspection PhpParamsInspection */
+                /** @var MultiGeometry $geometry */
                 return $this->collectionToGeoRSS($geometry);
         }
         return null;
     }
 
     /**
-     * @param Geometry $geometry
+     * @param Point $geometry
      * @return string
      */
-    private function pointToGeoRSS($geometry)
+    private function pointToGeoRSS(Point $geometry): string
     {
         return '<' . $this->nss . 'point>' . $geometry->y() . ' ' . $geometry->x() . '</' . $this->nss . 'point>';
     }
@@ -225,7 +227,7 @@ class GeoRSS implements GeoAdapter
      * @param LineString $geometry
      * @return string
      */
-    private function linestringToGeoRSS($geometry)
+    private function linestringToGeoRSS(LineString $geometry): string
     {
         $output = '<' . $this->nss . 'line>';
         foreach ($geometry->getComponents() as $k => $point) {
@@ -242,7 +244,7 @@ class GeoRSS implements GeoAdapter
      * @param Polygon $geometry
      * @return string
      */
-    private function polygonToGeoRSS($geometry)
+    private function polygonToGeoRSS(Polygon $geometry): string
     {
         $output = '<' . $this->nss . 'polygon>';
         $exteriorRing = $geometry->exteriorRing();
@@ -257,10 +259,10 @@ class GeoRSS implements GeoAdapter
     }
 
     /**
-     * @param Collection $geometry
+     * @param MultiGeometry $geometry
      * @return string
      */
-    public function collectionToGeoRSS($geometry)
+    public function collectionToGeoRSS(MultiGeometry $geometry): string
     {
         $georss = '<' . $this->nss . 'where>';
         $components = $geometry->getComponents();

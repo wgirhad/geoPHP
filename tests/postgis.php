@@ -57,7 +57,7 @@ function run_test()
  * @param string $name
  * @param string $type
  * @param \geoPHP\Geometry\Geometry $geom
- * @param resource $connection
+ * @param resource|\PgSql\Connection $connection
  * @param string $format
  * @throws Exception
  */

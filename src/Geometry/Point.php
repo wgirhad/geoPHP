@@ -34,10 +34,10 @@ class Point extends Geometry
     /**
      * Checks and stores coordinates.
      *
-     * @param int|float|null $x The x coordinate (or longitude)
-     * @param int|float|null $y The y coordinate (or latitude)
-     * @param int|float|null $z The z coordinate (or altitude) - optional
-     * @param int|float|null $m Measure - optional
+     * @param int|float|string|null $x The x coordinate (or longitude)
+     * @param int|float|string|null $y The y coordinate (or latitude)
+     * @param int|float|string|null $z The z coordinate (or altitude) - optional
+     * @param int|float|string|null $m Measure - optional
      *
      * @throws InvalidGeometryException
      */

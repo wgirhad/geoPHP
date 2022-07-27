@@ -80,6 +80,7 @@ class LineStringTest extends TestCase
         $this->expectException(\TypeError::class);
         $this->expectErrorMessageMatches('/Argument #?1 .+ type array, string given/');
 
+        // @phpstan-ignore-next-line
         new LineString('foo');
     }
 
@@ -102,6 +103,7 @@ class LineStringTest extends TestCase
         $this->expectException(InvalidGeometryException::class);
         $this->expectExceptionMessageMatches('/Cannot construct .+LineString\. Expected .+Point components, got.+/');
 
+        // @phpstan-ignore-next-line
         new LineString([new LineString(), new LineString()]);
     }
 

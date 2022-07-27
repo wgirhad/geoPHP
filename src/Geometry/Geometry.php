@@ -457,16 +457,19 @@ abstract class Geometry
         }
 
         $boundingBox = $this->getBBox();
-        $points = [
-            new Point($boundingBox['maxx'], $boundingBox['miny']),
-            new Point($boundingBox['maxx'], $boundingBox['maxy']),
-            new Point($boundingBox['minx'], $boundingBox['maxy']),
-            new Point($boundingBox['minx'], $boundingBox['miny']),
-            new Point($boundingBox['maxx'], $boundingBox['miny']),
-        ];
-        return $points
-            ? new Polygon([new LineString($points)])
-            : new Polygon();
+        if ($boundingBox) {
+            $points = [
+                new Point($boundingBox['maxx'], $boundingBox['miny']),
+                new Point($boundingBox['maxx'], $boundingBox['maxy']),
+                new Point($boundingBox['minx'], $boundingBox['maxy']),
+                new Point($boundingBox['minx'], $boundingBox['miny']),
+                new Point($boundingBox['maxx'], $boundingBox['miny']),
+            ];
+
+            return new Polygon([new LineString($points)]);
+        } else {
+            return new Polygon();
+        }
     }
 
     // ----------------------------------------------- //

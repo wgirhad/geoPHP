@@ -125,7 +125,7 @@ class WKT implements GeoAdapter
             $method = 'parse' . $geometryType;
             try {
                 return self::$method($dataString);
-            } catch (InvalidGeometryException $eInvalidGeom) {
+            } catch (InvalidGeometryException $eInvalidGeom) {  // @phpstan-ignore-line
                 throw new FileFormatException("Invalid WKT {$matches['type']}", $dataString, 0, $eInvalidGeom);
             }
         }

@@ -15,7 +15,7 @@ abstract class MultiGeometry extends Collection
     /**
      * Checks and stores geometry components.
      *
-     * @param Point[] $components           Array of Geometry components.
+     * @param Geometry[] $components        Array of Geometry components.
      * @param string  $allowedComponentType A class the components must be instance of. Default: Geometry.
      * @param bool    $allowEmptyComponents Allow creating geometries with empty components. Default: true.
      *

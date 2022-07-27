@@ -17,7 +17,7 @@ abstract class MultiCurve extends MultiGeometry
     /**
      * Checks and stores geometry components.
      *
-     * @param Point[] $components           Array of Curve components.
+     * @param Curve[] $components           Array of Curve components.
      * @param string  $allowedComponentType A class the components must be instance of. Default: Curve.
      *
      * @throws InvalidGeometryException

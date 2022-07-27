@@ -290,6 +290,7 @@ abstract class Collection extends Geometry
             if ($component instanceof Point) {
                 $points[] = $component;
             } else {
+                /** @var Collection $component */
                 self::getPointsRecursive($component, $points);
             }
         }

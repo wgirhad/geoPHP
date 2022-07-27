@@ -71,6 +71,7 @@ class PolygonTest extends TestCase
         $this->expectException(\TypeError::class);
         $this->expectErrorMessageMatches('/Argument #?1 .+ type array, string given/');
 
+        // @phpstan-ignore-next-line
         new Polygon('foo');
     }
 
@@ -115,6 +116,7 @@ class PolygonTest extends TestCase
         $this->expectException(InvalidGeometryException::class);
         $this->expectExceptionMessageMatches('/Cannot construct .+Polygon\. Expected .+LineString components, got.+/');
 
+        // @phpstan-ignore-next-line
         new Polygon([new Point()]);
     }
 

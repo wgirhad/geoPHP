@@ -3,6 +3,7 @@
 
 namespace geoPHP\Tests;
 
+use geoPHP\Geometry\Geometry;
 use \geoPHP\geoPHP;
 use PHPUnit\Framework\TestCase;
 
@@ -62,16 +63,15 @@ class MethodsTest extends TestCase
   }
 
   /**
-   * @param \geoPHP\Geometry\Geometry $geometry
+   * @param Geometry $geometry
    * @param string $method_name
-   * @param array $argument
+   * @param string|array $argument
    * @param string $file
    */
   function _methods_tester($geometry, $method_name, $argument, $file) {
 
     if (!method_exists($geometry, $method_name)) {
       $this->fail("Method ".$method_name.'() doesn\'t exists.');
-      return;
     }
 
     $failedOnMessage = 'Failed on ' . $method_name . ' (test file: ' . $file . ', geometry type: ' . $geometry->geometryType() . ')';
@@ -333,7 +333,6 @@ class MethodsTest extends TestCase
       if ($geos_type != $norm_type) {
         var_dump($geos_type, $norm_type);
         $this->fail('Type mismatch on '.$method);
-        continue;
       }
 
       // Now check base on type
@@ -349,7 +348,6 @@ class MethodsTest extends TestCase
         if ($haus_dist / $scale > 0.5) {
           var_dump('GEOS : ', $geos_result->out('wkt'), 'NORM : ', $norm_result->out('wkt'));
           $this->fail('Output mismatch on '.$method);
-          continue;
         }
       }
 
@@ -357,7 +355,6 @@ class MethodsTest extends TestCase
         if ($geos_result !== $norm_result) {
           var_dump('GEOS : ', $geos_result->out('wkt'), 'NORM : ', $norm_result->out('wkt'));
           $this->fail('Output mismatch on '.$method);
-          continue;
         }
       }
 

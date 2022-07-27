@@ -61,14 +61,14 @@ class GeoJSON implements GeoAdapter
 
     /**
      * @param object $input
-     * @return string|null
+     * @return int|null
      */
-    private function getSRID($input)
+    private function getSRID($input): ?int
     {
         if (isset($input->crs->properties->name)) {
             // parse CRS codes in forms "EPSG:1234" and "urn:ogc:def:crs:EPSG::1234"
             preg_match('#EPSG[:]+(\d+)#', $input->crs->properties->name, $m);
-            return isset($m[1]) ? $m[1] : null;
+            return isset($m[1]) ? (int) $m[1] : null;
         }
         return null;
     }

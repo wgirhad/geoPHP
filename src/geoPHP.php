@@ -231,6 +231,7 @@ class geoPHP
      * @param \GEOSGeometry $geos
      *
      * @throws \Exception
+     * @throws IOException
      *
      * @return Geometry|null Returns the converted geoPHP Geometry or null if GEOS is not installed.
      *
@@ -248,12 +249,9 @@ class geoPHP
         }
         $wkb = $wkbWriter->writeHEX($geos);
         $geometry = geoPHP::load($wkb, 'ewkb', true);
-        if ($geometry) {
-            $geometry->setGeos($geos);
-            return $geometry;
-        }
 
-        return null;
+        $geometry->setGeos($geos);
+        return $geometry;
     }
 
     /**
@@ -380,11 +378,9 @@ class geoPHP
         $geometryTypes = [];
         $hasData = false;
         foreach ($geometries as $item) {
-            if ($item) {
-                $geometryTypes[] = $item->geometryType();
-                if ($item->getData() !== null) {
-                    $hasData = true;
-                }
+            $geometryTypes[] = $item->geometryType();
+            if ($item->getData() !== null) {
+                $hasData = true;
             }
         }
         $geometryTypes = array_unique($geometryTypes);

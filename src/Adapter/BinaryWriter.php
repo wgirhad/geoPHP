@@ -15,9 +15,9 @@
 namespace geoPHP\Adapter;
 
 /**
- * Helper class BinaryWriter
+ * Helper class BinaryWriter.
  *
- * A simple binary writer supporting both byte orders
+ * A simple binary writer supporting both byte orders.
  */
 class BinaryWriter
 {
@@ -26,15 +26,20 @@ class BinaryWriter
 
     private $endianness = 0;
 
-    public function __construct($endianness = 0)
+    /**
+     * @param integer $endianness Constant value self::BIG_ENDIAN or self::LITTLE_ENDIAN.
+     */
+    public function __construct(int $endianness = 0)
     {
-        $this->endianness = $endianness;
+        $this->endianness = $endianness === self::BIG_ENDIAN
+            ? self::BIG_ENDIAN
+            : self::LITTLE_ENDIAN;
     }
 
     /**
      * @return bool Returns true if Writer is in BigEndian mode
      */
-    public function isBigEndian()
+    public function isBigEndian(): bool
     {
         return $this->endianness === self::BIG_ENDIAN;
     }
@@ -42,39 +47,39 @@ class BinaryWriter
     /**
      * @return bool Returns true if Writer is in LittleEndian mode
      */
-    public function isLittleEndian()
+    public function isLittleEndian(): bool
     {
         return $this->endianness === self::LITTLE_ENDIAN;
     }
 
     /**
      * Writes a signed 8-bit integer
-     * @param int $value
+     * @param int|float $value
      * @return string The integer as a binary string
      */
-    public function writeSInt8($value)
+    public function writeSInt8($value): string
     {
-        return pack('c', $value);
+        return pack('c', (int) $value);
     }
 
     /**
      * Writes an unsigned 8-bit integer
-     * @param int $value
+     * @param int|float $value
      * @return string The integer as a binary string
      */
-    public function writeUInt8($value)
+    public function writeUInt8($value): string
     {
-        return pack('C', $value);
+        return pack('C', (int) $value);
     }
 
     /**
      * Writes an unsigned 32-bit integer
-     * @param int $value
+     * @param int|float $value
      * @return string The integer as a binary string
      */
-    public function writeUInt32($value)
+    public function writeUInt32($value): string
     {
-        return pack($this->isLittleEndian() ? 'V' : 'N', $value);
+        return pack($this->isLittleEndian() ? 'V' : 'N', (int) $value);
     }
 
     /**
@@ -82,9 +87,9 @@ class BinaryWriter
      * @param float $value
      * @return string The floating point number as a binary string
      */
-    public function writeDouble($value)
+    public function writeDouble($value): string
     {
-        return $this->isLittleEndian() ? pack('d', $value) : strrev(pack('d', $value));
+        return $this->isLittleEndian() ? pack('d', (float) $value) : strrev(pack('d', (float) $value));
     }
 
     /**
@@ -92,11 +97,12 @@ class BinaryWriter
      *
      * Ported from https://github.com/cschwarz/wkx/blob/master/lib/binaryreader.js
      *
-     * @param int $value
+     * @param int|float $value
      * @return string The integer as a binary string
      */
-    public function writeUVarInt($value)
+    public function writeUVarInt($value): string
     {
+        $value = (int) $value;
         $out = '';
 
         while (($value & 0xFFFFFF80) !== 0) {
@@ -116,12 +122,12 @@ class BinaryWriter
 
     /**
      * Writes an integer as a signed base-128 varint
-     * @param int $value
+     * @param int|float $value
      * @return string The integer as a binary string
      */
-    public function writeSVarInt($value)
+    public function writeSVarInt($value): string
     {
-        return $this->writeUVarInt(self::zigZagEncode($value));
+        return $this->writeUVarInt(self::zigZagEncode((int) $value));
     }
 
     /**

@@ -257,10 +257,13 @@ class WKB implements GeoAdapter
         }
         switch ($type) {
             case 'Point':
+                /** @var Point[] $components */
                 return new MultiPoint($components);
             case 'LineString':
+                /** @var LineString[] $components */
                 return new MultiLineString($components);
             case 'Polygon':
+                /** @var Polygon[] $components */
                 return new MultiPolygon($components);
             case 'Geometry':
                 return new GeometryCollection($components);

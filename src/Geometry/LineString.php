@@ -97,7 +97,7 @@ class LineString extends Curve
         $x = 0;
         $y = 0;
         $length = 0.0;
-        /** @var Point $previousPoint */
+        /** @var Point|null $previousPoint */
         $previousPoint = null;
         foreach ($this->getPoints() as $point) {
             if ($previousPoint) {
@@ -132,7 +132,7 @@ class LineString extends Curve
             // @codeCoverageIgnoreEnd
         }
         $length = 0.0;
-        /** @var Point $previousPoint */
+        /** @var Point|null $previousPoint */
         $previousPoint = null;
         foreach ($this->getPoints() as $point) {
             if ($previousPoint) {
@@ -149,7 +149,7 @@ class LineString extends Curve
     public function length3D(): float
     {
         $length = 0.0;
-        /** @var Point $previousPoint */
+        /** @var Point|null $previousPoint */
         $previousPoint = null;
         foreach ($this->getPoints() as $point) {
             if ($previousPoint) {

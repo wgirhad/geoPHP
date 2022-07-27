@@ -1,12 +1,14 @@
 includes:
     - phpstan-baseline.neon
 parameters:
-    level: 3
+    level: 5
     paths:
         - src/
-        - tests/unit
+        - tests/
     inferPrivatePropertyTypeFromConstructor: true
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#\:\:centroid\(\) should return geoPHP\\Geometry\\Point but returns geoPHP\\Geometry\\Geometry\|null.$#'
+        - '#Parameter \#1 \$connection of function pg_query expects resource, PgSql\\Connection given.$#'
+        - '#Parameter \#1 \$result of function pg_fetch_all expects PgSql\\Result, resource\|false given.$#'

@@ -154,7 +154,7 @@ class OSM implements GeoAdapter
             $relationWays = [];
             foreach ($relation->getElementsByTagName('member') as $member) {
                 $memberType = $member->attributes->getNamedItem('type')->nodeValue;
-                $ref = $member->attributes->getNamedItem('ref')->nodeValue;
+                $ref = (int) $member->attributes->getNamedItem('ref')->nodeValue;
 
                 if ($memberType === 'node' &&  isset($nodes[$ref])) {
                     $nodes[$ref]['assigned'] = true;
