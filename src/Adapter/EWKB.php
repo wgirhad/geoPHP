@@ -9,7 +9,7 @@ use geoPHP\Geometry\Geometry;
  */
 class EWKB extends WKB
 {
-    public function write(Geometry $geometry, $writeAsHex = false, $bigEndian = false): string
+    public function write(Geometry $geometry, bool $writeAsHex = false, bool $bigEndian = false): string
     {
         $this->SRID = $geometry->getSRID();
         $this->hasSRID = $this->SRID !== null;
