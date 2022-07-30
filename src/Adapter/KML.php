@@ -2,14 +2,15 @@
 
 namespace geoPHP\Adapter;
 
+use DOMNode;
 use geoPHP\Exception\FileFormatException;
 use geoPHP\Exception\InvalidXmlException;
-use geoPHP\Geometry\Collection;
 use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 use geoPHP\Geometry\Point;
 use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\MultiGeometry;
 use geoPHP\Geometry\Polygon;
 
 /*
@@ -38,6 +39,9 @@ class KML implements GeoAdapter
      */
     protected $xmlObject;
 
+    /**
+     * @var string
+     */
     private $nss = ''; // Name-space string. eg 'georss:'
 
     /**
@@ -48,7 +52,7 @@ class KML implements GeoAdapter
      * @return Geometry|GeometryCollection
      * @throws InvalidXmlException If KML is not a valid XML
      */
-    public function read($kml)
+    public function read(string $kml): Geometry
     {
         // Change to lower-case and strip all CDATA
         $kml = mb_strtolower($kml, mb_detect_encoding($kml));
@@ -71,7 +75,7 @@ class KML implements GeoAdapter
         return $geom;
     }
 
-    protected function geomFromXML()
+    protected function geomFromXML(): Geometry
     {
         $geometries = [];
         $placemarkElements = $this->xmlObject->getElementsByTagName('placemark');
@@ -112,10 +116,16 @@ class KML implements GeoAdapter
         return new GeometryCollection();
     }
 
-    protected function childElements($xml, $nodeName = '')
+    /**
+     * @param ?DOMNode $xml
+     * @param string $nodeName
+     *
+     * @return DOMNode[]
+     */
+    protected function childElements(?DOMNode $xml, string $nodeName = ''): array
     {
         $children = [];
-        if ($xml && $xml->childNodes) {
+        if ($xml) {
             foreach ($xml->childNodes as $child) {
                 if ($child->nodeName == $nodeName) {
                     $children[] = $child;
@@ -125,7 +135,7 @@ class KML implements GeoAdapter
         return $children;
     }
 
-    protected function parsePoint($xml)
+    protected function parsePoint(DOMNode $xml): Point
     {
         $coordinates = $this->extractCoordinates($xml);
         if (empty($coordinates)) {
@@ -134,12 +144,12 @@ class KML implements GeoAdapter
         return new Point(
             $coordinates[0][0],
             $coordinates[0][1],
-            (isset($coordinates[0][2]) ? $coordinates[0][2] : null),
-            (isset($coordinates[0][3]) ? $coordinates[0][3] : null)
+            ($coordinates[0][2] ?? null),
+            ($coordinates[0][3] ?? null)
         );
     }
 
-    protected function parseLineString($xml)
+    protected function parseLineString(DOMNode $xml): LineString
     {
         $coordinates = $this->extractCoordinates($xml);
         $pointArray = [];
@@ -153,14 +163,14 @@ class KML implements GeoAdapter
             $pointArray[] = new Point(
                 $set[0],
                 $set[1],
-                ($hasZ ? (isset($set[2]) ? $set[2] : 0) : null),
-                ($hasM ? (isset($set[3]) ? $set[3] : 0) : null)
+                ($hasZ ? ($set[2] ?? 0) : null),
+                ($hasM ? ($set[3] ?? 0) : null)
             );
         }
         return new LineString($pointArray);
     }
 
-    protected function parsePolygon($xml)
+    protected function parsePolygon(DOMNode $xml): Polygon
     {
         $components = [];
 
@@ -186,7 +196,7 @@ class KML implements GeoAdapter
         return new Polygon($components);
     }
 
-    protected function parseGeometryCollection($xml)
+    protected function parseGeometryCollection(DOMNode $xml): GeometryCollection
     {
         $components = [];
         $geometryTypes = geoPHP::getGeometryList();
@@ -205,7 +215,11 @@ class KML implements GeoAdapter
         return new GeometryCollection($components);
     }
 
-    protected function extractCoordinates($xml)
+    /**
+     * @param DOMNode $xml
+     * @return array<array<string>>
+     */
+    protected function extractCoordinates(DOMNode $xml): array
     {
         $coordinateElements = $this->childElements($xml, 'coordinates');
         $coordinates = [];
@@ -230,10 +244,10 @@ class KML implements GeoAdapter
      * Serialize geometries into a KML string.
      *
      * @param Geometry $geometry
-     * @param bool $namespace
+     * @param null|string $namespace
      * @return string The KML string representation of the input geometries
      */
-    public function write(Geometry $geometry, $namespace = false)
+    public function write(Geometry $geometry, $namespace = null): string
     {
         if ($namespace) {
             $this->nss = $namespace . ':';
@@ -245,7 +259,7 @@ class KML implements GeoAdapter
      * @param Geometry $geometry
      * @return string
      */
-    private function geometryToKML($geometry)
+    private function geometryToKML(Geometry $geometry): string
     {
         $type = $geometry->geometryType();
         switch ($type) {
@@ -262,7 +276,7 @@ class KML implements GeoAdapter
             case Geometry::MULTI_LINE_STRING:
             case Geometry::MULTI_POLYGON:
             case Geometry::GEOMETRY_COLLECTION:
-            /** @var Collection $geometry */
+            /** @var MultiGeometry $geometry */
                 return $this->collectionToKML($geometry);
         }
         return '';
@@ -272,7 +286,7 @@ class KML implements GeoAdapter
      * @param Point $geometry
      * @return string
      */
-    private function pointToKML($geometry)
+    private function pointToKML(Point $geometry): string
     {
         $str = '<' . $this->nss . "Point>\n<" . $this->nss . 'coordinates>';
         if ($geometry->isEmpty()) {
@@ -285,10 +299,10 @@ class KML implements GeoAdapter
 
     /**
      * @param LineString $geometry
-     * @param string|boolean $type
+     * @param string|null $type
      * @return string
      */
-    private function linestringToKML($geometry, $type = false)
+    private function linestringToKML(LineString $geometry, string $type = null): string
     {
         if (!$type) {
             $type = $geometry->geometryType();
@@ -319,7 +333,7 @@ class KML implements GeoAdapter
      * @param Polygon $geometry
      * @return string
      */
-    public function polygonToKML($geometry)
+    public function polygonToKML(Polygon $geometry): string
     {
         $components = $geometry->getComponents();
         $str = '';
@@ -339,10 +353,10 @@ class KML implements GeoAdapter
     }
 
     /**
-     * @param Collection $geometry
+     * @param MultiGeometry $geometry
      * @return string
      */
-    public function collectionToKML($geometry)
+    public function collectionToKML(MultiGeometry $geometry): string
     {
         $components = $geometry->getComponents();
         $str = '<' . $this->nss . "MultiGeometry>\n";

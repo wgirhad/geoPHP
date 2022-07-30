@@ -20,12 +20,13 @@ class GeoHash implements GeoAdapter
     /**
      * @var string
      */
-
-    /** @noinspection SpellCheckingInspection */
     public static $characterTable = "0123456789bcdefghjkmnpqrstuvwxyz";
 
     /**
-     * array of neighbouring hash character maps.
+     * Array of neighbouring hash character maps.
+     * @var array{top: array<string, string>,right: array<string, string>,
+     *            left: array<string, string>,bottom: array<string, string>
+     *      }
      */
     private static $neighbours =  [
         // north
@@ -52,6 +53,9 @@ class GeoHash implements GeoAdapter
 
     /**
      * array of bordering hash character maps.
+     * @var array{top: array<string, string>,right: array<string, string>,
+     *            left: array<string, string>,bottom: array<string, string>
+     *      }
      */
     private static $borders =  [
         // north
@@ -84,7 +88,7 @@ class GeoHash implements GeoAdapter
      *
      * @return Point|Polygon the converted GeoHash
      */
-    public function read($hash, $asGrid = false)
+    public function read(string $hash, bool $asGrid = false): Geometry
     {
         $decodedHash = $this->decode($hash);
         if (!$asGrid) {
@@ -111,9 +115,10 @@ class GeoHash implements GeoAdapter
      *
      * @param Geometry $geometry
      * @param float|null $precision
+     *
      * @return string the GeoHash or null when the $geometry is not a Point
      */
-    public function write(Geometry $geometry, $precision = null)
+    public function write(Geometry $geometry, float $precision = null): string
     {
         if ($geometry->isEmpty()) {
             return '';
@@ -218,9 +223,10 @@ class GeoHash implements GeoAdapter
      * @see https://github.com/asonge/php-geohash/issues/1
      *
      * @param string $hash a GeoHash
-     * @return array Associative array.
+     *
+     * @return array<string, float|int> Associative array.
      */
-    private function decode($hash)
+    private function decode(string $hash): array
     {
         $result = [];
         $minLatitude = -90;
@@ -317,11 +323,12 @@ class GeoHash implements GeoAdapter
      * @see https://github.com/sunng87/node-geohash
      * @see https://github.com/davidmoten/geo
      *
-     * @param string $hash the geohash (lowercase)
-     * @param string $direction the direction of the neighbor (top, bottom, left or right)
-     * @return string the geohash of the adjacent cell
+     * @param string $hash the geohash (lowercase).
+     * @param string $direction the direction of the neighbor (top, bottom, left or right).
+     *
+     * @return string the geohash of the adjacent cell.
      */
-    public static function adjacent($hash, $direction)
+    public static function adjacent(string $hash, string $direction): string
     {
         $last = substr($hash, -1);
         $type = (strlen($hash) % 2) ? 'odd' : 'even';

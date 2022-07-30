@@ -33,30 +33,34 @@ class GoogleGeocode implements GeoAdapter
     protected $result;
 
     /**
-     * Makes a geocoding (lat/lon lookup) with an address string or array geometry objects
+     * Makes a geocoding (lat/lon lookup) with an address string or array geometry objects.
+     * Detailed documentation of response values can be found in:
      *
-     * @param string|string[]     $address        Address to geocode
-     * @param string              $apiKey         Your application's Google Maps Geocoding API key
-     * @param string              $returnType     Type of Geometry to return.
-     *                                            Can either be 'points' or 'bounds' (polygon)
-     * @param array|bool|Geometry $bounds         Limit the search area to within this region.
+     * @see https://developers.google.com/maps/documentation/geocoding/requests-geocoding
+     *
+     * @param string                 $address        Address to geocode.
+     * @param string                 $apiKey         Your application's Google Maps Geocoding API key.
+     * @param string                 $returnType     Type of Geometry to return.
+     *        Can either be 'points' or 'bounds' (polygon).
+     * @param string[]|Geometry|null $bounds         Limit the search area to within this region.
      *        For example by default geocoding "Cairo" will return the location of Cairo Egypt.
      *        If you pass a polygon of Illinois, it will return Cairo IL.
-     * @param boolean             $returnMultiple - Return all results in a multipoint or multipolygon
+     * @param boolean                $returnMultiple Return all results in a multipoint or multipolygon.
      *
      * @return Geometry
-     * @throws IOException If geocoding fails
+     * @throws IOException If geocoding fails.
      */
-    public function read($address, $apiKey = null, $returnType = 'point', $bounds = false, $returnMultiple = false)
-    {
-        if (is_array($address)) {
-            $address = join(',', $address);
-        }
-
-        if (gettype($bounds) == 'object') {
+    public function read(
+        string $address,
+        string $apiKey = null,
+        string $returnType = 'point',
+        $bounds = null,
+        bool $returnMultiple = false
+    ): Geometry {
+        if ($bounds instanceof Geometry) {
             $bounds = $bounds->getBBox();
         }
-        if (gettype($bounds) == 'array') {
+        if (is_array($bounds)) {
             $boundsString = '&bounds='
                             . $bounds['miny'] . ',' . $bounds['minx'] . '|'
                             . $bounds['maxy'] . ',' . $bounds['maxx'];
@@ -110,22 +114,72 @@ class GoogleGeocode implements GeoAdapter
     }
 
     /**
-     * Makes a Reverse Geocoding (address lookup) with the (center) point of Geometry
+     * Makes a Reverse Geocoding (address lookup) with the (center) point of Geometry.
      * Detailed documentation of response values can be found in:
      *
-     * @see https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding
+     * @see https://developers.google.com/maps/documentation/geocoding/requests-reverse-geocoding
      *
      * @param Geometry $geometry
-     * @param string   $apiKey     Your application's Google Maps Geocoding API key
-     * @param string   $returnType Should be either 'string' or 'array' or 'both'
+     * @param string   $apiKey     Your application's Google Maps Geocoding API key.
+     * @param string   $returnType Should be either 'string' or 'array' or 'full'.
      * @param string   $language   The language in which to return results.
      *                             If not set, geocoder tries to use the native language of the domain.
      *
-     * @return string|Object[] A formatted address or array of address components
+     * @return string A formatted address.
      * @throws IOException If geocoding fails
      */
-    public function write(Geometry $geometry, $apiKey = null, $returnType = 'string', $language = null)
-    {
+    public function write(
+        Geometry $geometry,
+        ?string $apiKey = null,
+        ?string $returnType = 'string',
+        ?string $language = null
+    ): string {
+        return $this->reverseGeocode($geometry, $apiKey, 'string', $language);
+    }
+
+    /**
+     * Makes a Reverse Geocoding (address lookup) with the (center) point of Geometry.
+     * Detailed documentation of response values can be found in:
+     *
+     * @see https://developers.google.com/maps/documentation/geocoding/requests-reverse-geocoding
+     *
+     * @param Geometry $geometry
+     * @param string   $apiKey     Your application's Google Maps Geocoding API key.
+     * @param string   $language   The language in which to return results.
+     *                             If not set, geocoder tries to use the native language of the domain.
+     *
+     * @return string[] Array of address components.
+     * @throws IOException If geocoding fails
+     */
+    public function writeAsArray(
+        Geometry $geometry,
+        ?string $apiKey = null,
+        ?string $language = null
+    ): array {
+        return $this->reverseGeocode($geometry, $apiKey, 'array', $language);
+    }
+
+    /**
+     * Makes a Reverse Geocoding (address lookup) with the (center) point of Geometry.
+     * Detailed documentation of response values can be found in:
+     *
+     * @see https://developers.google.com/maps/documentation/geocoding/requests-reverse-geocoding
+     *
+     * @param Geometry $geometry
+     * @param string   $apiKey     Your application's Google Maps Geocoding API key.
+     * @param string   $returnType Should be either 'string' or 'array' or 'full'
+     * @param string   $language   The language in which to return results.
+     *                             If not set, geocoder tries to use the native language of the domain.
+     *
+     * @return string|string[] A formatted address or array of address components.
+     * @throws IOException If geocoding fails
+     */
+    protected function reverseGeocode(
+        Geometry $geometry,
+        ?string $apiKey = null,
+        ?string $returnType = 'string',
+        ?string $language = null
+    ) {
         $centroid = $geometry->centroid();
         $lat = $centroid->y();
         $lon = $centroid->x();
@@ -166,14 +220,14 @@ class GoogleGeocode implements GeoAdapter
         return '';
     }
 
-    private function getPoint($delta = 0)
+    private function getPoint(int $delta = 0): Point
     {
         $lat = $this->result->results[$delta]->geometry->location->lat;
         $lon = $this->result->results[$delta]->geometry->location->lng;
         return new Point($lon, $lat);
     }
 
-    private function getPolygon($delta = 0)
+    private function getPolygon(int $delta = 0): Polygon
     {
         $points = [
                 $this->getTopLeft($delta),
@@ -186,28 +240,28 @@ class GoogleGeocode implements GeoAdapter
         return new Polygon([$outerRing]);
     }
 
-    private function getTopLeft($delta = 0)
+    private function getTopLeft(int $delta = 0): Point
     {
         $lat = $this->result->results[$delta]->geometry->bounds->northeast->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->southwest->lng;
         return new Point($lon, $lat);
     }
 
-    private function getTopRight($delta = 0)
+    private function getTopRight(int $delta = 0): Point
     {
         $lat = $this->result->results[$delta]->geometry->bounds->northeast->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->northeast->lng;
         return new Point($lon, $lat);
     }
 
-    private function getBottomLeft($delta = 0)
+    private function getBottomLeft(int $delta = 0): Point
     {
         $lat = $this->result->results[$delta]->geometry->bounds->southwest->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->southwest->lng;
         return new Point($lon, $lat);
     }
 
-    private function getBottomRight($delta = 0)
+    private function getBottomRight(int $delta = 0): Point
     {
         $lat = $this->result->results[$delta]->geometry->bounds->southwest->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->northeast->lng;

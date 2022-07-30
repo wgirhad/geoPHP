@@ -13,12 +13,12 @@ namespace geoPHP\Adapter;
 use geoPHP\Exception\FileFormatException;
 use geoPHP\Exception\InvalidXmlException;
 use geoPHP\Exception\IOException;
-use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 use geoPHP\Geometry\Point;
 use geoPHP\Geometry\MultiPoint;
 use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\MultiGeometry;
 use geoPHP\Geometry\MultiLineString;
 use geoPHP\Geometry\Polygon;
 use geoPHP\Geometry\MultiPolygon;
@@ -34,13 +34,22 @@ class OSM implements GeoAdapter
     const OSM_COORDINATE_PRECISION = '%.7f';
     const OSM_API_URL = 'http://openstreetmap.org/api/0.6/';
 
-    /** @var  \DOMDocument $xmlObj */
+    /** @var \DOMDocument */
     protected $xmlObj;
 
+    /**
+     * @var array<array{point: Point, assigned: bool, tags: array<mixed>, id?: int, used?: bool}>|array{}
+     */
     protected $nodes = [];
 
+    /**
+     * @var array<array{nodes: array<mixed>, assigned: bool, tags: array<mixed>, isRng: bool}>|array{}
+     */
     protected $ways = [];
 
+    /**
+     * @var int
+     */
     protected $idCounter = 0;
 
     /**
@@ -51,7 +60,7 @@ class OSM implements GeoAdapter
      * @return Geometry|GeometryCollection
      * @throws \Exception
      */
-    public function read($osm)
+    public function read(string $osm): Geometry
     {
         // Load into DOMDocument
         $this->xmlObj = new \DOMDocument();
@@ -69,7 +78,7 @@ class OSM implements GeoAdapter
         return $geom;
     }
 
-    protected function geomFromXML()
+    protected function geomFromXML(): Geometry
     {
         $geometries = [];
 
@@ -104,8 +113,8 @@ class OSM implements GeoAdapter
             /** @var \DOMElement $way */
             $id = intval($way->attributes->getNamedItem('id')->nodeValue);
             $wayNodes = [];
-            foreach ($way->getElementsByTagName('nd') as $node) {
-                $ref = intval($node->attributes->getNamedItem('ref')->nodeValue);
+            foreach ($way->getElementsByTagName('nd') as $wayNode) {
+                $ref = intval($wayNode->attributes->getNamedItem('ref')->nodeValue);
                 if (isset($nodes[$ref])) {
                     $nodes[$ref]['assigned'] = true;
                     $wayNodes[] = $ref;
@@ -150,7 +159,7 @@ class OSM implements GeoAdapter
             }
 
             // Collect relation members
-            /** @var array[] $relationWays */
+            /** @var array<int, array<mixed>> $relationWays */
             $relationWays = [];
             foreach ($relation->getElementsByTagName('member') as $member) {
                 $memberType = $member->attributes->getNamedItem('type')->nodeValue;
@@ -232,7 +241,12 @@ class OSM implements GeoAdapter
         return count($geometries) == 1 ? $geometries[0] : new GeometryCollection($geometries);
     }
 
-    protected function processRoutes(&$relationWays, &$nodes)
+    /**
+     * @param array<array<mixed>> $relationWays
+     * @param array<array<mixed>> $nodes
+     * @return LineString[]
+     */
+    protected function processRoutes(array &$relationWays, array &$nodes): array
     {
 
         // Construct lines
@@ -281,7 +295,12 @@ class OSM implements GeoAdapter
         return $lineStrings;
     }
 
-    protected function processMultipolygon(&$relationWays, &$nodes)
+    /**
+     * @param array<array<mixed>> $relationWays
+     * @param array<array<mixed>> $nodes
+     * @return Polygon[]
+     */
+    protected function processMultipolygon(array &$relationWays, array &$nodes): array
     {
         /* TODO: what to do with broken rings?
          * I propose to force-close if start -> end point distance is less then 10% of line length, otherwise drop it.
@@ -422,7 +441,7 @@ class OSM implements GeoAdapter
 
 
 
-    public function write(Geometry $geometry)
+    public function write(Geometry $geometry): string
     {
 
         $this->processGeometry($geometry);
@@ -447,7 +466,7 @@ class OSM implements GeoAdapter
     /**
      * @param Geometry $geometry
      */
-    protected function processGeometry($geometry)
+    protected function processGeometry(Geometry $geometry): void
     {
         if (!$geometry->isEmpty()) {
             switch ($geometry->geometryType()) {
@@ -467,7 +486,7 @@ class OSM implements GeoAdapter
                 case Geometry::MULTI_LINE_STRING:
                 case Geometry::MULTI_POLYGON:
                 case Geometry::GEOMETRY_COLLECTION:
-                    /** @var Collection $geometry */
+                    /** @var MultiGeometry $geometry */
                     $this->processCollection($geometry);
                     break;
             }
@@ -479,7 +498,7 @@ class OSM implements GeoAdapter
      * @param bool|false $isWayPoint
      * @return int
      */
-    protected function processPoint($point, $isWayPoint = false)
+    protected function processPoint(Point $point, bool $isWayPoint = false): int
     {
         $nodePosition = sprintf(
             self::OSM_COORDINATE_PRECISION . '_' . self::OSM_COORDINATE_PRECISION,
@@ -500,7 +519,7 @@ class OSM implements GeoAdapter
     /**
      * @param LineString $line
      */
-    protected function processLineString($line)
+    protected function processLineString(LineString $line): void
     {
         $processedNodes = [];
         foreach ($line->getPoints() as $point) {
@@ -512,16 +531,16 @@ class OSM implements GeoAdapter
     /**
      * @param Polygon $polygon
      */
-    protected function processPolygon($polygon)
+    protected function processPolygon(Polygon $polygon): void
     {
         // TODO: Support interior rings
         $this->processLineString($polygon->exteriorRing());
     }
 
     /**
-     * @param Collection $collection
+     * @param MultiGeometry $collection
      */
-    protected function processCollection($collection)
+    protected function processCollection(MultiGeometry $collection): void
     {
         // TODO: multi geometries should be converted to relations
         foreach ($collection->getComponents() as $component) {
@@ -529,7 +548,7 @@ class OSM implements GeoAdapter
         }
     }
 
-    public static function downloadFromOSMByBbox($left, $bottom, $right, $top)
+    public static function downloadFromOSMByBbox(float $left, float $bottom, float $right, float $top): string
     {
         $osmFile = file_get_contents(self::OSM_API_URL . "map?bbox={$left},{$bottom},{$right},{$top}");
         if ($osmFile !== false) {

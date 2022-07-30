@@ -24,8 +24,14 @@ class BinaryReader
     const BIG_ENDIAN = 0;
     const LITTLE_ENDIAN = 1;
 
+    /**
+     * @var resource
+     */
     private $buffer;
 
+    /**
+     * @var int
+     */
     private $endianness = 0;
 
     /**
@@ -48,7 +54,7 @@ class BinaryReader
     /**
      * Closes the memory buffer
      */
-    public function close()
+    public function close(): void
     {
         fclose($this->buffer);
     }
@@ -56,7 +62,7 @@ class BinaryReader
     /**
      * @param int $endian self::BIG_ENDIAN or self::LITTLE_ENDIAN
      */
-    public function setEndianness($endian)
+    public function setEndianness(int $endian): void
     {
         $this->endianness = $endian === self::BIG_ENDIAN ? self::BIG_ENDIAN : self::LITTLE_ENDIAN;
     }
@@ -64,7 +70,7 @@ class BinaryReader
     /**
      * @return int Returns 0 if reader is in BigEndian mode or 1 if in LittleEndian mode
      */
-    public function getEndianness()
+    public function getEndianness(): int
     {
         return $this->endianness;
     }
@@ -73,7 +79,7 @@ class BinaryReader
      * Reads a signed 8-bit integer from the buffer
      * @return int|null
      */
-    public function readSInt8()
+    public function readSInt8(): ?int
     {
         $char = fread($this->buffer, 1);
         return $char !== '' ? current(unpack("c", $char)) : null;
@@ -83,7 +89,7 @@ class BinaryReader
      * Reads an unsigned 8-bit integer from the buffer
      * @return int|null
      */
-    public function readUInt8()
+    public function readUInt8(): ?int
     {
         $char = fread($this->buffer, 1);
         return $char !== '' ? current(unpack("C", $char)) : null;

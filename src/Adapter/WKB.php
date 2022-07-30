@@ -8,9 +8,11 @@ use geoPHP\Geometry\GeometryCollection;
 use geoPHP\Geometry\Point;
 use geoPHP\Geometry\MultiPoint;
 use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\MultiGeometry;
 use geoPHP\Geometry\MultiLineString;
 use geoPHP\Geometry\Polygon;
 use geoPHP\Geometry\MultiPolygon;
+use InvalidArgumentException;
 
 /*
  * (c) Patrick Hayes
@@ -33,14 +35,19 @@ class WKB implements GeoAdapter
     const WKB_XDR = 1;
     const WKB_NDR = 0;
 
+    /** @var bool */
     protected $hasZ = false;
 
+    /** @var bool */
     protected $hasM = false;
 
+    /** @var bool */
     protected $hasSRID = false;
 
+    /**  @var int|null */
     protected $SRID = null;
 
+    /** @var int */
     protected $dimension = 2;
 
     /** @var  BinaryReader $reader */
@@ -49,7 +56,7 @@ class WKB implements GeoAdapter
     /** @var  BinaryWriter $writer */
     protected $writer;
 
-    /** @var array Maps Geometry types to WKB type codes */
+    /** @var array<string, int> Maps Geometry types to WKB type codes */
     public static $typeMap = [
             Geometry::POINT               => 1,
             Geometry::LINE_STRING         => 2,
@@ -81,7 +88,7 @@ class WKB implements GeoAdapter
      *
      * @throws IOException
      */
-    public function read($wkb, $isHexString = false)
+    public function read(string $wkb, bool $isHexString = false): Geometry
     {
         if ($isHexString) {
             $wkb = pack('H*', $wkb);
@@ -173,13 +180,13 @@ class WKB implements GeoAdapter
                     ' (' . (array_search($geometryType, self::$typeMap) ?: 'unknown') . ') not supported'
                 );
         }
-        if ($geometry && $SRID) {
+        if ($SRID) {
             $geometry->setSRID($SRID);
         }
         return $geometry;
     }
 
-    protected function getPoint()
+    protected function getPoint(): Point
     {
         $coordinates = $this->reader->readDoubles($this->dimension * 8);
 
@@ -206,7 +213,7 @@ class WKB implements GeoAdapter
         return $point;
     }
 
-    protected function getLineString()
+    protected function getLineString(): LineString
     {
         // Get the number of points expected in this string out of the first 4 bytes
         $lineLength = $this->reader->readUInt32();
@@ -219,14 +226,12 @@ class WKB implements GeoAdapter
         $components = [];
         for ($i = 0; $i < $lineLength; ++$i) {
             $point = $this->getPoint();
-            if ($point) {
-                $components[] = $point;
-            }
+            $components[] = $point;
         }
         return new LineString($components);
     }
 
-    protected function getPolygon()
+    protected function getPolygon(): Polygon
     {
         // Get the number of linestring expected in this poly out of the first 4 bytes
         $polyLength = $this->reader->readUInt32();
@@ -244,7 +249,7 @@ class WKB implements GeoAdapter
         return new Polygon($components);
     }
 
-    protected function getMulti($type)
+    protected function getMulti(string $type): MultiGeometry
     {
         // Get the number of items expected in this multi out of the first 4 bytes
         $multiLength = $this->reader->readUInt32();
@@ -268,7 +273,7 @@ class WKB implements GeoAdapter
             case 'Geometry':
                 return new GeometryCollection($components);
         }
-        return null;
+        throw new InvalidArgumentException("Unknown multi-geometry type '$type'.");
     }
 
     /**
@@ -280,7 +285,7 @@ class WKB implements GeoAdapter
      *
      * @return string The WKB string representation of the input geometries
      */
-    public function write(Geometry $geometry, $writeAsHex = false, $bigEndian = false)
+    public function write(Geometry $geometry, bool $writeAsHex = false, bool $bigEndian = false): string
     {
         $this->writer = new BinaryWriter($bigEndian ? BinaryWriter::BIG_ENDIAN : BinaryWriter::LITTLE_ENDIAN);
 
@@ -337,7 +342,7 @@ class WKB implements GeoAdapter
      * @param Point $point
      * @return string
      */
-    protected function writePoint($point)
+    protected function writePoint(Point $point): string
     {
         if ($point->isEmpty()) {
             /*
@@ -363,7 +368,7 @@ class WKB implements GeoAdapter
      * @param LineString $line
      * @return string
      */
-    protected function writeLineString($line)
+    protected function writeLineString(LineString $line): string
     {
         // Set the number of points in this line
         $wkb = $this->writer->writeUInt32($line->numPoints());
@@ -380,7 +385,7 @@ class WKB implements GeoAdapter
      * @param Polygon $poly
      * @return string
      */
-    protected function writePolygon($poly)
+    protected function writePolygon(Polygon $poly): string
     {
         // Set the number of lines in this poly
         $wkb = $this->writer->writeUInt32($poly->numGeometries());
@@ -394,10 +399,10 @@ class WKB implements GeoAdapter
     }
 
     /**
-     * @param MultiPoint|MultiPolygon|MultiLineString|GeometryCollection $geometry
+     * @param MultiGeometry $geometry
      * @return string
      */
-    protected function writeMulti($geometry)
+    protected function writeMulti(MultiGeometry $geometry): string
     {
         // Set the number of components
         $wkb = $this->writer->writeUInt32($geometry->numGeometries());
@@ -415,7 +420,7 @@ class WKB implements GeoAdapter
      * @param bool $writeSRID
      * @return string
      */
-    protected function writeType($geometry, $writeSRID = false)
+    protected function writeType(Geometry $geometry, bool $writeSRID = false): string
     {
         $type = self::$typeMap[$geometry->geometryType()];
         // Binary OR to mix in additional properties

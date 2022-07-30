@@ -4,6 +4,7 @@ namespace geoPHP\Adapter;
 
 use DOMDocument;
 use DOMElement;
+use DOMNode;
 use DOMXPath;
 use geoPHP\Exception\FileFormatException;
 use geoPHP\Exception\InvalidXmlException;
@@ -41,23 +42,29 @@ class GPX implements GeoAdapter
      */
     protected $xpath;
 
+    /**
+     * @var boolean
+     */
     protected $parseGarminRpt = false;
 
+    /**
+     * @var Point[]|null
+     */
     protected $trackFromRoute = null;
 
     /**
      * Read GPX string into geometry object
      *
      * @param string $gpx A GPX string
-     * @param array|null $allowedElements Which elements can be read from each GPX type
+     * @param array<string, array<mixed>>|null $allowedElements Which elements can be read from each GPX type.
      *                   If not specified, every element defined in the GPX specification can be read
      *                   Can be overwritten with an associative array, with type name in keys.
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
-     * @return Geometry|GeometryCollection
+     * @return Geometry
      * @throws InvalidXmlException If GPX is not a valid XML
      * @throws FileFormatException If cannot parse GPX
      */
-    public function read($gpx, $allowedElements = null)
+    public function read(string $gpx, ?array $allowedElements = null): Geometry
     {
         $this->gpxTypes = new GpxTypes($allowedElements);
 
@@ -109,9 +116,9 @@ class GPX implements GeoAdapter
     /**
      * Parses the GPX XML and returns a geometry
      * @param DOMDocument $xmlObject
-     * @return GeometryCollection|Geometry Returns the geometry representation of the GPX (@see geoPHP::buildGeometry)
+     * @return Geometry Returns the geometry representation of the GPX (@see geoPHP::buildGeometry)
      */
-    protected function geomFromXML($xmlObject)
+    protected function geomFromXML(DOMDocument $xmlObject): Geometry
     {
         /** @var Geometry[] $geometries */
         $geometries = array_merge(
@@ -128,6 +135,7 @@ class GPX implements GeoAdapter
         }
 
         $geometry = geoPHP::buildGeometry($geometries);
+
         if (
             in_array('metadata', $this->gpxTypes->get('gpxType'))
             && $xmlObject->getElementsByTagName('metadata')->length === 1
@@ -145,7 +153,12 @@ class GPX implements GeoAdapter
         return $geometry;
     }
 
-    protected function childElements($xml, $nodeName = '')
+    /**
+     * @param DOMNode $xml
+     * @param string $nodeName
+     * @return DOMNode[]
+     */
+    protected function childElements(DOMNode $xml, string $nodeName = ''): array
     {
         $children = [];
         foreach ($xml->childNodes as $child) {
@@ -153,6 +166,7 @@ class GPX implements GeoAdapter
                 $children[] = $child;
             }
         }
+
         return $children;
     }
 
@@ -160,7 +174,7 @@ class GPX implements GeoAdapter
      * @param DOMElement $node
      * @return Point
      */
-    protected function parsePoint($node)
+    protected function parsePoint(DOMElement $node): Point
     {
         $lat = (float) $node->attributes->getNamedItem("lat")->nodeValue;
         $lon = (float) $node->attributes->getNamedItem("lon")->nodeValue;
@@ -183,7 +197,7 @@ class GPX implements GeoAdapter
      * @param DOMDocument $xmlObject
      * @return Point[]
      */
-    protected function parseWaypoints($xmlObject)
+    protected function parseWaypoints(DOMDocument $xmlObject): array
     {
         if (!in_array('wpt', $this->gpxTypes->get('gpxType'))) {
             return [];
@@ -202,7 +216,7 @@ class GPX implements GeoAdapter
      * @param DOMDocument $xmlObject
      * @return LineString[]
      */
-    protected function parseTracks($xmlObject)
+    protected function parseTracks(DOMDocument $xmlObject): array
     {
         if (!in_array('trk', $this->gpxTypes->get('gpxType'))) {
             return [];
@@ -216,6 +230,7 @@ class GPX implements GeoAdapter
                 $points = [];
                 /** @noinspection SpellCheckingInspection */
                 foreach ($this->childElements($trkseg, 'trkpt') as $trkpt) {
+                    /** @var DomElement $trkpt */
                     $points[] = $this->parsePoint($trkpt);
                 }
                 // Avoids creating invalid LineString
@@ -237,7 +252,7 @@ class GPX implements GeoAdapter
      * @param DOMDocument $xmlObject
      * @return LineString[]
      */
-    protected function parseRoutes($xmlObject)
+    protected function parseRoutes(DOMDocument $xmlObject): array
     {
         if (!in_array('rte', $this->gpxTypes->get('gpxType'))) {
             return [];
@@ -248,7 +263,7 @@ class GPX implements GeoAdapter
             $components = [];
             /** @noinspection SpellCheckingInspection */
             foreach ($this->childElements($rte, 'rtept') as $routePoint) {
-                /** @noinspection SpellCheckingInspection */
+                /** @var DomElement $routePoint */
                 $components[] = $this->parsePoint($routePoint);
             }
             $line = new LineString($components);
@@ -264,11 +279,11 @@ class GPX implements GeoAdapter
      * eg: <wpt><name>Test</name><link href="example.com"><text>Example</text></link></wpt>
      * to: ['name' => 'Test', 'link' => ['text'] => 'Example', '@attributes' => ['href' => 'example.com']]
      *
-     * @param \DOMNode $node
+     * @param DOMNode $node
      * @param string[]|null $tagList
-     * @return array|string
+     * @return string | array<string, string> | array<string, array<string>>
      */
-    protected static function parseNodeProperties($node, $tagList = null)
+    protected static function parseNodeProperties(DOMNode $node, ?array $tagList = null)
     {
         if ($node->nodeType === XML_TEXT_NODE) {
             return $node->nodeValue;
@@ -312,15 +327,15 @@ class GPX implements GeoAdapter
     /**
      * Serialize geometries into a GPX string.
      *
-     * @param Geometry|GeometryCollection $geometry
+     * @param Geometry $geometry
      * @param string|null $namespace
-     * @param array|null $allowedElements Which elements can be added to each GPX type
+     * @param array<mixed>|null $allowedElements Which elements can be added to each GPX type
      *                   If not specified, every element defined in the GPX specification can be added
      *                   Can be overwritten with an associative array, with type name in keys.
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
      * @return string The GPX string representation of the input geometries
      */
-    public function write(Geometry $geometry, $namespace = null, $allowedElements = null)
+    public function write(Geometry $geometry, ?string $namespace = null, ?array $allowedElements = null): string
     {
         if ($namespace) {
             $this->nss = $namespace . ':';
@@ -472,7 +487,7 @@ class GPX implements GeoAdapter
      * @param string $indent
      * @return string
      */
-    protected static function processGeometryData($geometry, $tagList, $indent = "\t")
+    protected static function processGeometryData(Geometry $geometry, array $tagList, string $indent = "\t"): string
     {
         $tags = '';
         if ($geometry->getData() !== null) {
@@ -487,11 +502,11 @@ class GPX implements GeoAdapter
 
     /**
      * @param string $tagName
-     * @param string|array $value
+     * @param string|array<string, mixed> $value
      * @param string $indent
      * @return string
      */
-    protected static function createNodes($tagName, $value, $indent)
+    protected static function createNodes(string $tagName, $value, string $indent): string
     {
         $attributes = '';
         if (!is_array($value)) {

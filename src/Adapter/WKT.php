@@ -59,7 +59,7 @@ class WKT implements GeoAdapter
      *
      * @return Geometry
      */
-    public function read($wkt): Geometry
+    public function read(string $wkt): Geometry
     {
         $this->hasZ = null;
         $this->hasM = null;

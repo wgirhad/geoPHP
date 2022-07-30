@@ -12,7 +12,7 @@ namespace geoPHP\Adapter;
 class GpxTypes
 {
     /**
-     * @var array Allowed elements in <gpx>
+     * @var string[] Allowed elements in <gpx>
      * @see http://www.topografix.com/gpx/1/1/#type_gpxType
      */
     public static $gpxTypeElements = [
@@ -20,7 +20,7 @@ class GpxTypes
     ];
 
     /**
-     * @var array Allowed elements in <trk>
+     * @var string[] Allowed elements in <trk>
      * @see http://www.topografix.com/gpx/1/1/#type_trkType
      */
     public static $trkTypeElements = [
@@ -29,7 +29,7 @@ class GpxTypes
 
     /**
      * same as trkTypeElements
-     * @var array Allowed elements in <rte>
+     * @var string[] Allowed elements in <rte>
      * @see http://www.topografix.com/gpx/1/1/#type_rteType
      */
     public static $rteTypeElements = [
@@ -37,7 +37,7 @@ class GpxTypes
     ];
 
     /**
-     * @var array Allowed elements in <wpt>
+     * @var string[] Allowed elements in <wpt>
      * @see http://www.topografix.com/gpx/1/1/#type_wptType
      */
     public static $wptTypeElements = [
@@ -46,7 +46,7 @@ class GpxTypes
     ];
 
     /**
-     * @var array Same as wptType
+     * @var string[] Same as wptType
      */
     public static $trkptTypeElements = [    // same as wptTypeElements
         'ele', 'time', 'magvar', 'geoidheight', 'name', 'cmt', 'desc', 'src', 'link', 'sym', 'type',
@@ -54,7 +54,7 @@ class GpxTypes
     ];
 
     /**
-     * @var array Same as wptType
+     * @var string[] Same as wptType
      */
     public static $rteptTypeElements = [    // same as wptTypeElements
         'ele', 'time', 'magvar', 'geoidheight', 'name', 'cmt', 'desc', 'src', 'link', 'sym', 'type',
@@ -62,36 +62,63 @@ class GpxTypes
     ];
 
     /**
-     * @var array Allowed elements in <metadata>
+     * @var string[] Allowed elements in <metadata>
      * @see http://www.topografix.com/gpx/1/1/#type_metadataType
      */
     public static $metadataTypeElements = [
         'name', 'desc', 'author', 'copyright', 'link', 'time', 'keywords', 'bounds'
     ];
 
+    /**
+     * @var string[] Allowed elements in <gpx>
+     * @see http://www.topografix.com/gpx/1/1/#type_gpxType
+     */
     protected $allowedGpxTypeElements;
 
+    /**
+     * @var string[] Allowed elements in <trk>
+     * @see http://www.topografix.com/gpx/1/1/#type_trkType
+     */
     protected $allowedTrkTypeElements;
 
-    protected $allowedRteTypeElements;
 
-    protected $allowedWptTypeElements;
+    /**
+     * same as trkTypeElements
+     * @var string[] Allowed elements in <rte>
+     * @see http://www.topografix.com/gpx/1/1/#type_rteType
+     */
+    protected $allowedRteTypeElements = [];
 
-    protected $allowedTrkptTypeElements;
+    /**
+     * @var string[] Same as wptType
+     */
+    protected $allowedWptTypeElements = [];
 
-    protected $allowedRteptTypeElements;
+    /**
+     * @var string[] Same as wptType
+     */
+    protected $allowedTrkptTypeElements = [];
 
-    protected $allowedMetadataTypeElements;
+    /**
+     * @var string[] Same as wptType
+     */
+    protected $allowedRteptTypeElements = [];
+
+    /**
+     * @var string[] Allowed elements in <metadata>
+     * @see http://www.topografix.com/gpx/1/1/#type_metadataType
+     */
+    protected $allowedMetadataTypeElements = [];
 
     /**
      * GpxTypes constructor.
      *
-     * @param array|null $allowedElements Which elements can be used in each GPX type
-     *                   If not specified, every element defined in the GPX specification can be used
+     * @param array<string, ?array<string>>|null $allowedElements Which elements can be used in each GPX type.
+     *                   If not specified, every element defined in the GPX specification can be used.
      *                   Can be overwritten with an associative array, with type name in keys.
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
      */
-    public function __construct($allowedElements = null)
+    public function __construct(?array $allowedElements = null)
     {
         $this->allowedGpxTypeElements = self::$gpxTypeElements;
         $this->allowedTrkTypeElements = self::$trkTypeElements;
@@ -101,14 +128,12 @@ class GpxTypes
         $this->allowedRteptTypeElements = self::$rteptTypeElements;
         $this->allowedMetadataTypeElements = self::$metadataTypeElements;
 
-        if (is_array($allowedElements)) {
-            foreach ($allowedElements as $type => $elements) {
-                $elements = is_array($elements) ? $elements : [$elements];
-                $this->{'allowed' . ucfirst($type) . 'Elements'} = [];
-                foreach ($this::${$type . 'Elements'} as $availableType) {
-                    if (in_array($availableType, $elements)) {
-                        $this->{'allowed' . ucfirst($type) . 'Elements'}[] = $availableType;
-                    }
+        foreach ($allowedElements ?: [] as $type => $elements) {
+            $elements = is_array($elements) ? $elements : [$elements];
+            $this->{'allowed' . ucfirst($type) . 'Elements'} = [];
+            foreach ($this::${$type . 'Elements'} as $availableType) {
+                if (in_array($availableType, $elements)) {
+                    $this->{'allowed' . ucfirst($type) . 'Elements'}[] = $availableType;
                 }
             }
         }
@@ -122,7 +147,7 @@ class GpxTypes
      *                     gpxType, trkType, rteType, wptType, trkptType, rteptType, metadataType
      * @return string[]
      */
-    public function get($type)
+    public function get(string $type): array
     {
         $propertyName = 'allowed' . ucfirst($type) . 'Elements';
         if (isset($this->{$propertyName})) {
