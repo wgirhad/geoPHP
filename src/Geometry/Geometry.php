@@ -444,7 +444,9 @@ abstract class Geometry
     {
         if ($this->isEmpty()) {
             $type = 'geoPHP\\Geometry\\' . $this->geometryType();
-            return new $type();
+            /** @var Geometry */
+            $emptyGeometry = new $type();
+            return $emptyGeometry;
         }
         if ($this->geometryType() === Geometry::POINT) {
             return $this;
@@ -747,7 +749,7 @@ abstract class Geometry
     }
 
     /**
-     * @return array{valid: bool, reason: string, location: GEOSGeometry}
+     * @return array{valid: bool, reason?: string, location?: GEOSGeometry}
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */

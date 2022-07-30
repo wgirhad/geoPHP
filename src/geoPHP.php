@@ -261,14 +261,15 @@ class geoPHP
      * A multi-point containing a single point will return a point.
      * An array of geometries can be passed and they will be compiled into a single geometry
      *
-     * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
-     * @return Geometry|bool
+     * @param Geometry|Geometry[] $geometries
+     * @return Geometry|null
      */
     public static function geometryReduce($geometries)
     {
         if ($geometries === null) {
-            return false;
+            return null;
         }
+
         /*
          * If it is a single geometry
          */
@@ -308,7 +309,7 @@ class geoPHP
 
         $geometryTypes = array_unique($geometryTypes);
         if (empty($geometryTypes)) {
-            return false;
+            return null;    // TODO: Never happens?
         }
         if (count($geometryTypes) == 1) {
             if (count($reducedGeometries) == 1) {
@@ -317,7 +318,9 @@ class geoPHP
                 $class = 'geoPHP\\Geometry\\' .
                     (strstr($geometryTypes[0], 'Multi') ? '' : 'Multi') .
                     $geometryTypes[0];
-                return new $class($reducedGeometries);
+                /** @var Geometry */
+                $geometry = new $class($reducedGeometries);
+                return $geometry;
             }
         } else {
             return new GeometryCollection($reducedGeometries);
@@ -399,7 +402,9 @@ class geoPHP
                     }
                 }
                 $class = 'geoPHP\\Geometry\\' . $newType;
-                return new $class($geometries);
+                /** @var Geometry */
+                $geometry = new $class($geometries);
+                return $geometry;
             }
         } else {
             return new GeometryCollection($geometries);
@@ -420,11 +425,14 @@ class geoPHP
     public static function detectFormat(string &$input): ?string
     {
         $mem = fopen('php://memory', 'x+');
+        if (!$mem) {
+            throw new IOException('Failed to allocate memory');
+        }
         fwrite($mem, $input, 11); // Write 11 bytes - we can detect the vast majority of formats in the first 11 bytes
         fseek($mem, 0);
 
-        $bin = fread($mem, 11);
-        $bytes = unpack("c*", $bin);
+        $bin = fread($mem, 11) ?: '';
+        $bytes = unpack("c*", $bin) ?: [];
 
         // If bytes is empty, then we were passed empty input
         if (empty($bytes)) {
@@ -439,7 +447,7 @@ class geoPHP
 
         // Detect WKB or EWKB -- first byte is 1 (little endian indicator)
         if ($bytes[1] == 1 || $bytes[1] == 0) {
-            $wkbType = current(unpack($bytes[1] == 1 ? 'V' : 'N', substr($bin, 1, 4)));
+            $wkbType = current(unpack($bytes[1] == 1 ? 'V' : 'N', substr($bin, 1, 4)) ?: []);
             if (array_search($wkbType & 0xF, Adapter\WKB::$typeMap)) {
                 // If SRID byte is TRUE (1), it's EWKB
                 if (($wkbType & Adapter\WKB::SRID_MASK) === Adapter\WKB::SRID_MASK) {
@@ -457,7 +465,8 @@ class geoPHP
          */
         if ($bytes[1] == 48 && ($bytes[2] == 49 || $bytes[2] == 48) && strlen($input) > 12) {
             if (
-                (current(unpack($bytes[2] == 49 ? 'V' : 'N', hex2bin(substr($bin, 2, 8)))) & Adapter\WKB::SRID_MASK)
+                (current(unpack($bytes[2] == 49 ? 'V' : 'N', hex2bin(substr($bin, 2, 8))?: '') ?: [])
+                & Adapter\WKB::SRID_MASK)
                 == Adapter\WKB::SRID_MASK
             ) {
                 return 'ewkb:true';
@@ -477,7 +486,7 @@ class geoPHP
         }
 
         // Detect WKT - starts with a geometry type name
-        if (Adapter\WKT::getWktType(strstr($input, ' ', true))) {
+        if (Adapter\WKT::getWktType(strstr($input, ' ', true) ?: '')) {
             return 'wkt';
         }
 
@@ -504,7 +513,7 @@ class geoPHP
 
         // We need an 8 byte string for geohash and unpacked WKB / WKT
         fseek($mem, 0);
-        $string = trim(fread($mem, 8));
+        $string = trim(fread($mem, 8) ?: '');
 
         // Detect geohash - geohash ONLY contains lowercase chars and numerics
         preg_match('/[' . GeoHash::$characterTable . ']+/', $string, $matches);

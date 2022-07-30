@@ -177,7 +177,7 @@ abstract class MultiGeometry extends Collection
         $startPoint = $this->startPoint();
         $endPoint = $this->endPoint();
         if ($startPoint && $endPoint) {
-            return abs($startPoint->z() - $endPoint->z());
+            return (float) abs($startPoint->z() - $endPoint->z());
         } else {
             return null;
         }

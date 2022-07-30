@@ -109,7 +109,7 @@ class Point extends Geometry
     /**
      * Get X (longitude) coordinate
      *
-     * @return float The X coordinate
+     * @return float|null The X coordinate
      */
     public function x(): ?float
     {
@@ -119,7 +119,7 @@ class Point extends Geometry
     /**
      * Returns Y (latitude) coordinate
      *
-     * @return float The Y coordinate
+     * @return float|null The Y coordinate
      */
     public function y(): ?float
     {
@@ -129,7 +129,7 @@ class Point extends Geometry
     /**
      * Returns Z (altitude) coordinate
      *
-     * @return float The Z coordinate or NULL is not a 3D point
+     * @return float|null The Z coordinate or NULL is not a 3D point
      */
     public function z(): ?float
     {
@@ -139,7 +139,7 @@ class Point extends Geometry
     /**
      * Returns M (measured) value
      *
-     * @return float The measured value
+     * @return float|null The measured value
      */
     public function m(): ?float
     {
@@ -184,7 +184,7 @@ class Point extends Geometry
     }
 
     /**
-     * @return array{maxy: float, miny: float, maxx: float, minx: float}
+     * @return array{maxy: ?float, miny: ?float, maxx: ?float, minx: ?float}
      */
     public function getBBox(): array
     {

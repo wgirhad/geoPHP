@@ -16,7 +16,7 @@ class EWKB extends WKB
         return parent::write($geometry, $writeAsHex, $bigEndian);
     }
 
-    protected function writeType(Geometry $geometry, $writeSRID = false): string
+    protected function writeType(Geometry $geometry, bool $writeSRID = false): string
     {
         return parent::writeType($geometry, true);
     }
