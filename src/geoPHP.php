@@ -242,16 +242,15 @@ class geoPHP
         if (!geoPHP::isGeosInstalled()) {
             return null;
         }
+
         $wkbWriter = new \GEOSWKBWriter();
         $wkbWriter->setOutputDimension($geos->coordinateDimension());
         if ($geos->getSRID()) {
             $wkbWriter->setIncludeSRID($geos->getSRID());
         }
-        $wkb = $wkbWriter->writeHEX($geos);
-        $geometry = geoPHP::load($wkb, 'ewkb', true);
 
-        $geometry->setGeos($geos);
-        return $geometry;
+        $wkb = $wkbWriter->writeHEX($geos);
+        return geoPHP::load($wkb, 'ewkb', true);
     }
 
     /**

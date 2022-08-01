@@ -81,7 +81,7 @@ function testGeometryMethods(Geometry $geometry): void
     $geometry->interiorRingN(1);
     $geometry->coordinateDimension();
     $geometry->geometryType();
-    $geometry->SRID();
+    $geometry->getSRID();
     $geometry->setSRID(4326);
     $geometry->is3D();
     $geometry->isMeasured();
@@ -98,14 +98,14 @@ function testGeometryMethods(Geometry $geometry): void
     $geometry->getX();
     $geometry->getY();
     $geometry->geos();
-    $geometry->getSRID();
+    $geometry->SRID();
 
     // GEOS only functions
     try {
+        $geometry->flushGeosCache();
+        $geometry->getGeos();
         $geometry->contains($geometry);
         $geometry->overlaps($geometry);
-        $geometry->getGeos();
-        $geometry->setGeos($geometry->getGeos());
         $geometry->pointOnSurface();
         $geometry->equalsExact($geometry);
         $geometry->relate($geometry);

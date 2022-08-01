@@ -10,10 +10,13 @@
 
 namespace geoPHP\Tests\Geometry;
 
+use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\LineString;
+use geoPHP\Geometry\MultiPoint;
 use geoPHP\Geometry\Point;
+use geoPHP\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,6 +29,59 @@ use PHPUnit\Framework\TestCase;
  */
 class CollectionTest extends TestCase
 {
+    public function providerConstructorAllowedComponentType(): array
+    {
+        return [
+            [[Point::fromArray([1, 2])], Point::class],
+            [[LineString::fromArray([[1, 2], [3, 4]])], LineString::class],
+            [
+                [LineString::fromArray([[1, 2], [3, 4]]), MultiPoint::fromArray([[1, 2], [3, 4]])],
+                 Collection::class,
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider providerConstructorAllowedComponentType
+     */
+    public function testConstructorAllowedComponentTypeParameter($components, $allowedComponentType): void
+    {
+        $this->assertNotNull(
+            $this->getMockForAbstractClass(Collection::class, [$components, $allowedComponentType])
+        );
+
+        // Not allowed component type
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessageMatches('/^Cannot construct .+\. Expected .+Polygon components, got .+\.$/');
+        $this->getMockForAbstractClass(Collection::class, [$components, Polygon::class]);
+    }
+
+    public function testConstructorAllowEmptyParameter(): void
+    {
+        $emptyComponent = new Point();
+        $component = new Point(1, 2);
+
+        // Allowed empty, given non empty
+        $this->assertNotNull(
+            $this->getMockForAbstractClass(Collection::class, [[$component], Geometry::class, true])
+        );
+
+        // Allowed empty, given empty
+        $this->assertNotNull(
+            $this->getMockForAbstractClass(Collection::class, [[$emptyComponent], Geometry::class, true])
+        );
+
+        // Not allowed empty, given non empty
+        $this->assertNotNull(
+            $this->getMockForAbstractClass(Collection::class, [[$component], Geometry::class, false])
+        );
+
+        // Not allowed empty, given empty throws exception
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessage('Cannot create a collection of empty Points (1. component)');
+        $this->getMockForAbstractClass(Collection::class, [[$emptyComponent], Geometry::class, false]);
+    }
+
     /**
      * @return array<array{array<Geometry>, bool}>
      */

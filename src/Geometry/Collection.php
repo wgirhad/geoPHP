@@ -114,7 +114,7 @@ abstract class Collection extends Geometry
         foreach ($this->components as $component) {
             $component->invertXY();
         }
-        $this->setGeos(null);
+        $this->flushGeosCache();
         return $this;
     }
 
@@ -131,7 +131,7 @@ abstract class Collection extends Geometry
             }
             $this->hasZ = false;
             $this->isMeasured = false;
-            $this->setGeos(null);
+            $this->flushGeosCache();
         }
     }
 

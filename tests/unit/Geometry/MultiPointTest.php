@@ -139,7 +139,6 @@ class MultiPointTest extends TestCase
     {
         $multiPoint = MultiPoint::fromArray($components);
         $centroid = $multiPoint->centroid();
-        $centroid->setGeos(null);
 
         $this->assertEquals(Point::fromArray($expectedCentroid), $centroid);
     }

@@ -27,7 +27,6 @@ class EWKTTest extends TestCase
     public function testReadingValidEwkt(string $wkt, int $srid): void
     {
         $geometry = (new EWKT())->read($wkt);
-        $geometry->setGeos(null);
 
         $this->assertInstanceOf(Geometry::class, $geometry);
         $this->assertEquals($srid, $geometry->getSRID());

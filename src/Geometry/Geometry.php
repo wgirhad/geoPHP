@@ -57,7 +57,7 @@ abstract class Geometry
     protected $data;
 
     /**
-     * @var \GEOSGeometry|null
+     * @var \GEOSGeometry|null Caches the GEOSGeometry representation of this Geometry.
      */
     private $geos = null;
 
@@ -688,9 +688,12 @@ abstract class Geometry
         return $this->geos;
     }
 
-    public function setGeos(?\GEOSGeometry $geos): void
+    /**
+     * Resets internal GEOSGeometry cache to null. Useful if Geometry has changed.
+     */
+    public function flushGeosCache(): void
     {
-        $this->geos = $geos;
+        $this->geos = null;
     }
 
     /**

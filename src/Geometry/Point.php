@@ -168,7 +168,7 @@ class Point extends Geometry
         $this->x = $this->y;
         $this->y = $tempX;
 
-        $this->setGeos(null);
+        $this->flushGeosCache();
 
         return $this;
     }
@@ -287,7 +287,7 @@ class Point extends Geometry
         $this->z = null;
         $this->m = null;
 
-        $this->setGeos(null);
+        $this->flushGeosCache();
     }
 
     /**

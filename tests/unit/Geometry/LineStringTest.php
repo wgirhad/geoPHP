@@ -231,7 +231,6 @@ class LineStringTest extends TestCase
     {
         $line = LineString::fromArray($points);
         $centroid = $line->centroid();
-        $centroid->setGeos(null);
 
         $this->assertEquals($centroidPoint, $centroid);
     }

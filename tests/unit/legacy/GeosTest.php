@@ -31,8 +31,8 @@ class GeosTest extends TestCase
         $geometry = geoPHP::load($value, $format);
 
         $geosMethods = array(
-          array('name' => 'geos'),
-          array('name' => 'setGeos', 'argument' => $geometry->geos()),
+          array('name' => 'getGeos'),
+          array('name' => 'flushGeosCache'),
           array('name' => 'pointOnSurface'),
           array('name' => 'equals', 'argument' => $geometry),
           array('name' => 'equalsExact', 'argument' => $geometry),
