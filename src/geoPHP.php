@@ -447,7 +447,7 @@ class geoPHP
 
         // Detect WKB or EWKB -- first byte is 1 (little endian indicator)
         if ($bytes[1] == 1 || $bytes[1] == 0) {
-            $wkbType = current(unpack($bytes[1] == 1 ? 'V' : 'N', substr($bin, 1, 4)) ?: []);
+            $wkbType = current((array) unpack($bytes[1] == 1 ? 'V' : 'N', substr($bin, 1, 4)));
             if (array_search($wkbType & 0xF, Adapter\WKB::$typeMap)) {
                 // If SRID byte is TRUE (1), it's EWKB
                 if (($wkbType & Adapter\WKB::SRID_MASK) === Adapter\WKB::SRID_MASK) {
@@ -465,7 +465,7 @@ class geoPHP
          */
         if ($bytes[1] == 48 && ($bytes[2] == 49 || $bytes[2] == 48) && strlen($input) > 12) {
             if (
-                (current(unpack($bytes[2] == 49 ? 'V' : 'N', hex2bin(substr($bin, 2, 8))?: '') ?: [])
+                (current((array) unpack($bytes[2] == 49 ? 'V' : 'N', (string) hex2bin((string) substr($bin, 2, 8))))
                 & Adapter\WKB::SRID_MASK)
                 == Adapter\WKB::SRID_MASK
             ) {

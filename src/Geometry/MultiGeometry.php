@@ -185,16 +185,16 @@ abstract class MultiGeometry extends Collection
 
     public function elevationGain(float $verticalTolerance = 0.0): float
     {
-        $gain = null;
+        $gain = 0.0;
         foreach ($this->components as $component) {
             $gain += $component->elevationGain($verticalTolerance);
         }
-        return $gain;
+        return (float) $gain;
     }
 
     public function elevationLoss(float $verticalTolerance = 0.0): float
     {
-        $loss = null;
+        $loss = 0.0;
         foreach ($this->components as $component) {
             $loss += $component->elevationLoss($verticalTolerance);
         }

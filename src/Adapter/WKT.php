@@ -144,7 +144,7 @@ class WKT implements GeoAdapter
     protected function parseCoordinates(string $dataString): Point
     {
         list($x, $y, $coord3, $coord4) = array_merge(
-            explode(' ', preg_replace('#\s+#', ' ', trim($dataString))),
+            explode(' ', (string) preg_replace('#\s+#', ' ', trim($dataString))),
             [null, null, null, null]
         );
 
