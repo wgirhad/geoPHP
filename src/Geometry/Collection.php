@@ -44,25 +44,25 @@ abstract class Collection extends Geometry
         string $allowedComponentType = Geometry::class,
         bool $allowEmptyComponents = false
     ) {
-        $componentCount = count($components);
-        for ($i = 0; $i < $componentCount; ++$i) { // foreach is too memory-intensive here in PHP 5.*
-            if ($components[$i] instanceof $allowedComponentType) {
-                if (!$allowEmptyComponents && $components[$i]->isEmpty()) {
+        /** @var Geometry[] $components */
+        foreach ($components as $i => $component) {
+            if ($component instanceof $allowedComponentType) {
+                if (!$allowEmptyComponents && $component->isEmpty()) {
                     throw new InvalidGeometryException(
                         'Cannot create a collection of empty ' .
-                        $components[$i]->geometryType() . 's (' . ($i + 1) . '. component)'
+                        $component->geometryType() . 's (' . ($i + 1) . '. component)'
                     );
                 }
-                if ($components[$i]->is3D() && !$this->hasZ) {
+                if ($component->is3D() && !$this->hasZ) {
                     $this->hasZ = true;
                 }
-                if ($components[$i]->isMeasured() && !$this->isMeasured) {
+                if ($component->isMeasured() && !$this->isMeasured) {
                     $this->isMeasured = true;
                 }
             } else {
-                $componentType = gettype($components[$i]) !== 'object'
-                    ? gettype($components[$i])
-                    : get_class($components[$i]);
+                $componentType = gettype($component) !== 'object'
+                    ? gettype($component)
+                    : get_class($component);
                 throw new InvalidGeometryException(
                     "Cannot construct " . static::class . '. ' .
                     "Expected $allowedComponentType components, got $componentType."
@@ -351,7 +351,7 @@ abstract class Collection extends Geometry
      *
      * @param bool $toArray Return segments as LineString or array of start and end points. Explode(true) is faster.
      *
-     * @return LineString[]|null Returns line segments or null for 0-deminsional geometries.
+     * @return LineString[] Returns line segments.
      */
     public function explode(bool $toArray = false): ?array
     {
