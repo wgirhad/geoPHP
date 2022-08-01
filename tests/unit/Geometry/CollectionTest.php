@@ -29,6 +29,9 @@ use PHPUnit\Framework\TestCase;
  */
 class CollectionTest extends TestCase
 {
+    /**
+     * @return array<array{Geometry[], string}>
+     */
     public function providerConstructorAllowedComponentType(): array
     {
         return [
@@ -43,8 +46,12 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider providerConstructorAllowedComponentType
+     * @covers ::__construct
+     *
+     * @param Geometry[] $components
+     * @param string $allowedComponentType
      */
-    public function testConstructorAllowedComponentTypeParameter($components, $allowedComponentType): void
+    public function testConstructorAllowedComponentTypeParameter(array $components, string $allowedComponentType): void
     {
         $this->assertNotNull(
             $this->getMockForAbstractClass(Collection::class, [$components, $allowedComponentType])
@@ -56,6 +63,9 @@ class CollectionTest extends TestCase
         $this->getMockForAbstractClass(Collection::class, [$components, Polygon::class]);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorAllowEmptyParameter(): void
     {
         $emptyComponent = new Point();
@@ -245,51 +255,65 @@ class CollectionTest extends TestCase
         }
     }
 
-    // public function providerDistance(): array
-    // {
-    //     return [
-    //         "collection of points to empty point" => [
-    //             [new Point(1, 1), new Point(2,2)],
-    //             new Point(),
-    //             null
-    //         ],
-    //         "collection of points to point" => [
-    //             [new Point(1, 1), new Point(2, 1)],
-    //             new Point(1, 0),
-    //             1.0
-    //         ],
-    //         "collection of points to touching point" => [
-    //             [new Point(1, 1), new Point(2, 1)],
-    //             new Point(2, 1),
-    //             0.0
-    //         ],
-    //         "collection of points to touching point in between" => [
-    //             [new Point(1, 1), new Point(2, 1)],
-    //             new Point(1.5, 1),
-    //             0.0
-    //         ],
-    //         "collection of points to linestring" => [
-    //             [new Point(1, 1), new Point(2, 1)],
-    //             LineString::fromArray([[0, 0], [2, 0]]),
-    //             1.0
-    //         ],
-    //         "collection of points to crossing linestring" => [
-    //             [new Point(0, 1), new Point(4, 1)],
-    //             LineString::fromArray([[2, 0], [2, 2]]),
-    //             0.0
-    //         ],
-    //     ];
-    // }
+    /**
+     * @return array<string, array{Geometry[], Geometry, ?float}>
+     */
+    public function providerDistance(): array
+    {
+        return [
+            "collection of points to point" => [
+                [new Point(1, 1), new Point(2, 1)],
+                new Point(2, 0),
+                1.0
+            ],
+            "collection of points to touching point" => [
+                [new Point(1, 1), new Point(2, 1)],
+                new Point(2, 1),
+                0.0
+            ],
+            "collection of points to touching point in between" => [
+                [new Point(1, 1), new Point(2, 1)],
+                new Point(1.5, 1),
+                0.5
+            ],
+            "collection of points to empty point" => [
+                [new Point(1, 1), new Point(2, 2)],
+                new Point(),
+                null
+            ],
+            "collection of points with one empty point to point" => [
+                [new Point(1, 0), new Point()],
+                new Point(2, 0),
+                1.0
+            ],
+            "collection of points to linestring" => [
+                [new Point(1, 1), new Point(2, 1)],
+                LineString::fromArray([[0, 0], [2, 0]]),
+                1.0
+            ],
+            //  . | .
+            //    |
+            "collection of points to crossing linestring" => [
+                [new Point(0, 0), new Point(2, 0)],
+                LineString::fromArray([[1, -1], [1, 1]]),
+                1.0
+            ],
+        ];
+    }
 
-    // /**
-    //  * @dataProvider providerDistance
-    //  * @covers ::distance
-    //  */
-    // public function testDistance($components, $otherGeometry, $expectedDistance): void
-    // {
-    //     /** @var Collection $stub */
-    //     $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
+    /**
+     * @dataProvider providerDistance
+     * @covers ::distance
+     *
+     * @param Geometry[] $components
+     * @param Geometry $otherGeometry
+     * @param float|null $expectedDistance
+     */
+    public function testDistance(array $components, Geometry $otherGeometry, ?float $expectedDistance): void
+    {
+        /** @var Collection $stub */
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
 
-    //     $this->assertSame($expectedDistance, $stub->distance($otherGeometry));
-    // }
+        $this->assertSame($expectedDistance, $stub->distance($otherGeometry));
+    }
 }
