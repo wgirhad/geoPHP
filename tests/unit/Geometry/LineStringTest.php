@@ -380,7 +380,7 @@ class LineStringTest extends TestCase
 
     /**
      * @dataProvider providerLengths
-     * @vovers ::haversineLength
+     * @covers ::haversineLength
      *
      * @param array<mixed> $points
      * @param array<string, float> $results

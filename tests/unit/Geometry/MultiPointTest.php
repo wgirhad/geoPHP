@@ -9,12 +9,14 @@ use geoPHP\Geometry\MultiPoint;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit tests of MultiPoint geometry
+ * Unit tests of MultiPoint geometry.
  *
  * @group geometry
  * @coversDefaultClass geoPHP\Geometry\MultiPoint
  *
  * @uses geoPHP\Geometry\Point
+ * @uses geoPHP\Geometry\LineString
+ * @uses geoPHP\Geometry\Collection
  */
 class MultiPointTest extends TestCase
 {
@@ -61,7 +63,7 @@ class MultiPointTest extends TestCase
 
     /**
      * @dataProvider providerInvalidComponents
-     * @covery ::__construct
+     * @covers ::__construct
      *
      * @param array<mixed> $components
      */
@@ -84,7 +86,7 @@ class MultiPointTest extends TestCase
     }
 
     /**
-     * @covery ::__construct
+     * @covers ::__construct
      */
     public function testGeometryType(): void
     {
@@ -98,7 +100,7 @@ class MultiPointTest extends TestCase
     }
 
     /**
-     * @covery ::is3D
+     * @covers ::is3D
      */
     public function testIs3D(): void
     {
@@ -108,7 +110,7 @@ class MultiPointTest extends TestCase
     }
 
     /**
-     * @covery ::isMeasured
+     * @covers ::isMeasured
      */
     public function testIsMeasured(): void
     {

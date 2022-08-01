@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
  * Test cases for EWKT adapter
  *
  * @coversDefaultClass geoPHP\Adapter\EWKT
+ *
  * @uses geoPHP\Geometry\Point
  * @uses geoPHP\Geometry\MultiPoint
  * @uses geoPHP\Geometry\LineString
@@ -18,6 +19,13 @@ use PHPUnit\Framework\TestCase;
  * @uses geoPHP\Geometry\Polygon
  * @uses geoPHP\Geometry\MultiPolygon
  * @uses geoPHP\Geometry\GeometryCollection
+ * @uses geoPHP\Geometry\Collection
+ * @uses geoPHP\Geometry\Curve
+ * @uses geoPHP\Geometry\Surface
+ * @uses geoPHP\Geometry\MultiGeometry
+ * @uses geoPHP\Geometry\MultiCurve
+ * @uses geoPHP\Geometry\MultiSurface
+ * @uses geoPHP\Exception\FileFormatException
  */
 class EWKTTest extends TestCase
 {
