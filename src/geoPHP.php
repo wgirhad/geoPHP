@@ -15,6 +15,31 @@ use geoPHP\Exception\IOException;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 
+use function is_array;
+use function array_key_exists;
+use function array_merge;
+use function array_search;
+use function array_shift;
+use function array_unique;
+use function call_user_func_array;
+use function class_exists;
+use function count;
+use function current;
+use function explode;
+use function fopen;
+use function fread;
+use function fseek;
+use function fwrite;
+use function hex2bin;
+use function ltrim;
+use function preg_match;
+use function strlen;
+use function strpos;
+use function strstr;
+use function substr;
+use function trim;
+use function unpack;
+
 /**
  * Porides constants and static methods for loading geometries in any supported format.
  */

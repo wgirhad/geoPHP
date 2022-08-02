@@ -5,6 +5,10 @@ namespace geoPHP\Geometry;
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
+use function count;
+use function gettype;
+use function get_class;
+
 /**
  * Collection: Abstract class for compound geometries
  *

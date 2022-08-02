@@ -5,6 +5,13 @@ namespace geoPHP\Geometry;
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
+use function abs;
+use function array_merge;
+use function count;
+use function implode;
+use function max;
+use function min;
+
 /**
  * Polygon: A polygon is a plane figure that is bounded by a closed path,
  * composed of a finite sequence of straight line segments

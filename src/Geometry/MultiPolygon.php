@@ -5,6 +5,8 @@ namespace geoPHP\Geometry;
 use geoPHP\geoPHP;
 use geoPHP\Exception\InvalidGeometryException;
 
+use function array_merge;
+
 /**
  * MultiPolygon: A collection of Polygons
  *

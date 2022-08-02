@@ -6,6 +6,8 @@ use geoPHP\Exception\Exception;
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
+use function array_merge;
+
 /**
  * GeometryCollection: A heterogeneous collection of geometries
  */

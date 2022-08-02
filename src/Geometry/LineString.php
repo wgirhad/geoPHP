@@ -5,6 +5,21 @@ namespace geoPHP\Geometry;
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
+use function abs;
+use function atan;
+use function atan2;
+use function cos;
+use function count;
+use function deg2rad;
+use function is_nan;
+use function pow;
+use function sin;
+use function sqrt;
+use function tan;
+
+use const M_PI;
+use const PHP_INT_MAX;
+
 /**
  * A LineString is defined by a sequence of points, (X,Y) pairs, which define the reference points of the line string.
  * Linear interpolation between the reference points defines the resulting linestring.

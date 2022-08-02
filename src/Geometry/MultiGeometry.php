@@ -5,6 +5,10 @@ namespace geoPHP\Geometry;
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\geoPHP;
 
+use function abs;
+
+use const PHP_INT_MAX;
+
 /**
  * MultiGeometry is an abstract collection of geometries
  *

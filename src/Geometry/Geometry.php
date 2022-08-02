@@ -6,6 +6,14 @@ use geoPHP\Exception\UnsupportedMethodException;
 use geoPHP\geoPHP;
 use GEOSGeometry;
 
+use function array_key_exists;
+use function array_unshift;
+use function call_user_func_array;
+use function is_array;
+use function str_replace;
+use function strstr;
+use function strtolower;
+
 /**
  * Geometry is the root class of the hierarchy. Geometry is an abstract (non-instantiable) class.
  *

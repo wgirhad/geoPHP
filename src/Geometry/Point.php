@@ -4,6 +4,10 @@ namespace geoPHP\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
 
+use function gettype;
+use function is_finite;
+use function is_numeric;
+
 /**
  * A Point is a 0-dimensional geometric object and represents a single location in coordinate space.
  * A Point has an x-coordinate value, a y-coordinate value.
@@ -93,7 +97,7 @@ class Point extends Geometry
     public static function fromArray(array $coordinateArray): Point
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return (new \ReflectionClass(get_called_class()))->newInstanceArgs($coordinateArray);
+        return (new \ReflectionClass(\get_called_class()))->newInstanceArgs($coordinateArray);
     }
 
     public function geometryType(): string
@@ -358,7 +362,7 @@ class Point extends Geometry
                     $y = $y1 + ($u * $py);
                     $dx = $x - $x3;
                     $dy = $y - $y3;
-                    $checkDistance = sqrt(($dx * $dx) + ($dy * $dy));
+                    $checkDistance = \sqrt(($dx * $dx) + ($dy * $dy));
                 }
                 if ($checkDistance === 0.0) {
                     return 0.0;
