@@ -242,11 +242,21 @@ class Point extends Geometry
     }
 
     /**
-     * @return int Returns always 1
+     * Returns 1 if point is not empty, or 0 if empty.
+     *
+     * OGC SFA defines numPoints() only for LineStrings, but PostGIS implements it for all geometries.
+     * PostGIS' approach seems more useful, so we follow their standard.
+     * PostGIS doesn't take empty points into acount.
+     *
+     * Note: Behaviour of this method has changed in version 2.1.
+     *
+     * @return int
      */
     public function numPoints(): int
     {
-        return 1;
+        return $this->isEmpty()
+            ? 0
+            : 1;
     }
 
     /**

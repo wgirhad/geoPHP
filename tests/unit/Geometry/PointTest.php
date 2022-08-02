@@ -184,7 +184,7 @@ class PointTest extends TestCase
     /**
      * @return array<string, array<?int>>
      */
-    public function providerEmpty(): array
+    public function providerIsEmpty(): array
     {
         return [
             'no coordinates'     => [],
@@ -195,7 +195,8 @@ class PointTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEmpty
+     * @dataProvider providerIsEmpty
+     * @covers ::isEmpty
      * @covers ::__construct
      *
      * @param int|float|null $x
@@ -203,7 +204,7 @@ class PointTest extends TestCase
      * @param int|float|null $z
      * @param int|float|null $m
      */
-    public function testEmpty($x = null, $y = null, $z = null, $m = null): void
+    public function testIsEmpty($x = null, $y = null, $z = null, $m = null): void
     {
         $point = new Point($x, $y, $z, $m);
 
@@ -213,6 +214,18 @@ class PointTest extends TestCase
         $this->assertNull($point->y());
         $this->assertNull($point->z());
         $this->assertNull($point->m());
+    }
+
+    /**
+     * @covers ::numPoints
+     */
+    public function testNumPoints(): void
+    {
+        $point = new Point(1, 2);
+        $this->assertSame(1, $point->numPoints());
+
+        $pointEmpty = new Point();
+        $this->assertSame(0, $pointEmpty->numPoints());
     }
 
     /**
@@ -527,7 +540,6 @@ class PointTest extends TestCase
 
     /**
      * @covers ::dimension
-     * @covers ::numPoints
      * @covers ::getPoints
      * @covers ::isSimple
      */
@@ -536,8 +548,6 @@ class PointTest extends TestCase
         $point = new Point(1, 2, 3, 4);
 
         $this->assertSame(0, $point->dimension());
-
-        $this->assertSame(1, $point->numPoints());
 
         $this->assertSame([$point], $point->getPoints());
 

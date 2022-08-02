@@ -97,11 +97,6 @@ class MultiPoint extends MultiGeometry
         return new GeometryCollection();
     }
 
-    public function numPoints(): int
-    {
-        return $this->numGeometries();
-    }
-
     public function centroid(): Point
     {
         if ($this->isEmpty()) {

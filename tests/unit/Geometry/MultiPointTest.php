@@ -173,17 +173,30 @@ class MultiPointTest extends TestCase
     }
 
     /**
-     * @dataProvider providerValidComponents
+     * @return array<string, array<int|Point[]>>
+     */
+    public function providerNumPoints(): array
+    {
+        return [
+            'no components'    => [0, []],
+            'empty Point comp' => [0, [new Point()]],
+            'xy'               => [1, [new Point(1, 2)]],
+            '2 xy'             => [2, [new Point(1, 2), new Point(3, 4)]],
+            'one is empty'     => [1, [new Point(), new Point(1, 2)]],
+        ];
+    }
+
+    /**
+     * @dataProvider providerNumPoints
      * @covers ::numPoints
      *
-     * @param array<mixed> $points
+     * @param Point[]|array{} $points
      */
-    public function testNumPoints(array $points): void
+    public function testNumPoints(int $expectedNum, array $points): void
     {
         $multiPoint = new MultiPoint($points);
 
-        $this->assertEquals(count($points), $multiPoint->numPoints());
-        $this->assertEquals($multiPoint->numPoints(), $multiPoint->numGeometries());
+        $this->assertEquals($expectedNum, $multiPoint->numPoints());
     }
 
     /**
