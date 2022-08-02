@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace geoPHP\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
@@ -53,7 +55,7 @@ class Point extends Geometry
         }
 
         // Basic validation: x and y must be numeric and finite (non NaN).
-        if (!is_numeric($x) || !is_numeric($y) || !is_finite($x) || !is_finite($y)) {
+        if (!is_numeric($x) || !is_numeric($y) || !is_finite((float) $x) || !is_finite((float) $y)) {
             throw new InvalidGeometryException(
                 'Cannot construct Point, x and y must be numeric, ' . gettype($x) . ' given.'
             );
@@ -65,7 +67,7 @@ class Point extends Geometry
 
         // Check to see if this point has Z (height) value
         if ($z !== null) {
-            if (!is_numeric($z) || !is_finite($z)) {
+            if (!is_numeric($z) || !is_finite((float) $z)) {
                 throw new InvalidGeometryException(
                     'Cannot construct Point, z must be numeric, ' . gettype($x) . ' given.'
                 );
@@ -75,7 +77,7 @@ class Point extends Geometry
 
         // Check to see if this is a measure
         if ($m !== null) {
-            if (!is_numeric($m) || !is_finite($m)) {
+            if (!is_numeric($m) || !is_finite((float) $m)) {
                 throw new InvalidGeometryException(
                     'Cannot construct Point, m must be numeric, ' . gettype($x) . ' given.'
                 );

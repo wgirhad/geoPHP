@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace geoPHP\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
