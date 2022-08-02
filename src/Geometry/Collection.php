@@ -282,11 +282,11 @@ abstract class Collection extends Geometry
     public function getPoints(): array
     {
         $points = [];
-        foreach($this->getComponents() as $component) {
+        foreach ($this->getComponents() as $component) {
             if ($component instanceof Point) {
                 $points[] = $component;
             } else {
-                foreach($component->getPoints() as $componentPoint) {
+                foreach ($component->getPoints() as $componentPoint) {
                     $points[] = $componentPoint;
                 }
             }
