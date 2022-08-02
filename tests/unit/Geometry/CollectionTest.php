@@ -63,6 +63,14 @@ class CollectionTest extends TestCase
         $this->getMockForAbstractClass(Collection::class, [$components, Polygon::class]);
     }
 
+    public function testConstructorWrongComponent(): void
+    {
+        // Not allowed component type
+        $this->expectException(InvalidGeometryException::class);
+        $this->expectExceptionMessageMatches('/^Cannot construct .+\. Expected .+Geometry components, got string\.$/');
+        $this->getMockForAbstractClass(Collection::class, [[new Point(), 'foo'], Geometry::class, true]);
+    }
+
     /**
      * @covers ::__construct
      */
@@ -93,20 +101,21 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @return array<array{array<Geometry>, bool}>
+     * @return array<string, array{Geometry[], bool}>
      */
     public function providerIs3D(): array
     {
         return [
-                [[new Point(1, 2)], false],
-                [[new Point(1, 2, 3)], true],
-                [[new Point(1, 2, 3), new Point(1, 2)], true],
+                '2D' => [[new Point(1, 2)], false],
+                '3D' => [[new Point(1, 2, 3)], true],
+                'mixed' => [[new Point(1, 2, 3), new Point(1, 2)], true],
         ];
     }
 
     /**
      * @dataProvider providerIs3D
      * @covers ::is3D
+     * @covers ::__construct
      *
      * @param Geometry[] $components
      * @param bool       $result
@@ -120,7 +129,7 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @return array<array{array<Geometry>, bool}>
+     * @return array<array{Geometry[], bool}>
      */
     public function providerIsMeasured(): array
     {
@@ -136,6 +145,7 @@ class CollectionTest extends TestCase
     /**
      * @dataProvider providerIsMeasured
      * @covers ::isMeasured
+     * @covers ::__construct
      *
      * @param Geometry[] $components
      * @param bool       $result
@@ -146,6 +156,63 @@ class CollectionTest extends TestCase
         $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
 
         $this->assertEquals($result, $stub->isMeasured());
+    }
+
+    /**
+     * @dataProvider providerIsMeasured
+     * @dataProvider providerInvertXY
+     * @covers ::getComponents
+     *
+     * @param Geometry[] $components
+     */
+    public function testGetComponents(array $components): void
+    {
+        /** @var Collection $stub */
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components, Geometry::class, true]);
+
+        $this->assertEquals($components, $stub->getComponents());
+    }
+
+    /**
+     * @return array<array{Geometry[], Geometry[]}>
+     */
+    public function providerInvertXY(): array
+    {
+        return [
+                [
+                    [new Point(1, 2, 3)],
+                    [new Point(2, 1, 3)]
+                ],
+                [
+                    [LineString::fromArray([[1, 2, 3], [5, 6, 7]]), Point::fromArray([10, 11, 12])],
+                    [LineString::fromArray([[2, 1, 3], [6, 5, 7]]), Point::fromArray([11, 10, 12])],
+                ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerInvertXY
+     * @covers ::invertXY
+     *
+     * @param Geometry[] $components
+     */
+    public function testInvertXY(array $components): void
+    {
+        /** @var Collection */
+        $collection = $this->getMockForAbstractClass(Collection::class, [$components]);
+        /** @var Collection */
+        $expectedCollection = $this->getMockForAbstractClass(Collection::class, [$components]);
+
+        $inverse = $collection->invertXY();
+
+        // InvertXY returns the inverted geometry
+        $this->assertEquals($expectedCollection, $inverse);
+
+        // invertXY() alters the original geometry
+        $this->assertSame($collection, $inverse);
+
+        // Must be symmetric, invertXY()->invertXY() gives the original geometry
+        $this->assertEquals($expectedCollection, $inverse->invertXY()->invertXY());
     }
 
     /**
@@ -199,11 +266,13 @@ class CollectionTest extends TestCase
     {
         $components = [
                 new Point(1, 2),
-                new LineString()
+                new LineString(),
+                LineString::fromArray([[1, 2, 3], [5, 6, 7]])
         ];
         $expected = [
                 [1, 2],
-                []
+                [],
+                [[1, 2, 3], [5, 6, 7]],
         ];
 
         /** @var Collection $stub */

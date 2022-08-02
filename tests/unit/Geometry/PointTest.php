@@ -217,6 +217,32 @@ class PointTest extends TestCase
     }
 
     /**
+     * @dataProvider providerValidCoordinatesXY
+     * @dataProvider providerValidCoordinatesXYZorXYM
+     * @dataProvider providerValidCoordinatesXYZM
+     * @dataProvider providerIsEmpty
+     *
+     * @covers ::fromArray
+     *
+     * @param int|float|null $x
+     * @param int|float|null $y
+     * @param int|float|null $z
+     * @param int|float|null $m
+     */
+    public function testFromArray($x = null, $y = null, $z = null, $m = null): void
+    {
+        $positions = [$x, $y, $z, $m];
+        $point = Point::fromArray($positions);
+
+        $this->assertEquals($x, $point->x());
+        $this->assertEquals($y, $point->y());
+        if ($x !== null) {
+            $this->assertEquals($z, $point->z());
+            $this->assertEquals($m, $point->m());
+        }
+    }
+
+    /**
      * @covers ::numPoints
      */
     public function testNumPoints(): void
@@ -498,8 +524,10 @@ class PointTest extends TestCase
                 [new Point(0, 10), 10.0],
             'Point x+10,y+10' =>
                 [new Point(10, 10), 14.142135623730951],
-            'LineString, point is a vertex' =>
-                [LineString::fromArray([[-10, 10], [0, 0], [10, 10]]), 0.0],
+            'LineString, point is the first vertex' =>
+                [LineString::fromArray([[0, 0], [10, 10]]), 0.0],
+            'LineString, point is the second vertex' =>
+                [LineString::fromArray([[-10, 10], [0, 0]]), 0.0],
             'LineString, containing a vertex twice' =>
                 [LineString::fromArray([[0, 10], [0, 10]]), 10.0],
             'LineString, point on line' =>
@@ -509,6 +537,8 @@ class PointTest extends TestCase
                 [MultiPoint::fromArray([[0, 0], [10, 20]]), 0.0],
             'MultiPoint, closest distance is 10' =>
                 [MultiPoint::fromArray([[10, 20], [0, 10]]), 10.0],
+            'MultiPoint, one is empty' =>
+                [MultiPoint::fromArray([[10, 0], []]), 10.0],
 
             'GeometryCollection, closest component is 10' =>
                 [new GeometryCollection([new Point(0, 10), new Point(20, 0)]), 10.0]

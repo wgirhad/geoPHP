@@ -9,11 +9,15 @@ use geoPHP\Exception\InvalidGeometryException;
 use function gettype;
 use function is_finite;
 use function is_numeric;
+use function pow;
+use function sqrt;
 
 /**
  * A Point is a 0-dimensional geometric object and represents a single location in coordinate space.
  * A Point has an x-coordinate value, a y-coordinate value.
  * If called for by the associated Spatial Reference System, it may also have coordinate values for z and m.
+ *
+ * @phpstan-consistent-constructor
  */
 class Point extends Geometry
 {
@@ -98,8 +102,9 @@ class Point extends Geometry
      */
     public static function fromArray(array $coordinateArray): Point
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return (new \ReflectionClass(\get_called_class()))->newInstanceArgs($coordinateArray);
+        [$x, $y, $z, $m] = array_merge($coordinateArray, [null, null, null, null]);
+
+        return new static($x, $y, $z, $m);
     }
 
     public function geometryType(): string
@@ -349,38 +354,46 @@ class Point extends Geometry
             $distance = null;
             foreach ($geometry->explode(true) as $seg) {
                 // As per http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
-                // and http://paulbourke.net/geometry/pointline/
+                // and http://paulbourke.net/geometry/pointlineplane/
+                /** @var Point[] $seg */
                 $x1 = $seg[0]->x();
                 $y1 = $seg[0]->y();
                 $x2 = $seg[1]->x();
                 $y2 = $seg[1]->y();
-                $px = $x2 - $x1;
-                $py = $y2 - $y1;
-                $d = ($px * $px) + ($py * $py);
-                if ($d == 0) {
+                $dx21 = $x2 - $x1;
+                $dy21 = $y2 - $y1;
+                $segNorm = ($dx21 * $dx21) + ($dy21 * $dy21);
+                if ($segNorm == 0) {
                     // Line-segment's endpoints are identical. This is merely a point masquerading as a line-segment.
-                    $checkDistance = $this->distance($seg[1]);
+                    $componentDistance = $this->distance($seg[1]);
                 } else {
                     $x3 = $this->x();
                     $y3 = $this->y();
-                    $u =  ((($x3 - $x1) * $px) + (($y3 - $y1) * $py)) / $d;
-                    if ($u > 1) {
-                        $u = 1;
+                    $dx31 = $x3 - $x1;
+                    $dy31 = $y3 - $y1;
+                    $uNorm =  (($dx31 * $dx21) + ($dy31 * $dy21)) / $segNorm;
+
+                    if ($uNorm >= 1) {
+                        $closestPointX = $x2;
+                        $closestPointY = $y2;
+                    } elseif ($uNorm <= 0) {
+                        $closestPointX = $x1;
+                        $closestPointY = $y1;
+                    } else {
+                        // Closest point is between p1 and p2
+                        $closestPointX = $x1 + ($uNorm * $dx21);
+                        $closestPointY = $y1 + ($uNorm * $dy21);
                     }
-                    if ($u < 0) {
-                        $u = 0;
-                    }
-                    $x = $x1 + ($u * $px);
-                    $y = $y1 + ($u * $py);
-                    $dx = $x - $x3;
-                    $dy = $y - $y3;
-                    $checkDistance = \sqrt(($dx * $dx) + ($dy * $dy));
+                    $dx = $closestPointX - $x3;
+                    $dy = $closestPointY - $y3;
+
+                    $componentDistance = sqrt(($dx * $dx) + ($dy * $dy));
                 }
-                if ($checkDistance === 0.0) {
+                if ($componentDistance === 0.0) {
                     return 0.0;
                 }
-                if ($distance === null || $checkDistance < $distance) {
-                    $distance = $checkDistance;
+                if ($distance === null || $componentDistance < $distance) {
+                    $distance = $componentDistance;
                 }
             }
             return $distance;

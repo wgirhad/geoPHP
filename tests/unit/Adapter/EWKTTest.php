@@ -31,6 +31,8 @@ class EWKTTest extends TestCase
 {
     /**
      * @dataProvider providerReadValidEwkt
+     *
+     * @covers ::read
      */
     public function testReadingValidEwkt(string $wkt, int $srid): void
     {
@@ -59,6 +61,8 @@ class EWKTTest extends TestCase
 
     /**
      * @dataProvider providerWriteValidEwkt
+     *
+     * @covers ::write
      */
     public function testWritingValidEwkt(string $expectedWkt, Geometry $geometry, ?int $srid): void
     {

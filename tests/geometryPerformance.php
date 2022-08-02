@@ -69,6 +69,13 @@ function runPerformanceTests(): void
     }
     testEnd();
 
+    testStart("Creating " . $pointCount . " Point using ::fromArray():");
+    $points = [];
+    for ($i = 0; $i < $pointCount; $i++) {
+        $points[] = Point::fromArray([$i, $i + 1]);
+    }
+    testEnd();
+
     testStart("Creating " . $pointCount . " PointZ:");
     $points = [];
     for ($i = 0; $i < $pointCount; $i++) {
