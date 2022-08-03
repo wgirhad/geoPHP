@@ -1,6 +1,6 @@
 <?php
 
-namespace geoPHP\Tests\Exception;
+namespace geoPHP\Tests\Unit\Exception;
 
 use geoPHP\Exception\Exception;
 use geoPHP\Exception\IOException;

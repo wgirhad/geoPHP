@@ -1,6 +1,6 @@
 <?php
 
-namespace geoPHP\Tests\Adapter;
+namespace geoPHP\Tests\Unit\Adapter;
 
 use geoPHP\Adapter\EWKT;
 use geoPHP\Geometry\Geometry;

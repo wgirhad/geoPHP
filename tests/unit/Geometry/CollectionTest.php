@@ -8,7 +8,7 @@
  * @since 2020-03-19
  */
 
-namespace geoPHP\Tests\Geometry;
+namespace geoPHP\Tests\Unit\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\Geometry\Collection;

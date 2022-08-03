@@ -1,6 +1,6 @@
 <?php
 
-namespace geoPHP\Tests\Geometry;
+namespace geoPHP\Tests\Unit\Geometry;
 
 use geoPHP\Exception\InvalidGeometryException;
 use geoPHP\Geometry\LineString;
