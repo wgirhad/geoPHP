@@ -199,11 +199,20 @@ class WKB implements GeoAdapter
                 $point = new Point($coordinates[0], $coordinates[1]);
                 break;
             case 3:
+                if (is_nan($coordinates[2])) {
+                    $coordinates[2] = null;
+                }
                 $point = $this->hasZ
                     ? new Point($coordinates[0], $coordinates[1], $coordinates[2])
                     : new Point($coordinates[0], $coordinates[1], null, $coordinates[2]);
                 break;
             case 4:
+                if (is_nan($coordinates[2])) {
+                    $coordinates[2] = null;
+                }
+                if (is_nan($coordinates[3])) {
+                    $coordinates[3] = null;
+                }
                 $point = new Point($coordinates[0], $coordinates[1], $coordinates[2], $coordinates[3]);
                 break;
             default:

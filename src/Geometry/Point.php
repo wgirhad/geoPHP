@@ -61,7 +61,7 @@ class Point extends Geometry
         // Basic validation: x and y must be numeric and finite (non NaN).
         if (!is_numeric($x) || !is_numeric($y) || !is_finite((float) $x) || !is_finite((float) $y)) {
             throw new InvalidGeometryException(
-                'Cannot construct Point, x and y must be numeric, ' . gettype($x) . ' given.'
+                'Cannot construct Point, x and y must be numeric and finite, ' . gettype($x) . ' given.'
             );
         }
 
@@ -73,7 +73,7 @@ class Point extends Geometry
         if ($z !== null) {
             if (!is_numeric($z) || !is_finite((float) $z)) {
                 throw new InvalidGeometryException(
-                    'Cannot construct Point, z must be numeric, ' . gettype($x) . ' given.'
+                    'Cannot construct Point, z must be numeric and finite, ' . gettype($z) . ' given.'
                 );
             }
             $this->z = (float) $z;
@@ -83,7 +83,7 @@ class Point extends Geometry
         if ($m !== null) {
             if (!is_numeric($m) || !is_finite((float) $m)) {
                 throw new InvalidGeometryException(
-                    'Cannot construct Point, m must be numeric, ' . gettype($x) . ' given.'
+                    'Cannot construct Point, m must be numeric and finite, ' . gettype($m) . ' given.'
                 );
             }
             $this->m = (float) $m;
@@ -402,30 +402,22 @@ class Point extends Geometry
 
     public function minimumZ(): ?float
     {
-        return $this->is3D()
-            ? $this->z()
-            : null;
+        return $this->z();
     }
 
     public function maximumZ(): ?float
     {
-        return $this->is3D()
-            ? $this->z()
-            : null;
+        return $this->z();
     }
 
     public function minimumM(): ?float
     {
-        return $this->isMeasured()
-            ? $this->m()
-            : null;
+        return $this->m();
     }
 
     public function maximumM(): ?float
     {
-        return $this->isMeasured()
-            ? $this->m()
-            : null;
+        return $this->m();
     }
 
     /* The following methods are not valid for this geometry type */
