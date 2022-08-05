@@ -20,7 +20,7 @@ install:
   - if [[ -z $PHPSTAN ]]; then export COMPOSER_REMOVE="phpstan/phpstan"; fi
   - if [[ $DISABLE_UNIT ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpunit/phpunit"; fi
   - if [[ $DISABLE_BENCH ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpbench/phpbench"; fi
-  - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
+  - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-req=php+"; fi
   - |
     if [[ $COMPOSER_REMOVE ]]; then
       echo "Removing $COMPOSER_REMOVE dependencies"
@@ -71,7 +71,6 @@ jobs:
     - stage: Test
       php: nightly
 
-# FIXME: allow_failures doesn't appear to work with stages defined. How to solve that?
   allow_failures:
     - php: nightly
 
