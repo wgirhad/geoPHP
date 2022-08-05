@@ -125,15 +125,16 @@ class GeometryCollection extends MultiGeometry
     }
 
     /**
-     * @return Geometry[]|Collection[]
+     * @return Geometry[]
      */
     public function explodeGeometries(): array
     {
         $geometries = [];
         foreach ($this->components as $component) {
-            if ($component->geometryType() === Geometry::GEOMETRY_COLLECTION) {
-                /** @var GeometryCollection $component */
-                $geometries = array_merge($geometries, $component->explodeGeometries());
+            if ($component instanceof GeometryCollection) {
+                foreach ($component->explodeGeometries() as $subComponent) {
+                    $geometries[] = $subComponent;
+                }
             } else {
                 $geometries[] = $component;
             }

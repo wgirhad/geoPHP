@@ -151,11 +151,11 @@ class LineString extends Curve
         $length = 0.0;
         /** @var Point|null $previousPoint */
         $previousPoint = null;
-        foreach ($this->getPoints() as $point) {
+        foreach ($this->getComponents() as $point) {
             if ($previousPoint) {
                 $length += sqrt(
                     pow(($previousPoint->x() - $point->x()), 2) +
-                        pow(($previousPoint->y() - $point->y()), 2)
+                    pow(($previousPoint->y() - $point->y()), 2)
                 );
             }
             $previousPoint = $point;
@@ -168,12 +168,12 @@ class LineString extends Curve
         $length = 0.0;
         /** @var Point|null $previousPoint */
         $previousPoint = null;
-        foreach ($this->getPoints() as $point) {
+        foreach ($this->getComponents() as $point) {
             if ($previousPoint) {
                 $length += sqrt(
                     pow(($previousPoint->x() - $point->x()), 2) +
-                        pow(($previousPoint->y() - $point->y()), 2) +
-                        pow(($previousPoint->z() - $point->z()), 2)
+                    pow(($previousPoint->y() - $point->y()), 2) +
+                    pow(($previousPoint->z() - $point->z()), 2)
                 );
             }
             $previousPoint = $point;
@@ -198,15 +198,20 @@ class LineString extends Curve
             $lon1 = $points[$i]->x() * $rad;
             $lon2 = $points[$i + 1]->x() * $rad;
             $deltaLon = $lon2 - $lon1;
+            $cosLat1 = cos($lat1);
+            $cosLat2 = cos($lat2);
+            $sinLat1 = sin($lat1);
+            $sinLat2 = sin($lat2);
+            $cosDeltaLon = cos($deltaLon);
             $d =
                     $radius *
                     atan2(
                         sqrt(
-                            pow(cos($lat2) * sin($deltaLon), 2) +
-                                    pow(cos($lat1) * sin($lat2) - sin($lat1) * cos($lat2) * cos($deltaLon), 2)
+                            pow($cosLat2 * sin($deltaLon), 2) +
+                                    pow($cosLat1 * $sinLat2 - $sinLat1 * $cosLat2 * $cosDeltaLon, 2)
                         ),
-                        sin($lat1) * sin($lat2) +
-                            cos($lat1) * cos($lat2) * cos($deltaLon)
+                        $sinLat1 * $sinLat2 +
+                            $cosLat1 * $cosLat2 * $cosDeltaLon
                     );
             if ($points[$i]->is3D()) {
                 $d = sqrt(
@@ -446,10 +451,11 @@ class LineString extends Curve
     }
 
     /**
-     * Get all line segments
-     * @param bool $toArray return segments as LineString or array of start and end points
+     * Get all line segments. By default returns segments as array of LineStrings of two points.
      *
-     * @return LineString[]|array<Point>
+     * @param bool $toArray Return segments as arrays of Point pairs.
+     *
+     * @return LineString[]|array<array{Point, Point}>
      */
     public function explode(bool $toArray = false): ?array
     {

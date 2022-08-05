@@ -64,6 +64,18 @@ abstract class Curve extends Collection
     }
 
     /**
+     * Returns true if the Curve represents the empty set.
+     *
+     * A Curve is empty if and only if it has no components.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return count($this->components) === 0;
+    }
+
+    /**
      * The boundary of a non-closed Curve consists of its end Points.
      *
      * @return MultiPoint

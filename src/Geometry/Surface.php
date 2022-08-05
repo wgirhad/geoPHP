@@ -44,6 +44,18 @@ abstract class Surface extends Collection
         return 2;
     }
 
+    /**
+     * Returns true if the Surface represents the empty set.
+     *
+     * A Surface is empty if and only if it has no components.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return count($this->components) === 0;
+    }
+
     public function startPoint(): ?Point
     {
         return null;
