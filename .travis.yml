@@ -19,6 +19,7 @@ install:
   - composer validate
   - if [[ -z $PHPSTAN ]]; then export COMPOSER_REMOVE="phpstan/phpstan"; fi
   - if [[ $DISABLE_UNIT ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpunit/phpunit"; fi
+  - if [[ $DISABLE_BENCH ]]; then export COMPOSER_REMOVE="$COMPOSER_REMOVE phpbench/phpbench"; fi
   - if [[ $TRAVIS_PHP_VERSION = "nightly" ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
   - |
     if [[ $COMPOSER_REMOVE ]]; then
@@ -32,16 +33,17 @@ install:
 
 script:
   - mkdir -p build/cache
-  - if [[ -z $DISABLE_UNIT ]]; then composer unit; fi
-  - composer test-input
-  - composer performance
+  - if [[ -z $DISABLE_UNIT ]]; then composer run unit; fi
+  - composer run test-input
+  - composer run performance
+  - if [[ -z $DISABLE_BENCH ]]; then vendor/bin/phpbench run --report=aggregate --progress=plain --tag=$TRAVIS_BRANCH; fi
 
 jobs:
   include:
     - stage: Smoke
       php: 8.1
       env: PHPCS=1
-      script: composer cs-warning
+      script: composer run cs-warning
     - stage: Smoke
       php: 8.1
       env: PHPSTAN=1
@@ -49,8 +51,10 @@ jobs:
 
     - stage: Test
       php: 7.1
-      name: PHP 7.1 without Unit tests
-      env: DISABLE_UNIT=1
+      name: PHP 7.1 without Unit tests and Bench
+      env:
+        - DISABLE_UNIT=1
+        - DISABLE_BENCH=1
     - stage: Test
       php: 7.2
       name: PHP 7.2 without Unit tests
