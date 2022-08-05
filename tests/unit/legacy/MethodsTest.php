@@ -73,7 +73,8 @@ class MethodsTest extends TestCase
             $this->fail("Method " . $methodName . '() doesn\'t exists.');
         }
 
-        $failedOnMessage = 'Failed on ' . $methodName . ' (test file: ' . $file . ', geometry type: ' . $geometry->geometryType() . ')';
+        $failedOnMessage = 'Failed on ' . $methodName
+            . ' (test file: ' . $file . ', geometry type: ' . $geometry->geometryType() . ')';
         switch ($methodName) {
             case 'y':
             case 'x':
@@ -345,7 +346,8 @@ class MethodsTest extends TestCase
                 $bb = $geosResult->getBBox();
                 $scale = $bb ? sqrt((($bb['maxy'] - $bb['miny']) ^ 2) + (($bb['maxx'] - $bb['minx']) ^ 2)) : 1;
 
-              // The difference in the output of GEOS and native-PHP methods should be less than 0.5 scaled haustorff units
+              // The difference in the output of GEOS and native-PHP methods
+              // should be less than 0.5 scaled haustorff units
                 if ($hausDist / $scale > 0.5) {
                     //var_dump('GEOS : ', $geosResult->out('wkt'), 'NORM : ', $normResult->out('wkt'));
                     $this->fail('Output mismatch on ' . $method);

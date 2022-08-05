@@ -50,7 +50,7 @@ class AdaptersTest extends TestCase
                       //Don't test google geocoder regularly. Comment to test
                         continue;
                     }
-                  // Turn GEOS on
+                    // Turn GEOS on
                     geoPHP::enableGeos();
 
                     $output = $geometry->out($adapterKey);
@@ -60,16 +60,18 @@ class AdaptersTest extends TestCase
 
                         $testGeom1 = $adapterLoader->read($output);
 
-                  // Turn GEOS off
+                        // Turn GEOS off
                         geoPHP::disableGeos();
 
                         $testGeom2 = $adapterLoader->read($output);
 
-                  // Turn GEOS back On
+                        // Turn GEOS back On
                         geoPHP::enableGeos();
 
-                  // Check to make sure a both are the same with geos and without
-                        $this->assertEquals($testGeom1->out('wkt'), $testGeom2->out('wkt'), "Mismatched adapter output between GEOS and NORM in " . $adapterClass . ' (test file: ' . $file . ')');
+                        // Check to make sure a both are the same with geos and without
+                        $msg = "Mismatched adapter output between GEOS and NORM in " . $adapterClass
+                            . ' (test file: ' . $file . ')';
+                        $this->assertEquals($testGeom1->out('wkt'), $testGeom2->out('wkt'), $msg);
                     }
                 }
             }

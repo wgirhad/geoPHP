@@ -6,7 +6,8 @@ use geoPHP\geoPHP;
 use geoPHP\Geometry\Geometry;
 use PHPUnit\Framework\TestCase;
 
-// FIXME file 20120702.gpx contains one MultiLineString but _method_tester() also wants to test Points and LineStrings (ie does nothing)
+// FIXME file 20120702.gpx contains one MultiLineString
+// but methodTester() also wants to test Points and LineStrings (ie does nothing)
 
 class File20120702Test extends TestCase
 {
@@ -223,7 +224,11 @@ class File20120702Test extends TestCase
                     $this->assertNotNull($geometry->$methodName($argument), $failedOnMessage);
                 }
                 if ($geometry->geometryType() == 'MultiLineString') {
-                    $this->assertEquals($geometry->$methodName($argument), (float) '0.11624637315233', $failedOnMessage);
+                    $this->assertEquals(
+                        $geometry->$methodName($argument),
+                        (float) '0.11624637315233',
+                        $failedOnMessage
+                    );
                 }
                 break;
             case 'numGeometries':

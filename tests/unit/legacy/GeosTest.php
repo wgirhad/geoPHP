@@ -2,6 +2,7 @@
 
 namespace geoPHP\Tests\Unit\Legacy;
 
+use geoPHP\Geometry\Geometry;
 use geoPHP\geoPHP;
 use PHPUnit\Framework\TestCase;
 
@@ -95,14 +96,18 @@ class GeosTest extends TestCase
                         case 'symDifference':
                         case 'union':
                         case 'simplify':
-                            $this->assertInstanceOf('geoPHP\\Geometry\\Geometry', $geometry->$methodName($argument), $errorMessage);
+                            $this->assertInstanceOf(Geometry::class, $geometry->$methodName($argument), $errorMessage);
                             break;
                         case 'distance':
                         case 'hausdorffDistance':
                             $this->assertIsFloat($geometry->$methodName($argument), $errorMessage);
                             break;
                         case 'relate':
-                            $this->assertMatchesRegularExpression('/[0-9TF]{9}/', $geometry->$methodName($argument), $errorMessage);
+                            $this->assertMatchesRegularExpression(
+                                '/[0-9TF]{9}/',
+                                $geometry->$methodName($argument),
+                                $errorMessage
+                            );
                             break;
                         case 'checkValidity':
                             $this->assertArrayHasKey('valid', $geometry->$methodName($argument), $errorMessage);
