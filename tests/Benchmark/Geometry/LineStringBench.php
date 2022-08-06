@@ -5,7 +5,6 @@ namespace geoPHP\Tests\Benchmark\Geometry;
 use geoPHP\Geometry\LineString;
 
 /**
- *
  * @property LineString $geometry
  */
 class LineStringBench extends AbstractGeometryBench
@@ -80,6 +79,15 @@ class LineStringBench extends AbstractGeometryBench
     public function benchGeometryN(): void
     {
         $this->geometry->geometryN(10);
+    }
+
+    /**
+     * @BeforeMethods("setUpLineString")
+     * @Revs(1000)
+     */
+    public function benchEndPoint(): void
+    {
+        $this->geometry->endPoint();
     }
 
     /**

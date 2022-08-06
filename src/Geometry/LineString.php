@@ -26,10 +26,6 @@ use const PHP_INT_MAX;
  * A LineString is defined by a sequence of points, (X,Y) pairs, which define the reference points of the line string.
  * Linear interpolation between the reference points defines the resulting linestring.
  *
- * @method Point[] getComponents()
- * @property Point[] $components
- * @method Point|null geometryN(int $n)
- *
  * @phpstan-consistent-constructor
  */
 class LineString extends Curve
@@ -474,6 +470,10 @@ class LineString extends Curve
 
     /**
      * Checks that LineString is a Simple Geometry.
+     *
+     * A Curve is simple if it does not pass through the same Point twice
+     * with the possible exception of the two end points.
+     *
      * WARNING: Current implementation has known problems with self tangency.
      *
      * @return boolean

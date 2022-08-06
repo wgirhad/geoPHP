@@ -11,8 +11,10 @@ use geoPHP\Exception\InvalidGeometryException;
  * TODO write this
  *
  * @package geoPHP\Geometry
- * @method Point[] getComponents()
+ *
  * @property Point[] $components A curve consists of sequence of Points
+ * @method Point[] getComponents()
+ * @method Point|null geometryN(int $n)
  */
 abstract class Curve extends Collection
 {
@@ -76,7 +78,10 @@ abstract class Curve extends Collection
     }
 
     /**
-     * The boundary of a non-closed Curve consists of its end Points.
+     * The boundary of a non-closed Curve consists of its two end Points.
+     * End point are represented as a MultiPoint geometry.
+     *
+     * @see OGC SFA 6.1.6.1
      *
      * @return MultiPoint
      */
@@ -90,7 +95,7 @@ abstract class Curve extends Collection
     public function startPoint(): ?Point
     {
         if (!isset($this->startPoint)) {
-            $this->startPoint = $this->pointN(1);
+            $this->startPoint = $this->components[0] ?? null;
         }
         return $this->startPoint;
     }
@@ -98,18 +103,23 @@ abstract class Curve extends Collection
     public function endPoint(): ?Point
     {
         if (!isset($this->endPoint)) {
-            $this->endPoint = $this->pointN($this->numPoints());
+            $this->endPoint = $this->components[count($this->components) - 1] ?? null;
         }
         return $this->endPoint;
     }
 
+    /**
+     * A Curve is closed if its start Point is equal to its end Point.
+     *
+     * @see OGC SFA 6.1.6.1
+     *
+     * @return boolean
+     */
     public function isClosed(): bool
     {
-        if ($this->isEmpty() || !$this->startPoint() || !$this->endPoint()) {
-            return false;
-        } else {
-            return $this->startPoint()->equals($this->endPoint());
-        }
+        return !$this->isEmpty()
+            ? $this->startPoint()->equals($this->endPoint())
+            : false;
     }
 
     public function isRing(): bool

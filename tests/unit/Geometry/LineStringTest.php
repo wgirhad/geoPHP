@@ -270,6 +270,37 @@ class LineStringTest extends TestCase
     }
 
     /**
+     * @return array<string, array{mixed, bool}>
+     */
+    public function providerIsRing(): array
+    {
+        return [
+                'empty' =>
+                    [[], false],
+                'non closed' =>
+                    [[[0, 0], [0, 10], [10, 10]], false],
+                'simple ring' =>
+                    [[[0, 0], [0, 10], [10, 10], [0, 0]], true],
+                'self-crossing' =>
+                    [[[0, 0], [10, 0], [10, 10], [0, -10], [0, 0]], false],
+        ];
+    }
+
+    /**
+     * @dataProvider providerIsRing
+     * @covers ::isRing
+     *
+     * @param array<array<int|null>> $points
+     * @param bool                   $result
+     */
+    public function testIsRing(array $points, bool $result, ?string $skip = null): void
+    {
+        $line = LineString::fromArray($points);
+
+        $this->assertSame($result, $line->isRing());
+    }
+
+    /**
      * @return array<array{array<mixed>, float}>
      */
     public function providerLength(): array
@@ -292,6 +323,9 @@ class LineStringTest extends TestCase
         $line = LineString::fromArray($points);
 
         $this->assertEqualsWithDelta($result, $line->length(), self::DELTA);
+
+        // Results of Lengh and Length3D should be equal on 2D dataset.
+        $this->assertEquals($line->length(), $line->length3D());
     }
 
     /**

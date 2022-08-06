@@ -87,6 +87,7 @@ class MultiPointTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::geometryType
      */
     public function testGeometryType(): void
     {
