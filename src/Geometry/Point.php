@@ -447,6 +447,11 @@ class Point extends Geometry
         return 0.0;
     }
 
+    public function vincentyLength(): float
+    {
+        return 0.0;
+    }
+
     public function zDifference(): ?float
     {
         return null;

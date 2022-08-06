@@ -645,27 +645,21 @@ class PointTest extends TestCase
         $this->assertNull((new Point(1, 2, 3, 4))->$methodName());
     }
 
-    /**
-     * @return array{array<string>}
-     */
-    public function providerMethodsNotValidForPointReturns0(): array
-    {
-        return [
-            ['area'],
-            ['length'],
-            ['length3D'],
-            ['greatCircleLength'],
-            ['haversineLength']
-        ];
-    }
 
     /**
-     * @dataProvider providerMethodsNotValidForPointReturns0
+     * @testWith ["area"]
+     *           ["length"]
+     *           ["length3D"]
+     *           ["greatCircleLength"]
+     *           ["haversineLength"]
+     *           ["vincentyLength"]
+     *
      * @covers ::area
      * @covers ::length
      * @covers ::length3D
      * @covers ::greatCircleLength
      * @covers ::haversineLength
+     * @covers ::vincentyLength
      */
     public function testPlaceholderMethods(string $methodName): void
     {

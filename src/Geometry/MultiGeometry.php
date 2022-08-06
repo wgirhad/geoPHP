@@ -145,6 +145,15 @@ abstract class MultiGeometry extends Collection
         return $length;
     }
 
+    public function vincentyLength(): float
+    {
+        $length = 0.0;
+        foreach ($this->components as $component) {
+            $length += $component->vincentyLength();
+        }
+        return $length;
+    }
+
     public function minimumZ(): ?float
     {
         if (!$this->is3D()) {

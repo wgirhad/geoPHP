@@ -354,6 +354,8 @@ abstract class Geometry
 
     abstract public function haversineLength(): float; //degrees
 
+    abstract public function vincentyLength(): float;
+
     // Elevations statistics
 
     abstract public function minimumZ(): ?float;

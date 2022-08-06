@@ -96,6 +96,11 @@ abstract class Surface extends Collection
         return 0.0;
     }
 
+    public function vincentyLength(): float
+    {
+        return 0.0;
+    }
+
     public function greatCircleLength(float $radius = null): float
     {
         return 0.0;
