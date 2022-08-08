@@ -54,7 +54,7 @@
     ],
     "all": [
       "@analyze",
-      "echo \"Let's cool down a bit before testing benchmark ...\" && sleep 3",
+      "echo \"Let's cool down a bit before testing benchmark ...\" && sleep 1",
       "@tests"
     ],
     "cs":          "phpcs",
@@ -67,6 +67,6 @@
     ],
     "test-input":  "cd tests && php test.php && cd ..",
     "performance": "cd tests && php geometryPerformance.php && cd ..",
-    "bench": "vendor/bin/phpbench run --report=aggregate"
+    "bench": "vendor/bin/phpbench run --report=aggregate --sleep 10000"
   }
 }

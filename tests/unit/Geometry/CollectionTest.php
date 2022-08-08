@@ -216,6 +216,26 @@ class CollectionTest extends TestCase
     }
 
     /**
+     * @covers ::flatten
+     */
+    public function testFlatten(): void
+    {
+        $components = [
+                new Point(1, 2, 3, 4),
+                new Point(5, 6, 7, 8),
+                new LineString([new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)]),
+        ];
+
+        /** @var Collection $stub */
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
+        $stub->flatten();
+
+        $this->assertFalse($stub->is3D());
+        $this->assertFalse($stub->isMeasured());
+        $this->assertFalse($stub->getPoints()[0]->is3D());
+    }
+
+    /**
      * @return array<array{array<Geometry>, bool}>
      */
     public function providerIsEmpty(): array
@@ -282,23 +302,88 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @covers ::flatten
+     * @dataProvider providerConstructorAllowedComponentType
+     * @covers ::numGeometries
+     *
+     * @param array<mixed> $components
      */
-    public function testFlatten(): void
+    public function testNumGeometries(array $components): void
     {
-        $components = [
-                new Point(1, 2, 3, 4),
-                new Point(5, 6, 7, 8),
-                new LineString([new Point(1, 2, 3, 4), new Point(5, 6, 7, 8)]),
-        ];
-
         /** @var Collection $stub */
         $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
-        $stub->flatten();
 
-        $this->assertFalse($stub->is3D());
-        $this->assertFalse($stub->isMeasured());
-        $this->assertFalse($stub->getPoints()[0]->is3D());
+        $this->assertEquals(count($components), $stub->numGeometries());
+    }
+
+    /**
+     * @dataProvider providerConstructorAllowedComponentType
+     * @covers ::GeometryN
+     *
+     * @param array<mixed> $components
+     */
+    public function testGeometryN(array $components): void
+    {
+        /** @var Collection $stub */
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
+
+        for ($i = 0; $i < count($components) + 1; ++$i) {
+            $this->assertEquals($components[$i] ?? null, $stub->geometryN($i + 1));
+        }
+    }
+
+    /**
+     * @return array<string, array<int|Geometry[]>>
+     */
+    public function providerNumPoints(): array
+    {
+        return [
+            'no components'     => [0, []],
+            'linestring'        => [2, [LineString::fromArray([[1, 2], [3, 4]])]],
+            'linestring, point' => [3, [LineString::fromArray([[1, 2], [3, 4]]), new Point(5, 6)]],
+        ];
+    }
+
+    /**
+     * @dataProvider providerNumPoints
+     * @covers ::numPoints
+     *
+     * @param Geometry[]|array{} $components
+     */
+    public function testNumPoints(int $expectedNum, array $components): void
+    {
+        /** @var Collection $stub */
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
+
+        $this->assertEquals($expectedNum, $stub->numPoints());
+    }
+
+    /**
+     * @return array<string, array<int|Geometry[]>>
+     */
+    public function providerGetPoints(): array
+    {
+        return [
+            'no components'     => [[], []],
+            'linestring, point' => [
+                [LineString::fromArray([[1, 2], [3, 4]]), new Point(5, 6)],
+                [new Point(1, 2), new Point(3, 4), new Point(5, 6)]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerGetPoints
+     * @covers ::getPoints
+     *
+     * @param Geometry[]|array{} $components
+     * @param Point[]|array{} $expectedPoints
+     */
+    public function testGetPoints(array $components, array $expectedPoints): void
+    {
+        /** @var Collection $stub */
+        $stub = $this->getMockForAbstractClass(Collection::class, [$components]);
+
+        $this->assertEquals($expectedPoints, $stub->getPoints());
     }
 
     /**

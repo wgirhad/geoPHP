@@ -202,19 +202,6 @@ class MultiPointTest extends TestCase
 
     /**
      * @dataProvider providerValidComponents
-     * @covers ::numGeometries
-     *
-     * @param array<mixed> $points
-     */
-    public function testNumGeometries(array $points): void
-    {
-        $multiPoint = new MultiPoint($points);
-
-        $this->assertEquals(count($points), $multiPoint->numGeometries());
-    }
-
-    /**
-     * @dataProvider providerValidComponents
      * @covers ::dimension
      * @covers ::boundary
      * @covers ::explode
