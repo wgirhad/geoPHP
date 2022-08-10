@@ -85,22 +85,4 @@ class MultiLineString extends MultiCurve
             ? $this->getPoints()[0]
             : new Point($x / $totalLength, $y / $totalLength);
     }
-
-    /**
-     * The boundary of a MultiLineString is a MultiPoint, consists of the start and end points
-     * of its non-closed LineStrings
-     *
-     * @return MultiPoint
-     */
-    public function boundary(): ?Geometry
-    {
-        $points = [];
-        foreach ($this->components as $line) {
-            if (!$line->isEmpty() && !$line->isClosed()) {
-                $points[] = $line->startPoint();
-                $points[] = $line->endPoint();
-            }
-        }
-        return new MultiPoint($points);
-    }
 }

@@ -12,7 +12,7 @@ use function abs;
 use const PHP_INT_MAX;
 
 /**
- * MultiGeometry is an abstract collection of geometries
+ * MultiGeometry is an abstract collection of geometries.
  *
  * @package geoPHP\Geometry
  */
@@ -36,6 +36,8 @@ abstract class MultiGeometry extends Collection
     }
 
     /**
+     * A collection is simple if all it's components are simple.
+     *
      * @return bool
      */
     public function isSimple(): ?bool
@@ -47,7 +49,6 @@ abstract class MultiGeometry extends Collection
             // @codeCoverageIgnoreEnd
         }
 
-        // A collection is simple if all it's components are simple
         foreach ($this->components as $component) {
             if (!$component->isSimple()) {
                 return false;
