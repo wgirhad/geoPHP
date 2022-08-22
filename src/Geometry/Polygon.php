@@ -15,8 +15,8 @@ use function max;
 use function min;
 
 /**
- * Polygon: A polygon is a plane figure that is bounded by a closed path,
- * composed of a finite sequence of straight line segments
+ * A Polygon is a planar Surface defined by 1 exterior boundary and 0 or more interior boundaries.
+ * Each interior boundary defines a hole in the Polygon.
  *
  * @method   LineString[] getComponents()
  * @method   LineString|null geometryN(int $n)
@@ -58,10 +58,6 @@ class Polygon extends Surface
                     );
                 }
             }
-            // This check is tooo expensive
-            //if (!$component->isSimple() && !$forceCreate) {
-            //    throw new \Exception('Cannot create Polygon: geometry should be simple');
-            //}
         }
     }
 
@@ -87,11 +83,6 @@ class Polygon extends Surface
     public function geometryType(): string
     {
         return Geometry::POLYGON;
-    }
-
-    public function dimension(): int
-    {
-        return 2;
     }
 
     /**
@@ -206,6 +197,7 @@ class Polygon extends Surface
     public function outermostPoint(): Point
     {
         $centroid = $this->centroid();
+
         if ($centroid->isEmpty()) {
             return $centroid;
         }
@@ -226,6 +218,8 @@ class Polygon extends Surface
     }
 
     /**
+     * Returns the exterior ring of the Polygon.
+     *
      * @return LineString
      */
     public function exteriorRing(): LineString
@@ -236,6 +230,11 @@ class Polygon extends Surface
         return $this->components[0];
     }
 
+    /**
+     * Returns the number of interior rings in the Polygon.
+     *
+     * @return int
+     */
     public function numInteriorRings(): int
     {
         if ($this->isEmpty()) {
@@ -244,11 +243,20 @@ class Polygon extends Surface
         return $this->numGeometries() - 1;
     }
 
+    /**
+     * Returns the Nth interior ring for the Polygon as a LineString.
+     *
+     * @param int $n
+     * @return LineString|null
+     */
     public function interiorRingN(int $n): ?LineString
     {
         return $this->geometryN($n + 1);
     }
 
+    /**
+     * @return bool|null
+     */
     public function isSimple(): ?bool
     {
         if ($this->getGeos()) {
@@ -282,6 +290,7 @@ class Polygon extends Surface
      * @param Point $point
      * @param boolean $pointOnBoundary - whether a boundary should be considered "in" or not
      * @param boolean $pointOnVertex - whether a vertex should be considered "in" or not
+     *
      * @return boolean
      */
     public function pointInPolygon(Point $point, bool $pointOnBoundary = true, bool $pointOnVertex = true): bool
@@ -328,11 +337,7 @@ class Polygon extends Surface
             }
         }
         // If the number of edges we passed through is even, then it's in the polygon.
-        if ($intersections % 2 != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $intersections % 2 !== 0;
     }
 
     /**
@@ -375,10 +380,9 @@ class Polygon extends Surface
             return false;
         }
 
-        if ($geometry->geometryType() == Geometry::LINE_STRING) {
-        } elseif ($geometry->geometryType() == Geometry::POLYGON) {
+        if ($geometry->geometryType() === Geometry::POLYGON) {
             $geometry = $geometry->exteriorRing();
-        } else {
+        } elseif ($geometry->geometryType() !== Geometry::LINE_STRING) {
             return false;
         }
 
@@ -402,6 +406,9 @@ class Polygon extends Surface
     }
 
     /**
+     * The boundary of a simple Surface is the set of closed Curves,
+     * corresponding to its “exterior” and “interior” boundaries.
+
      * @return LineString|MultiLineString
      */
     public function boundary(): ?Geometry
@@ -410,10 +417,16 @@ class Polygon extends Surface
             return new LineString();
         }
 
+        if ($this->getGeos()) {
+            // @codeCoverageIgnoreStart
+            return geoPHP::geosToGeometry($this->getGeos()->boundary());
+            // @codeCoverageIgnoreEnd
+        }
+
         $rings = $this->getComponents();
 
         return $this->numInteriorRings() === 0
-            ? new LineString($rings[0]->getPoints())
+            ? $rings[0]
             : new MultiLineString($rings);
     }
 }

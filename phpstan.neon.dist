@@ -10,5 +10,6 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#\:\:centroid\(\) should return geoPHP\\Geometry\\Point but returns geoPHP\\Geometry\\Geometry\|null.$#'
+        - '#\:\:boundary\(\) should return geoPHP\\Geometry\\.+ but returns geoPHP\\Geometry\\Geometry\|null.$#'
         - '#Parameter \#1 \$connection of function pg_query expects resource, PgSql\\Connection given.$#'
         - '#Parameter \#1 \$result of function pg_fetch_all expects PgSql\\Result, resource\|false given.$#'

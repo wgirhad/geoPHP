@@ -22,14 +22,14 @@ abstract class Surface extends Collection
     /**
      * Checks and stores geometry components.
      *
-     * @param Curve[] $components             Array of Curve components.
-     * @param string    $allowedComponentType A class the components must be instance of. Default: Curve.
+     * @param Curve[]|Polygon[] $components Array of Curve or Polygon components.
+     * @param string  $allowedComponentType A class the components must be instance of. Default: Geometry.
      *
      * @throws InvalidGeometryException
      */
     public function __construct(
         array $components = [],
-        string $allowedComponentType = Curve::class
+        string $allowedComponentType = Geometry::class
     ) {
         parent::__construct($components, $allowedComponentType);
     }
