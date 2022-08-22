@@ -394,9 +394,9 @@ abstract class Geometry
      */
     public function setSRID(?int $srid): void
     {
-        if ($this->getGeos() && $srid !== null) {
+        if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
-            $this->getGeos()->setSRID($srid);
+            $this->getGeos()->setSRID($srid ?: 0);
             // @codeCoverageIgnoreEnd
         }
         $this->srid = $srid;

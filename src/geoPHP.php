@@ -270,9 +270,7 @@ class geoPHP
 
         $wkbWriter = new \GEOSWKBWriter();
         $wkbWriter->setOutputDimension($geos->coordinateDimension());
-        if ($geos->getSRID()) {
-            $wkbWriter->setIncludeSRID($geos->getSRID());
-        }
+        $wkbWriter->setIncludeSRID(true); // @phpstan-ignore-line
 
         $wkb = $wkbWriter->writeHEX($geos);
         return geoPHP::load($wkb, 'ewkb', true);
