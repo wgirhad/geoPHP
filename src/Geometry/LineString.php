@@ -14,7 +14,6 @@ use function cos;
 use function count;
 use function deg2rad;
 use function is_nan;
-use function pow;
 use function sin;
 use function sqrt;
 use function tan;
@@ -116,8 +115,8 @@ class LineString extends Curve
             if ($previousPoint) {
                 // Equivalent to $previousPoint->distance($point) but much faster
                 $segmentLength = sqrt(
-                    pow(($previousPoint->x() - $point->x()), 2) +
-                        pow(($previousPoint->y() - $point->y()), 2)
+                    ($previousPoint->x() - $point->x()) ** 2 +
+                    ($previousPoint->y() - $point->y()) ** 2
                 );
                 $length += $segmentLength;
                 $x += ($previousPoint->x() + $point->x()) / 2 * $segmentLength;
@@ -150,8 +149,8 @@ class LineString extends Curve
         foreach ($this->getComponents() as $point) {
             if ($previousPoint) {
                 $length += sqrt(
-                    pow(($previousPoint->x() - $point->x()), 2) +
-                    pow(($previousPoint->y() - $point->y()), 2)
+                    ($previousPoint->x() - $point->x()) ** 2 +
+                    ($previousPoint->y() - $point->y()) ** 2
                 );
             }
             $previousPoint = $point;
@@ -167,9 +166,9 @@ class LineString extends Curve
         foreach ($this->getComponents() as $point) {
             if ($previousPoint) {
                 $length += sqrt(
-                    pow(($previousPoint->x() - $point->x()), 2) +
-                    pow(($previousPoint->y() - $point->y()), 2) +
-                    pow(($previousPoint->z() - $point->z()), 2)
+                    ($previousPoint->x() - $point->x()) ** 2 +
+                    ($previousPoint->y() - $point->y()) ** 2 +
+                    ($previousPoint->z() - $point->z()) ** 2
                 );
             }
             $previousPoint = $point;
@@ -203,16 +202,16 @@ class LineString extends Curve
                     $radius *
                     atan2(
                         sqrt(
-                            pow($cosLat2 * sin($deltaLon), 2) +
-                                    pow($cosLat1 * $sinLat2 - $sinLat1 * $cosLat2 * $cosDeltaLon, 2)
+                            ($cosLat2 * sin($deltaLon)) ** 2 +
+                            ($cosLat1 * $sinLat2 - $sinLat1 * $cosLat2 * $cosDeltaLon) ** 2
                         ),
                         $sinLat1 * $sinLat2 +
-                            $cosLat1 * $cosLat2 * $cosDeltaLon
+                        $cosLat1 * $cosLat2 * $cosDeltaLon
                     );
             if ($points[$i]->is3D()) {
                 $d = sqrt(
-                    pow($d, 2) +
-                        pow($points[$i + 1]->z() - $points[$i]->z(), 2)
+                    $d ** 2 +
+                    ($points[$i + 1]->z() - $points[$i]->z()) ** 2
                 );
             }
 

@@ -16,7 +16,7 @@ class LineStringBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpLineString")
-     * @Revs(200)
+     * @Revs(100)
      */
     public function benchInvertXY(): void
     {
@@ -25,7 +25,7 @@ class LineStringBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpLineString")
-     * @Revs(1000)
+     * @Revs(200)
      */
     public function benchIsEmpty(): void
     {
@@ -74,7 +74,7 @@ class LineStringBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpLineString")
-     * @Revs(1000)
+     * @Revs(200)
      */
     public function benchGeometryN(): void
     {
@@ -83,7 +83,7 @@ class LineStringBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpLineString")
-     * @Revs(1000)
+     * @Revs(200)
      */
     public function benchEndPoint(): void
     {

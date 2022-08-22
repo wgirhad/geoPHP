@@ -39,7 +39,7 @@ class PolygonBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpPolygonLarge")
-     * @Revs(1000)
+     * @Revs(200)
      */
     public function benchIsEmpty(): void
     {
@@ -48,7 +48,7 @@ class PolygonBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpPolygonLarge")
-     * @Revs(1000)
+     * @Revs(200)
      */
     public function benchExteriorRing(): void
     {
@@ -57,6 +57,7 @@ class PolygonBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpPolygonSmall")
+     * @Revs(10)
      */
     public function benchGetPoints(): void
     {
@@ -65,6 +66,7 @@ class PolygonBench extends AbstractGeometryBench
 
     /**
      * @BeforeMethods("setUpPolygonSmall")
+     * @Revs(10)
      */
     public function benchArea(): void
     {

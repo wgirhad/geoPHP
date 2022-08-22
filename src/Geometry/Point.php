@@ -9,7 +9,6 @@ use geoPHP\Exception\InvalidGeometryException;
 use function gettype;
 use function is_finite;
 use function is_numeric;
-use function pow;
 use function sqrt;
 
 /**
@@ -328,8 +327,8 @@ class Point extends Geometry
         }
         if ($geometry->geometryType() == Geometry::POINT) {
             return sqrt(
-                pow(($this->x() - $geometry->x()), 2)
-                + pow(($this->y() - $geometry->y()), 2)
+                ($this->x() - $geometry->x()) ** 2 +
+                ($this->y() - $geometry->y()) ** 2
             );
         }
         if ($geometry instanceof MultiGeometry) {
