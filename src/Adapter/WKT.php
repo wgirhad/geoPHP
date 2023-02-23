@@ -68,7 +68,7 @@ class WKT implements GeoAdapter
         $srid = null;
         // If the input starts with "SRID=" then read Spatial Reference ID
         if (preg_match('#^SRID=(\d+);#', $wkt, $m)) {
-            $srid = $m[1];
+            $srid = intval($m[1]);
             $wkt = substr($wkt, strlen($m[0]));
         }
 
