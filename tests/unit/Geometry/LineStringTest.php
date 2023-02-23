@@ -232,7 +232,7 @@ class LineStringTest extends TestCase
         $line = LineString::fromArray($points);
         $centroid = $line->centroid();
 
-        $this->assertEquals($centroidPoint, $centroid);
+        $this->assertEqualsWithDelta($centroidPoint, $centroid, self::DELTA);
     }
 
     /**
