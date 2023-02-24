@@ -7,7 +7,7 @@
   "type": "library",
   "description": "Open-source native PHP library for doing geometry operations. Can read and write a wide variety of formats: (E)WKT, (E)WKB, TWKB, GeoJSON, KML, GPX, GeoRSS. Works with all Simple-Feature geometries (Point, LineString, Polygon...) and can be used to get centroids, bounding-boxes, area, etc.",
   "keywords": ["geophp", "gis", "geometry", "converter", "linestring", "polygon", "wkt", "wkb", "kml", "gpx", "geojson", "twkb"],
-  "homepage": "https://github.com/funiq/geoPHP",
+  "homepage": "https://github.com/wgirhad/geoPHP",
   "authors": [
     {
       "name": "Patrick Hayes",
@@ -15,6 +15,10 @@
     },
     {
       "name": "Péter Báthory",
+      "role": "Developer"
+    },
+    {
+      "name": "Willian Girhad",
       "role": "Developer"
     }
   ],

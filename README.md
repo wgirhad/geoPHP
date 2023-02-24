@@ -1,7 +1,15 @@
-[![Build Status](https://travis-ci.com/funiq/geoPHP.svg?branch=development)](https://travis-ci.com/funiq/geoPHP)
-[![Coverage Status](https://coveralls.io/repos/github/funiq/geoPHP/badge.svg?branch=development)](https://coveralls.io/github/funiq/geoPHP?branch=development)
+[![Build Status](https://travis-ci.com/wgirhad/geoPHP.svg?branch=development)](https://travis-ci.com/wgirhad/geoPHP)
+[![Coverage Status](https://coveralls.io/repos/github/wgirhad/geoPHP/badge.svg?branch=development)](https://coveralls.io/github/wgirhad/geoPHP?branch=development)
 
 GeoPHP is a open-source native PHP library for doing geometry operations. It is a fork of famous [geoPHP](https://github.com/phayes/geoPHP) library by Patrick Hayes.
+
+## Notice about this repo
+*This fork aims to unify the most relevant forks from the original work of phayes/geoPHP*
+
+### Goals
+* Maintain compatibility with current [supported versions of PHP](https://www.php.net/supported-versions.php)
+* Keep the unit tests compatible with the latest PHPUnit
+* Merge contributions from other [geoPHP forks](https://github.com/phayes/geoPHP/forks), like [funiq](https://github.com/funiq/geoPHP), [swen100](https://github.com/swen100/geoPHP) and others
 
 It is written entirely in PHP and can therefore run on shared hosts. It can read and write a wide variety of formats: WKT (EWKT), WKB (EWKB), TWKB, GeoJSON,
 KML, GPX, and GeoRSS. It works with all Simple-Feature geometries (Point, LineString, Polygon, GeometryCollection etc.)
@@ -16,7 +24,7 @@ for environments that have GEOS installed.
 
 See the _getting started_ section below for references and examples of everything that geoPHP can do.
 
-Forks and contributions are welcome. Please open [issues](https://github.com/funiq/geoPHP/issues), send [pull](https://github.com/funiq/geoPHP/pulls) requests and I will merge them into the main branch.
+Forks and contributions are welcome. Please open [issues](https://github.com/wgirhad/geoPHP/issues), send [pull](https://github.com/wgirhad/geoPHP/pulls) requests and I will merge them into the main branch.
 
 ## Getting Started
 
