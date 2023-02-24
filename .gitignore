@@ -3,6 +3,7 @@
 composer.phar
 .phpunit.result.cache
 phpstan.neon
+.vscode/
 
 # JetBrains (PhpStorm)
 .idea/
