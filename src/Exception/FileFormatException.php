@@ -16,10 +16,10 @@ class FileFormatException extends IOException
      * @param Throwable|null $previous
      */
     public function __construct(
-        ?string $message = null,
-        string $invalidData = null,
+        string|null $message = null,
+        string|null $invalidData = null,
         int $code = 0,
-        ?Throwable $previous = null
+        Throwable|null $previous = null
     ) {
         if ($invalidData) {
             $invalidData = strlen($invalidData) <= 50 ? $invalidData : substr($invalidData, 0, 49) . "…";

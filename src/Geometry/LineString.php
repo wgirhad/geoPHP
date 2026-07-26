@@ -82,7 +82,7 @@ class LineString extends Curve
      * @param int $n Nth point of the LineString
      * @return Point|null
      */
-    public function pointN(int $n): ?Point
+    public function pointN(int $n): Point|null
     {
         return $n >= 0
                 ? $this->geometryN($n)
@@ -323,7 +323,7 @@ class LineString extends Curve
         return $length;
     }
 
-    public function minimumZ(): ?float
+    public function minimumZ(): float|null
     {
         if (!$this->is3D()) {
             return null;
@@ -337,7 +337,7 @@ class LineString extends Curve
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumZ(): ?float
+    public function maximumZ(): float|null
     {
         if (!$this->is3D()) {
             return null;
@@ -352,7 +352,7 @@ class LineString extends Curve
         return $max > ~PHP_INT_MAX ? $max : null;
     }
 
-    public function zDifference(): ?float
+    public function zDifference(): float|null
     {
         if (!$this->is3D()) {
             return null;
@@ -416,7 +416,7 @@ class LineString extends Curve
         return $loss;
     }
 
-    public function minimumM(): ?float
+    public function minimumM(): float|null
     {
         if (!$this->isMeasured()) {
             return null;
@@ -430,7 +430,7 @@ class LineString extends Curve
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumM(): ?float
+    public function maximumM(): float|null
     {
         if (!$this->isMeasured()) {
             return null;
@@ -452,7 +452,7 @@ class LineString extends Curve
      *
      * @return LineString[]|array<array{Point, Point}>
      */
-    public function explode(bool $toArray = false): ?array
+    public function explode(bool $toArray = false): array|null
     {
         $points = $this->getPoints();
         $numPoints = count($points);
@@ -477,7 +477,7 @@ class LineString extends Curve
      *
      * @return boolean
      */
-    public function isSimple(): ?bool
+    public function isSimple(): bool|null
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -527,7 +527,7 @@ class LineString extends Curve
      * @param Geometry|Collection $geometry
      * @return float|null
      */
-    public function distance(Geometry $geometry): ?float
+    public function distance(Geometry $geometry): float|null
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart

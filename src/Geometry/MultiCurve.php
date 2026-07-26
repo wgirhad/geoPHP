@@ -81,7 +81,7 @@ abstract class MultiCurve extends MultiGeometry
      *
      * @return Geometry|null
      */
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         if (geoPHP::isGeosInstalled()) {
             // @codeCoverageIgnoreStart

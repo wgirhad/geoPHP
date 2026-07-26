@@ -100,7 +100,7 @@ class MultiPolygon extends MultiSurface
         return $area;
     }
 
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         $rings = [];
         foreach ($this->getComponents() as $component) {

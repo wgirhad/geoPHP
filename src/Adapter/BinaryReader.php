@@ -79,7 +79,7 @@ class BinaryReader
      * Reads a signed 8-bit integer from the buffer
      * @return int|null
      */
-    public function readSInt8(): ?int
+    public function readSInt8(): int|null
     {
         $char = fread($this->buffer, 1);
         return $char !== '' ? current(unpack("c", $char)) : null;
@@ -89,7 +89,7 @@ class BinaryReader
      * Reads an unsigned 8-bit integer from the buffer
      * @return int|null
      */
-    public function readUInt8(): ?int
+    public function readUInt8(): int|null
     {
         $char = fread($this->buffer, 1);
         return $char !== '' ? current(unpack("C", $char)) : null;

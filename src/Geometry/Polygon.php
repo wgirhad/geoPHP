@@ -167,7 +167,7 @@ class Polygon extends Surface
 
     /**
      * @param LineString $ring
-     * @return array{area: float, x: ?float, y: ?float}
+     * @return array{area: float, x: float|null, y: float|null}
      */
     protected function getRingCentroidAndArea(LineString $ring): array
     {
@@ -249,7 +249,7 @@ class Polygon extends Surface
      * @param int $n
      * @return LineString|null
      */
-    public function interiorRingN(int $n): ?LineString
+    public function interiorRingN(int $n): LineString|null
     {
         return $this->geometryN($n + 1);
     }
@@ -257,7 +257,7 @@ class Polygon extends Surface
     /**
      * @return bool|null
      */
-    public function isSimple(): ?bool
+    public function isSimple(): bool|null
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -400,7 +400,7 @@ class Polygon extends Surface
     /**
      * @return null|array{maxy: float, miny: float, maxx: float, minx: float}
      */
-    public function getBBox(): ?array
+    public function getBBox(): array|null
     {
         return $this->exteriorRing()->getBBox();
     }
@@ -411,7 +411,7 @@ class Polygon extends Surface
 
      * @return LineString|MultiLineString
      */
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         if ($this->isEmpty()) {
             return new LineString();

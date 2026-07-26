@@ -51,7 +51,7 @@ class GeometryCollection extends MultiGeometry
      * Not valid for this geometry type
      * @return null
      */
-    public function isSimple(): ?bool
+    public function isSimple(): bool|null
     {
         return null;
     }
@@ -143,7 +143,7 @@ class GeometryCollection extends MultiGeometry
     }
 
     // Not valid for this geometry
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         return null;
     }

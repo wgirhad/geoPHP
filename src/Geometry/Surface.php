@@ -56,27 +56,27 @@ abstract class Surface extends Collection
         return count($this->components) === 0;
     }
 
-    public function startPoint(): ?Point
+    public function startPoint(): Point|null
     {
         return null;
     }
 
-    public function endPoint(): ?Point
+    public function endPoint(): Point|null
     {
         return null;
     }
 
-    public function pointN(int $n): ?Point
+    public function pointN(int $n): Point|null
     {
         return null;
     }
 
-    public function isClosed(): ?bool
+    public function isClosed(): bool|null
     {
         return null;
     }
 
-    public function isRing(): ?bool
+    public function isRing(): bool|null
     {
         return null;
     }
@@ -101,42 +101,42 @@ abstract class Surface extends Collection
         return 0.0;
     }
 
-    public function greatCircleLength(float $radius = null): float
+    public function greatCircleLength(float|null $radius = null): float
     {
         return 0.0;
     }
 
-    public function minimumZ(): ?float
+    public function minimumZ(): float|null
     {
         return null;
     }
 
-    public function maximumZ(): ?float
+    public function maximumZ(): float|null
     {
         return null;
     }
 
-    public function minimumM(): ?float
+    public function minimumM(): float|null
     {
         return null;
     }
 
-    public function maximumM(): ?float
+    public function maximumM(): float|null
     {
         return null;
     }
 
-    public function elevationGain(float $verticalTolerance = 0.0): ?float
+    public function elevationGain(float $verticalTolerance = 0.0): float|null
     {
         return null;
     }
 
-    public function elevationLoss(float $verticalTolerance = 0.0): ?float
+    public function elevationLoss(float $verticalTolerance = 0.0): float|null
     {
         return null;
     }
 
-    public function zDifference(): ?float
+    public function zDifference(): float|null
     {
         return null;
     }

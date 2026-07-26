@@ -117,12 +117,12 @@ class KML implements GeoAdapter
     }
 
     /**
-     * @param ?DOMNode $xml
+     * @param DOMNode|null $xml
      * @param string $nodeName
      *
      * @return DOMNode[]
      */
-    protected function childElements(?DOMNode $xml, string $nodeName = ''): array
+    protected function childElements(DOMNode|null $xml, string $nodeName = ''): array
     {
         $children = [];
         if ($xml) {
@@ -302,7 +302,7 @@ class KML implements GeoAdapter
      * @param string|null $type
      * @return string
      */
-    private function linestringToKML(LineString $geometry, string $type = null): string
+    private function linestringToKML(LineString $geometry, string|null $type = null): string
     {
         if (!$type) {
             $type = $geometry->geometryType();

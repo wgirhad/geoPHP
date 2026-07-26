@@ -352,11 +352,11 @@ class TWKB implements GeoAdapter
     public function write(
         Geometry $geometry,
         bool $writeAsHex = false,
-        ?int $decimalDigitsXY = 5,
-        ?int $decimalDigitsZ = 0,
-        ?int $decimalDigitsM = 0,
-        ?bool $includeSizes = false,
-        ?bool $includeBoundingBoxes = false
+        int|null $decimalDigitsXY = 5,
+        int|null $decimalDigitsZ = 0,
+        int|null $decimalDigitsM = 0,
+        bool|null $includeSizes = false,
+        bool|null $includeBoundingBoxes = false
     ): string {
         $this->writer = new BinaryWriter();
 

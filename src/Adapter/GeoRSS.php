@@ -200,7 +200,7 @@ class GeoRSS implements GeoAdapter
      * @param Geometry $geometry
      * @return string|null
      */
-    protected function geometryToGeoRSS(Geometry $geometry): ?string
+    protected function geometryToGeoRSS(Geometry $geometry): string|null
     {
         $type = $geometry->geometryType();
         switch ($type) {
