@@ -121,7 +121,7 @@ class Point extends Geometry
      *
      * @return float|null The X coordinate
      */
-    public function x(): ?float
+    public function x(): float|null
     {
         return $this->x;
     }
@@ -131,7 +131,7 @@ class Point extends Geometry
      *
      * @return float|null The Y coordinate
      */
-    public function y(): ?float
+    public function y(): float|null
     {
         return $this->y;
     }
@@ -141,7 +141,7 @@ class Point extends Geometry
      *
      * @return float|null The Z coordinate or NULL is not a 3D point
      */
-    public function z(): ?float
+    public function z(): float|null
     {
         return $this->z;
     }
@@ -151,7 +151,7 @@ class Point extends Geometry
      *
      * @return float|null The measured value
      */
-    public function m(): ?float
+    public function m(): float|null
     {
         return $this->m;
     }
@@ -194,7 +194,7 @@ class Point extends Geometry
     }
 
     /**
-     * @return array{maxy: ?float, miny: ?float, maxx: ?float, minx: ?float}
+     * @return array{maxy: float|null, miny: float|null, maxx: float|null, minx: float|null}
      */
     public function getBBox(): array
     {
@@ -232,7 +232,7 @@ class Point extends Geometry
      *
      * @return GeometryCollection
      */
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         return new GeometryCollection();
     }
@@ -314,7 +314,7 @@ class Point extends Geometry
      * @param Geometry $geometry
      * @return float|null
      */
-    public function distance(Geometry $geometry): ?float
+    public function distance(Geometry $geometry): float|null
     {
         if ($this->isEmpty() || $geometry->isEmpty()) {
             return null;
@@ -399,22 +399,22 @@ class Point extends Geometry
         }
     }
 
-    public function minimumZ(): ?float
+    public function minimumZ(): float|null
     {
         return $this->z();
     }
 
-    public function maximumZ(): ?float
+    public function maximumZ(): float|null
     {
         return $this->z();
     }
 
-    public function minimumM(): ?float
+    public function minimumM(): float|null
     {
         return $this->m();
     }
 
-    public function maximumM(): ?float
+    public function maximumM(): float|null
     {
         return $this->m();
     }
@@ -436,7 +436,7 @@ class Point extends Geometry
         return 0.0;
     }
 
-    public function greatCircleLength(float $radius = null): float
+    public function greatCircleLength(float|null $radius = null): float
     {
         return 0.0;
     }
@@ -451,67 +451,67 @@ class Point extends Geometry
         return 0.0;
     }
 
-    public function zDifference(): ?float
+    public function zDifference(): float|null
     {
         return null;
     }
 
-    public function elevationGain(?float $verticalTolerance = 0.0): ?float
+    public function elevationGain(float|null $verticalTolerance = 0.0): float|null
     {
         return null;
     }
 
-    public function elevationLoss(?float $verticalTolerance = 0.0): ?float
+    public function elevationLoss(float|null $verticalTolerance = 0.0): float|null
     {
         return null;
     }
 
-    public function numGeometries(): ?int
+    public function numGeometries(): int|null
     {
         return null;
     }
 
-    public function geometryN(int $n = null): ?Geometry
+    public function geometryN(int|null $n = null): Geometry|null
     {
         return null;
     }
 
-    public function startPoint(): ?Point
+    public function startPoint(): Point|null
     {
         return null;
     }
 
-    public function endPoint(): ?Point
+    public function endPoint(): Point|null
     {
         return null;
     }
 
-    public function isRing(): ?bool
+    public function isRing(): bool|null
     {
         return null;
     }
 
-    public function isClosed(): ?bool
+    public function isClosed(): bool|null
     {
         return null;
     }
 
-    public function pointN(int $n = null): ?Point
+    public function pointN(int|null $n = null): Point|null
     {
         return null;
     }
 
-    public function exteriorRing(): ?LineString
+    public function exteriorRing(): LineString|null
     {
         return null;
     }
 
-    public function numInteriorRings(): ?int
+    public function numInteriorRings(): int|null
     {
         return null;
     }
 
-    public function interiorRingN(int $n = null): ?LineString
+    public function interiorRingN(int|null $n = null): LineString|null
     {
         return null;
     }
@@ -520,7 +520,7 @@ class Point extends Geometry
      * @param bool $toArray
      * @return null
      */
-    public function explode(bool $toArray = false): ?array  // @phpstan-ignore-line
+    public function explode(bool $toArray = false): array|null  // @phpstan-ignore-line
     {
         return null;
     }

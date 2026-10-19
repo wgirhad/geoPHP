@@ -107,14 +107,14 @@ abstract class Geometry
      *
      * @return bool|null
      */
-    abstract public function isSimple(): ?bool;
+    abstract public function isSimple(): bool|null;
 
     /**
      * Returns the closure of the combinatorial boundary of the geometric object.
      *
      * @return Geometry|null
      */
-    abstract public function boundary(): ?Geometry;
+    abstract public function boundary(): Geometry|null;
 
     /**
      * Get all sub-geometry components of the geometry.
@@ -133,28 +133,28 @@ abstract class Geometry
      *
      * @return float|null
      */
-    abstract public function x(): ?float;
+    abstract public function x(): float|null;
 
     /**
      * The y-coordinate value of the Point.
      *
      * @return float|null
      */
-    abstract public function y(): ?float;
+    abstract public function y(): float|null;
 
     /**
      * The z-coordinate value (elevation) of the Point.
      *
      * @return float|null
      */
-    abstract public function z(): ?float;
+    abstract public function z(): float|null;
 
     /**
      * The m-coordinate value (measure) of the Point.
      *
      * @return float|null
      */
-    abstract public function m(): ?float;
+    abstract public function m(): float|null;
 
     /**
      * Returns TRUE if this geometric object has z coordinate values.
@@ -204,7 +204,7 @@ abstract class Geometry
      *
      * @return int|null
      */
-    abstract public function numGeometries(): ?int;
+    abstract public function numGeometries(): int|null;
 
     /**
      * Returns the geometry N. in the collection. Note that the index starts at 1.
@@ -213,35 +213,35 @@ abstract class Geometry
      *
      * @return Geometry|null The geometry, or null if not found.
      */
-    abstract public function geometryN(int $n): ?Geometry;
+    abstract public function geometryN(int $n): Geometry|null;
 
     /**
      * The first Point of the LineString.
      *
      * @return Point|null
      */
-    abstract public function startPoint(): ?Point;
+    abstract public function startPoint(): Point|null;
 
     /**
      * The last Point of the LineString.
      *
      * @return Point|null
      */
-    abstract public function endPoint(): ?Point;
+    abstract public function endPoint(): Point|null;
 
     /**
      * Returns TRUE if the Curve isClosed() and isSimple().
      *
      * @return bool|null
      */
-    abstract public function isRing(): ?bool;
+    abstract public function isRing(): bool|null;
 
     /**
      * Returns TRUE if the startPoint() and endPoint() of the Curve equals.
      *
      * @return bool|null
      */
-    abstract public function isClosed(): ?bool;
+    abstract public function isClosed(): bool|null;
 
     /**
      * The number of Points in the Geometry.
@@ -256,21 +256,21 @@ abstract class Geometry
      * @param int $n N-th point
      * @return Point|null
      */
-    abstract public function pointN(int $n): ?Point;
+    abstract public function pointN(int $n): Point|null;
 
     /**
      * Returns the exterior ring of the Polygon.
      *
      * @return LineString|null
      */
-    abstract public function exteriorRing(): ?LineString;
+    abstract public function exteriorRing(): LineString|null;
 
     /**
      * Returns the number of interior rings in the Polygon.
      *
      * @return int|null
      */
-    abstract public function numInteriorRings(): ?int;
+    abstract public function numInteriorRings(): int|null;
 
     /**
      * Returns the N-th interior ring in the Polygon as a LineString. Note that the index starts at 1.
@@ -278,14 +278,14 @@ abstract class Geometry
      * @param int $n
      * @return LineString|null
      */
-    abstract public function interiorRingN(int $n): ?LineString;
+    abstract public function interiorRingN(int $n): LineString|null;
 
     /**
      * The distance of this geometry to another geometry in their associated spatial reference.
      *
      * @return float|null
      */
-    abstract public function distance(Geometry $geom): ?float;
+    abstract public function distance(Geometry $geom): float|null;
 
     /**
      * Returns TRUE if this geometry is "spatially equal" to other geometry.
@@ -309,7 +309,7 @@ abstract class Geometry
      * @return array{maxy: float, miny: float, maxx: float, minx: float}|null
      *         Array of min and max values of x and y coordinates.
      */
-    abstract public function getBBox(): ?array;
+    abstract public function getBBox(): array|null;
 
     /**
      * Get the given geometry as an array of components (recursive)
@@ -348,7 +348,7 @@ abstract class Geometry
      *
      * @return array<mixed>|null Returns line segments or null for 0-deminsional geometries.
      */
-    abstract public function explode(bool $toArray = false): ?array;
+    abstract public function explode(bool $toArray = false): array|null;
 
     abstract public function greatCircleLength(float $radius = geoPHP::EARTH_WGS84_SEMI_MAJOR_AXIS): float; //meters
 
@@ -358,19 +358,19 @@ abstract class Geometry
 
     // Elevations statistics
 
-    abstract public function minimumZ(): ?float;
+    abstract public function minimumZ(): float|null;
 
-    abstract public function maximumZ(): ?float;
+    abstract public function maximumZ(): float|null;
 
-    abstract public function minimumM(): ?float;
+    abstract public function minimumM(): float|null;
 
-    abstract public function maximumM(): ?float;
+    abstract public function maximumM(): float|null;
 
-    abstract public function zDifference(): ?float;
+    abstract public function zDifference(): float|null;
 
-    abstract public function elevationGain(float $verticalTolerance = 0.0): ?float;
+    abstract public function elevationGain(float $verticalTolerance = 0.0): float|null;
 
-    abstract public function elevationLoss(float $verticalTolerance = 0.0): ?float;
+    abstract public function elevationLoss(float $verticalTolerance = 0.0): float|null;
 
 
     // ----------------------------------------------- //
@@ -382,7 +382,7 @@ abstract class Geometry
      *
      * @return int|null
      */
-    public function getSRID(): ?int
+    public function getSRID(): int|null
     {
         return $this->srid;
     }
@@ -392,7 +392,7 @@ abstract class Geometry
      *
      * @param int|null $srid Spatial Reference System Identifier.
      */
-    public function setSRID(?int $srid): void
+    public function setSRID(int|null $srid): void
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -424,7 +424,7 @@ abstract class Geometry
      *
      * @return mixed|null The data or null if not exists.
      */
-    public function getData(string $property = null)
+    public function getData(string|null $property = null)
     {
         if ($property) {
             return $this->hasDataProperty($property) ? $this->data[$property] : null;
@@ -593,28 +593,28 @@ abstract class Geometry
     /**
      * @deprecated 2.1
      */
-    public function getX(): ?float
+    public function getX(): float|null
     {
         return $this->x();
     }
     /**
      * @deprecated 2.1
      */
-    public function getY(): ?float
+    public function getY(): float|null
     {
         return $this->y();
     }
     /**
      * @deprecated 2.1
      */
-    public function getZ(): ?float
+    public function getZ(): float|null
     {
         return $this->z();
     }
     /**
      * @deprecated 2.1
      */
-    public function getM(): ?float
+    public function getM(): float|null
     {
         return $this->m();
     }
@@ -622,7 +622,7 @@ abstract class Geometry
      * @return array<string, float>
      * @deprecated 2.1
      */
-    public function getBoundingBox(): ?array
+    public function getBoundingBox(): array|null
     {
         return $this->getBBox();
     }
@@ -637,21 +637,21 @@ abstract class Geometry
     /**
      * @deprecated 2.1
      */
-    public function getCentroid(): ?Point
+    public function getCentroid(): Point|null
     {
         return $this->centroid();
     }
     /**
      * @deprecated 2.1
      */
-    public function getArea(): ?float
+    public function getArea(): float|null
     {
         return $this->area();
     }
     /**
      * @deprecated 2.1
      */
-    public function geos(): ?GEOSGeometry
+    public function geos(): GEOSGeometry|null
     {
         return $this->getGeos();
     }
@@ -665,7 +665,7 @@ abstract class Geometry
     /**
      * @deprecated 2.1
      */
-    public function SRID(): ?int
+    public function SRID(): int|null
     {
         return $this->getSRID();
     }
@@ -682,7 +682,7 @@ abstract class Geometry
      * @return \GEOSGeometry|null
      * @codeCoverageIgnore
      */
-    public function getGeos(): ?\GEOSGeometry
+    public function getGeos(): \GEOSGeometry|null
     {
         // If it's already been set, just return it
         if ($this->geos && geoPHP::isGeosInstalled()) {
@@ -749,7 +749,7 @@ abstract class Geometry
      * @throws UnsupportedMethodException
      * @codeCoverageIgnore
      */
-    public function relate(Geometry $geometry, string $pattern = null)
+    public function relate(Geometry $geometry, string|null $pattern = null)
     {
         if ($this->getGeos()) {
             if ($pattern) {

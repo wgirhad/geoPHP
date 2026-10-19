@@ -85,14 +85,14 @@ abstract class Curve extends Collection
      *
      * @return MultiPoint
      */
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         return $this->isEmpty() || $this->isClosed()
             ? new MultiPoint()
             : new MultiPoint([$this->startPoint(), $this->endPoint()]);
     }
 
-    public function startPoint(): ?Point
+    public function startPoint(): Point|null
     {
         if (!isset($this->startPoint)) {
             $this->startPoint = $this->components[0] ?? null;
@@ -100,7 +100,7 @@ abstract class Curve extends Collection
         return $this->startPoint;
     }
 
-    public function endPoint(): ?Point
+    public function endPoint(): Point|null
     {
         if (!isset($this->endPoint)) {
             $this->endPoint = $this->components[count($this->components) - 1] ?? null;
@@ -142,17 +142,17 @@ abstract class Curve extends Collection
         return 0.0;
     }
 
-    public function exteriorRing(): ?LineString
+    public function exteriorRing(): LineString|null
     {
         return null;
     }
 
-    public function numInteriorRings(): ?int
+    public function numInteriorRings(): int|null
     {
         return null;
     }
 
-    public function interiorRingN(int $n): ?LineString
+    public function interiorRingN(int $n): LineString|null
     {
         return null;
     }

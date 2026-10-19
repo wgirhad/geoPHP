@@ -40,7 +40,7 @@ abstract class MultiGeometry extends Collection
      *
      * @return bool
      */
-    public function isSimple(): ?bool
+    public function isSimple(): bool|null
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -63,7 +63,7 @@ abstract class MultiGeometry extends Collection
      *
      * @return Geometry
      */
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         if ($this->isEmpty()) {
             return new LineString();
@@ -155,7 +155,7 @@ abstract class MultiGeometry extends Collection
         return $length;
     }
 
-    public function minimumZ(): ?float
+    public function minimumZ(): float|null
     {
         if (!$this->is3D()) {
             return null;
@@ -170,7 +170,7 @@ abstract class MultiGeometry extends Collection
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumZ(): ?float
+    public function maximumZ(): float|null
     {
         if (!$this->is3D()) {
             return null;
@@ -185,7 +185,7 @@ abstract class MultiGeometry extends Collection
         return $max > ~PHP_INT_MAX ? $max : null;
     }
 
-    public function zDifference(): ?float
+    public function zDifference(): float|null
     {
         if (!$this->is3D()) {
             return null;
@@ -217,7 +217,7 @@ abstract class MultiGeometry extends Collection
         return $loss;
     }
 
-    public function minimumM(): ?float
+    public function minimumM(): float|null
     {
         if (!$this->isMeasured()) {
             return null;
@@ -232,7 +232,7 @@ abstract class MultiGeometry extends Collection
         return $min < PHP_INT_MAX ? $min : null;
     }
 
-    public function maximumM(): ?float
+    public function maximumM(): float|null
     {
         if (!$this->isMeasured()) {
             return null;
@@ -249,42 +249,42 @@ abstract class MultiGeometry extends Collection
 
 
 
-    public function startPoint(): ?Point
+    public function startPoint(): Point|null
     {
         return null;
     }
 
-    public function endPoint(): ?Point
+    public function endPoint(): Point|null
     {
         return null;
     }
 
-    public function isRing(): ?bool
+    public function isRing(): bool|null
     {
         return null;
     }
 
-    public function isClosed(): ?bool
+    public function isClosed(): bool|null
     {
         return null;
     }
 
-    public function pointN(int $n): ?Point
+    public function pointN(int $n): Point|null
     {
         return null;
     }
 
-    public function exteriorRing(): ?LineString
+    public function exteriorRing(): LineString|null
     {
         return null;
     }
 
-    public function numInteriorRings(): ?int
+    public function numInteriorRings(): int|null
     {
         return null;
     }
 
-    public function interiorRingN(int $n): ?LineString
+    public function interiorRingN(int $n): LineString|null
     {
         return null;
     }

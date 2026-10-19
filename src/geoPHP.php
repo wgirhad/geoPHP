@@ -139,7 +139,7 @@ class geoPHP
      *
      * @return Geometry
      */
-    public static function load($data, string $format = null, ...$args): Geometry
+    public static function load($data, string|null $format = null, ...$args): Geometry
     {
         if (is_array($data)) {
             // Data is an array, combine all passed in items into a single geometry.
@@ -185,7 +185,7 @@ class geoPHP
      *
      * @deprecated 2.1 Use instead isGeosInstalled(), enableGeos() or disableGeos().
      */
-    public static function geosInstalled(bool $force = null): bool
+    public static function geosInstalled(bool|null $force = null): bool
     {
         geoPHP::$geosInstalled = null;
         if ($force !== null) {
@@ -262,7 +262,7 @@ class geoPHP
      *
      * @codeCoverageIgnore
      */
-    public static function geosToGeometry(\GEOSGeometry $geos): ?Geometry
+    public static function geosToGeometry(\GEOSGeometry $geos): Geometry|null
     {
         if (!geoPHP::isGeosInstalled()) {
             return null;
@@ -444,7 +444,7 @@ class geoPHP
      *
      * @return string|null Returns the name of input's format (e.g. 'gpx') or null if fails to detect.
      */
-    public static function detectFormat(string &$input): ?string
+    public static function detectFormat(string &$input): string|null
     {
         $mem = fopen('php://memory', 'x+');
         if (!$mem) {

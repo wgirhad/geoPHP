@@ -64,7 +64,7 @@ class GPX implements GeoAdapter
      * @throws InvalidXmlException If GPX is not a valid XML
      * @throws FileFormatException If cannot parse GPX
      */
-    public function read(string $gpx, ?array $allowedElements = null): Geometry
+    public function read(string $gpx, array|null $allowedElements = null): Geometry
     {
         $this->gpxTypes = new GpxTypes($allowedElements);
 
@@ -283,7 +283,7 @@ class GPX implements GeoAdapter
      * @param string[]|null $tagList
      * @return string | array<string, string> | array<string, array<string>>
      */
-    protected static function parseNodeProperties(DOMNode $node, ?array $tagList = null)
+    protected static function parseNodeProperties(DOMNode $node, array|null $tagList = null)
     {
         if ($node->nodeType === XML_TEXT_NODE) {
             return $node->nodeValue;
@@ -335,7 +335,7 @@ class GPX implements GeoAdapter
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
      * @return string The GPX string representation of the input geometries
      */
-    public function write(Geometry $geometry, ?string $namespace = null, ?array $allowedElements = null): string
+    public function write(Geometry $geometry, string|null $namespace = null, array|null $allowedElements = null): string
     {
         if ($namespace) {
             $this->nss = $namespace . ':';

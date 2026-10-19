@@ -73,7 +73,7 @@ class GeoJSON implements GeoAdapter
      * @param stdClass $input
      * @return int|null
      */
-    private function getSRID(stdClass $input): ?int
+    private function getSRID(stdClass $input): int|null
     {
         if (isset($input->crs->properties->name)) {
             // parse CRS codes in forms "EPSG:1234" and "urn:ogc:def:crs:EPSG::1234"
@@ -255,7 +255,7 @@ class GeoJSON implements GeoAdapter
      *          }|array{type: string, features: array<mixed>
      *          }|array{type: string, coordinates: array<float>}
      */
-    public function geometryToGeoJsonArray(Geometry $geometry, ?bool $isRoot = true): array
+    public function geometryToGeoJsonArray(Geometry $geometry, bool|null $isRoot = true): array
     {
         if ($geometry->geometryType() === Geometry::GEOMETRY_COLLECTION) {
             $components = [];

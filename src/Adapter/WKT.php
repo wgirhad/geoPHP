@@ -40,7 +40,7 @@ class WKT implements GeoAdapter
      *
      * @return string|null The geometry type if found or null
      */
-    public static function getWktType(string $typeString): ?string
+    public static function getWktType(string $typeString): string|null
     {
         foreach (geoPHP::getGeometryList() as $geom => $type) {
             if (strtolower((substr($typeString, 0, strlen($geom)))) === $geom) {

@@ -149,7 +149,7 @@ abstract class Collection extends Geometry
      * @return null|array{maxy: float, miny: float, maxx: float, minx: float}
      *         Array of min and max values of x and y coordinates.
      */
-    public function getBBox(): ?array
+    public function getBBox(): array|null
     {
         if ($this->isEmpty()) {
             return null;
@@ -226,7 +226,7 @@ abstract class Collection extends Geometry
      *
      * @return int|null
      */
-    public function numGeometries(): ?int
+    public function numGeometries(): int|null
     {
         return count($this->components);
     }
@@ -238,7 +238,7 @@ abstract class Collection extends Geometry
      *
      * @return Geometry|null The geometry, or null if not found.
      */
-    public function geometryN(int $n): ?Geometry
+    public function geometryN(int $n): Geometry|null
     {
         return isset($this->components[$n - 1]) ? $this->components[$n - 1] : null;
     }
@@ -350,7 +350,7 @@ abstract class Collection extends Geometry
      *
      * @return LineString[] Returns line segments.
      */
-    public function explode(bool $toArray = false): ?array
+    public function explode(bool $toArray = false): array|null
     {
         $parts = [];
         foreach ($this->components as $component) {
@@ -366,7 +366,7 @@ abstract class Collection extends Geometry
      *
      * @return float|null
      */
-    public function distance(Geometry $geometry): ?float
+    public function distance(Geometry $geometry): float|null
     {
         if ($this->getGeos()) {
             // @codeCoverageIgnoreStart
@@ -394,22 +394,22 @@ abstract class Collection extends Geometry
 
     // Not valid for this geometry type
     // --------------------------------
-    public function x(): ?float
+    public function x(): float|null
     {
         return null;
     }
 
-    public function y(): ?float
+    public function y(): float|null
     {
         return null;
     }
 
-    public function z(): ?float
+    public function z(): float|null
     {
         return null;
     }
 
-    public function m(): ?float
+    public function m(): float|null
     {
         return null;
     }

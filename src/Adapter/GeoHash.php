@@ -118,7 +118,7 @@ class GeoHash implements GeoAdapter
      *
      * @return string the GeoHash or null when the $geometry is not a Point
      */
-    public function write(Geometry $geometry, float $precision = null): string
+    public function write(Geometry $geometry, float|null $precision = null): string
     {
         if ($geometry->isEmpty()) {
             return '';
@@ -159,7 +159,7 @@ class GeoHash implements GeoAdapter
      * @return string The GeoHash
      * @throws \Exception
      */
-    private function encodePoint(Point $point, ?float $precision = null): string
+    private function encodePoint(Point $point, float|null $precision = null): string
     {
         $minLatitude = -90.0000000000001;
         $maxLatitude = 90.0000000000001;

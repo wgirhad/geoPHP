@@ -52,7 +52,7 @@ class GoogleGeocode implements GeoAdapter
      */
     public function read(
         string $address,
-        string $apiKey = null,
+        string|null $apiKey = null,
         string $returnType = 'point',
         $bounds = null,
         bool $returnMultiple = false
@@ -130,9 +130,9 @@ class GoogleGeocode implements GeoAdapter
      */
     public function write(
         Geometry $geometry,
-        ?string $apiKey = null,
-        ?string $returnType = 'string',
-        ?string $language = null
+        string|null $apiKey = null,
+        string|null $returnType = 'string',
+        string|null $language = null
     ): string {
         return $this->reverseGeocode($geometry, $apiKey, 'string', $language);
     }
@@ -153,8 +153,8 @@ class GoogleGeocode implements GeoAdapter
      */
     public function writeAsArray(
         Geometry $geometry,
-        ?string $apiKey = null,
-        ?string $language = null
+        string|null $apiKey = null,
+        string|null $language = null
     ): array {
         return $this->reverseGeocode($geometry, $apiKey, 'array', $language);
     }
@@ -176,9 +176,9 @@ class GoogleGeocode implements GeoAdapter
      */
     protected function reverseGeocode(
         Geometry $geometry,
-        ?string $apiKey = null,
-        ?string $returnType = 'string',
-        ?string $language = null
+        string|null $apiKey = null,
+        string|null $returnType = 'string',
+        string|null $language = null
     ) {
         $centroid = $geometry->centroid();
         $lat = $centroid->y();

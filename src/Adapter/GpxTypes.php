@@ -118,7 +118,7 @@ class GpxTypes
      *                   Can be overwritten with an associative array, with type name in keys.
      *                   eg.: ['wptType' => ['ele', 'name'], 'trkptType' => ['ele'], 'metadataType' => null]
      */
-    public function __construct(?array $allowedElements = null)
+    public function __construct(array|null $allowedElements = null)
     {
         $this->allowedGpxTypeElements = self::$gpxTypeElements;
         $this->allowedTrkTypeElements = self::$trkTypeElements;

@@ -75,7 +75,7 @@ class MultiPoint extends MultiGeometry
      *
      * @return bool
      */
-    public function isSimple(): ?bool
+    public function isSimple(): bool|null
     {
         $componentCount = count($this->components);
         for ($i = 0; $i < $componentCount; $i++) {
@@ -92,7 +92,7 @@ class MultiPoint extends MultiGeometry
      * The boundary of a MultiPoint is the empty set.
      * @return GeometryCollection
      */
-    public function boundary(): ?Geometry
+    public function boundary(): Geometry|null
     {
         return new GeometryCollection();
     }
@@ -120,7 +120,7 @@ class MultiPoint extends MultiGeometry
 
     // Not valid for this geometry type
     // --------------------------------
-    public function explode(bool $toArray = false): ?array  // @phpstan-ignore-line
+    public function explode(bool $toArray = false): array|null  // @phpstan-ignore-line
     {
         return null;
     }
